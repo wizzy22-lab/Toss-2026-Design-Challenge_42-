@@ -16,13 +16,13 @@ const CHANNELS = [
   { name: "랜덤", active: false, unread: false },
 ];
 
-// 채널 참석자 6명 전원 — 좌측 DM 목록에 그대로 노출
+// 다이렉트 메시지 — 본인(이가영)은 제외(자기 DM 없음, 하단 계정과 중복).
+// 곧 응답할 멤버들이라 전원 온라인으로 둔다.
 const DMS = [
-  { name: "이가영", present: true },
   { name: "윤지은", present: true },
-  { name: "박준호", present: false },
+  { name: "박준호", present: true },
   { name: "정지훈", present: true },
-  { name: "최민영", present: false },
+  { name: "최민영", present: true },
   { name: "한소희", present: true },
 ];
 
@@ -51,6 +51,19 @@ const STAGE_LABEL: Record<DemoStage, string> = {
   confirmed: "확정",
   change: "변경",
 };
+
+// 비트 판정 — 각 단계는 (a)자동체이닝 / (b)디제틱(제품 행동) / (c)읽기·대기 중 하나.
+//  create=디제틱(회의 만들기) · recommend=디제틱(정하기·자세히) · confirmed=종료(읽기) → 버튼 없음.
+//  collect(주최자)=응답이 채워지는 걸 읽는 대기 비트 → 여기서만 [다음]으로 추천으로 이동.
+// (제품 CTA엔 pulse 금지 · pulse는 이 [다음] 데모 크롬에만.)
+function nextBeat(
+  viewAs: ViewAs,
+  stage: DemoStage,
+): { to: DemoStage; label: string } | null {
+  if (viewAs === "host" && stage === "collect")
+    return { to: "recommend", label: "추천 보기" };
+  return null;
+}
 
 function SectionLabel({ children }: { children: ReactNode }) {
   return (
@@ -194,6 +207,9 @@ function DemoSwitcher({
   const roleLabel = viewAs === "host" ? "주최자" : "참석자";
   const seq = STAGE_TABS[viewAs];
   const curIdx = seq.findIndex((t) => t.id === stage);
+  const inSeq = curIdx >= 0;
+  const effIdx = inSeq ? curIdx : seq.length; // 시퀀스 밖(변경 등) = 여정 완료로 간주
+  const next = nextBeat(viewAs, stage);
 
   return (
     <div className="ml-auto flex flex-wrap items-center gap-2 rounded-xl border border-white/10 bg-[#2C2C2A] px-3 py-2">
@@ -205,38 +221,53 @@ function DemoSwitcher({
 
       <span className="hidden h-4 w-px bg-white/15 sm:inline-block" />
 
-      {/* 가운데: 현재 상태 (텍스트만, 아바타 없음) */}
+      {/* 가운데: 단계 라벨 "N/M · 이름" + 관점(뮤트) */}
       <span className="text-[13px] font-normal text-white/50">
-        <span className="hidden sm:inline">지금 보는 화면 — </span>
-        <span className="font-semibold text-white/85">
-          {persona} · {roleLabel} · {STAGE_LABEL[stage]}
+        <span className="font-bold text-white/90">
+          {inSeq ? `${curIdx + 1}/${seq.length} · ` : ""}
+          {STAGE_LABEL[stage]}
+        </span>
+        <span className="hidden sm:inline">
+          {" "}
+          · {persona} · {roleLabel}
         </span>
       </span>
 
       <span className="hidden h-4 w-px bg-white/15 sm:inline-block" />
 
-      {/* 오른쪽: 진행 점(단계 이동) + 처음부터 */}
+      {/* 진행 점 — 표시 전용(현재만 오렌지). 클릭 유도 아님(호버 변화 없음),
+          이동은 [다음]/제품 행동으로. (접근성상 기능은 유지) */}
       <div className="flex items-center gap-0.5">
         {seq.map((t, i) => (
           <button
             key={t.id}
             onClick={() => onDemo(t.id)}
-            title={t.label}
-            aria-label={t.label}
-            className="group grid h-6 w-6 place-items-center rounded-full"
+            aria-label={`${i + 1}. ${t.label}`}
+            className="grid h-6 w-6 place-items-center rounded-full"
           >
             <span
-              className={`h-2 w-2 rounded-full transition ${
+              className={`h-1.5 w-1.5 rounded-full ${
                 i === curIdx
                   ? "bg-brand-500"
-                  : i < curIdx
-                    ? "bg-white/70"
-                    : "bg-white/25 group-hover:bg-white/50"
+                  : i < effIdx
+                    ? "bg-white/55"
+                    : "bg-white/20"
               }`}
             />
           </button>
         ))}
       </div>
+
+      {/* [다음 →] — (c)읽기·대기 비트에서만 조건부. 데모 크롬이라 subtle pulse 허용. */}
+      {next && (
+        <button
+          onClick={() => onDemo(next.to)}
+          className="demo-next-pulse ml-0.5 inline-flex items-center gap-1 rounded-[10px] bg-brand-600 px-2.5 py-1 text-[13px] font-bold text-white transition hover:bg-brand-700"
+        >
+          {next.label}
+          <Icon name="arrow-right" size={14} />
+        </button>
+      )}
 
       <button
         onClick={onRestart}
@@ -302,7 +333,7 @@ export default function Shell({
               </span>
             </div>
             <p className="hidden truncate text-[13px] text-ink-faint lg:block">
-              스프린트 · 리서치 · 회의 조율
+              커머스 스쿼드 · 스프린트 · 리서치
             </p>
           </div>
 

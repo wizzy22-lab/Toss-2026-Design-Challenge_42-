@@ -765,13 +765,8 @@ export default function Channel({
         오 좋아요. 저도 몇 개 메모해뒀어요
       </HumanMessage>
 
-      {/* create 단계: 아직 봇 카드 없음 */}
-      {!sent && (
-        <div className="rounded-xl border border-dashed border-line bg-white/60 px-4 py-4 text-center text-[13px] text-ink-faint">
-          아래 <span className="font-bold text-brand-600">＋ 회의 만들기</span>로
-          회의를 시작하면, 참석자에게 요청 카드가 이 채널에 올라와요.
-        </div>
-      )}
+      {/* create 단계: 아직 봇 카드 없음 — 안내 문구 없이 자연스러운 채널 상태.
+          진행은 컴포저의 '회의 만들기' CTA(디제틱) + Demo 바 단계가 안내한다. */}
 
       {/* ===== 주최자 관점 ===== */}
       {isHost && sent && (
