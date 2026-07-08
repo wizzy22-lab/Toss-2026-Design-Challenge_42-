@@ -24,11 +24,24 @@ export default function CreateMeeting({
 }) {
   const { state, dispatch } = useApp();
   const [invite, setInvite] = useState("");
-  // 소요시간 직접 입력 — 프리셋에 없는 값이면 커스텀 모드
-  const durIsCustom = !DURATIONS.includes(state.durationLabel);
-  const [customDur, setCustomDur] = useState(
-    durIsCustom ? state.durationLabel : "",
-  );
+  // QA: 프리필 금지 — 로컬 드래프트로 '빈/미선택' 시작. 제출 때만 스토어에 커밋.
+  // (데모/UT는 의식적 선택·이해 관찰이 목적 → 스마트 디폴트 대신 미선택 채택)
+  const [title, setTitle] = useState("");
+  const [rangeLabel, setRangeLabel] = useState<string | null>(null);
+  const [duration, setDuration] = useState<string | null>(null);
+  const [customDur, setCustomDur] = useState("");
+  const durIsCustom = duration !== null && !DURATIONS.includes(duration);
+
+  // 보내기 = 이름 + 후보기간 + 소요시간 셋 다 정해졌을 때만 활성
+  const canSubmit =
+    title.trim() !== "" && rangeLabel !== null && duration !== null;
+  const submit = () => {
+    if (!canSubmit) return;
+    dispatch({ type: "SET_TITLE", title: title.trim() });
+    dispatch({ type: "SET_RANGE", label: rangeLabel! });
+    dispatch({ type: "SET_DURATION", label: duration! });
+    onSubmit();
+  };
   // '링크 복사' = 링크만 복사 + 토스트 (외부인 자동 추가 아님)
   const [toast, setToast] = useState<string | null>(null);
   const copyLink = () => {
@@ -67,16 +80,14 @@ export default function CreateMeeting({
         {/* 헤더 */}
         <div className="border-b border-line-soft px-6 pt-4">
           <div className="flex items-center justify-between pb-3">
+            {/* 헤더 — 서브텍스트 제거(CTA와 중복·baseline 정렬 문제). 아이콘 + 제목만 */}
             <div className="flex items-center gap-2">
-              <span className="grid h-6 w-6 place-items-center rounded-[10px] bg-brand-500 text-[16px] font-bold text-white">
+              <span className="grid h-6 w-6 place-items-center rounded-[10px] bg-brand-600 text-white">
                 <Icon name="plus" size={16} />
               </span>
               <h1 className="text-2xl font-bold tracking-[-0.01em]">
                 회의 만들기
               </h1>
-              <span className="hidden text-[13px] text-ink-faint sm:inline">
-                #커머스팀에서 시작
-              </span>
             </div>
             <button
               onClick={onClose}
@@ -90,14 +101,15 @@ export default function CreateMeeting({
 
         {/* 본문 스크롤 — 좌우 24 */}
         <div className="flex-1 overflow-y-auto px-6 py-5">
-          {/* 회의 제목 — 컴포저 입력처럼 */}
+          {/* 회의 이름 — 유저 직접 입력(프리필 금지). 라벨 + 빈 필드 + 회색 placeholder */}
+          <label className="mb-2 block text-[16px] font-bold text-ink-soft">
+            회의 이름
+          </label>
           <input
-            value={state.title}
-            onChange={(e) =>
-              dispatch({ type: "SET_TITLE", title: e.target.value })
-            }
-            placeholder="무슨 회의인가요?"
-            className="w-full rounded-[10px] border border-edge px-3.5 py-3 text-[16px] font-bold outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="커머스팀 스프린트 결정 회의"
+            className="w-full rounded-[10px] border border-edge px-3.5 py-3 text-[16px] font-bold outline-none placeholder:font-normal placeholder:text-ink-disabled focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
           />
 
           {/* 후보 기간 — 프리셋 칩 (기본 다음 주) */}
@@ -105,9 +117,7 @@ export default function CreateMeeting({
             <label className="mb-2 block text-[16px] font-bold text-ink-soft">
               후보 기간
             </label>
-            <DateRangePicker
-              onChange={(label) => dispatch({ type: "SET_RANGE", label })}
-            />
+            <DateRangePicker onChange={setRangeLabel} />
           </div>
 
           {/* 소요시간 — 세그먼트 칩 (기본 1시간), 기간 칩과 같은 스타일 */}
@@ -119,8 +129,8 @@ export default function CreateMeeting({
               {DURATIONS.map((d) => (
                 <button
                   key={d}
-                  onClick={() => dispatch({ type: "SET_DURATION", label: d })}
-                  className={segClass(state.durationLabel === d)}
+                  onClick={() => setDuration(d)}
+                  className={segClass(duration === d)}
                 >
                   {d}
                 </button>
@@ -130,7 +140,7 @@ export default function CreateMeeting({
                 onClick={() => {
                   const v = customDur || "3시간";
                   setCustomDur(v);
-                  dispatch({ type: "SET_DURATION", label: v });
+                  setDuration(v);
                 }}
                 className={segClass(durIsCustom)}
               >
@@ -144,7 +154,7 @@ export default function CreateMeeting({
                   value={customDur}
                   onChange={(e) => {
                     setCustomDur(e.target.value);
-                    dispatch({ type: "SET_DURATION", label: e.target.value });
+                    setDuration(e.target.value);
                   }}
                   placeholder="예: 3시간 · 반나절 · 45분"
                   className="w-full rounded-[10px] border border-edge px-3 py-2 text-[16px] font-bold outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
@@ -158,18 +168,14 @@ export default function CreateMeeting({
 
           {/* 참석자 — 채널 인원 자동 초대 */}
           <div className="mt-6">
-            <div className="flex items-center justify-between">
-              <div className="text-[16px] font-bold text-ink-soft">
-                참석자 {included.length}명
-              </div>
-              <span className="text-[13px] text-ink-faint">
-                #커머스팀 인원을 자동으로 초대했어요
-              </span>
+            {/* '자동 초대' 문구 제거 — 6명 노출 + 아래 헬퍼로 자명(중복 제거) */}
+            <div className="text-[16px] font-bold text-ink-soft">
+              참석자 {included.length}명
             </div>
             <p className="mt-0.5 text-[13px] text-ink-faint">
-              기본은 <b className="text-brand-600">전원 필참</b>이에요. 빼고 싶은
-              사람만 <b>선택으로</b> 내리고, 이 회의와 무관하면 오른쪽{" "}
-              <b>X</b>로 뺄 수 있어요.
+              #커머스팀 인원을 자동으로 넣었어요. 기본은{" "}
+              <b className="text-brand-600">전원 필참</b> — 빼고 싶은 사람만{" "}
+              <b>선택으로</b> 내리고, 무관하면 오른쪽 <b>X</b>로 빼요.
             </p>
 
             <div className="mt-2.5 space-y-2">
@@ -313,11 +319,17 @@ export default function CreateMeeting({
         {/* 하단 CTA — 만들면 요청 게시 + 주최자 본인 시간 입력으로 이어짐 */}
         <div className="border-t border-line-soft px-6 pb-6 pt-4">
           <button
-            onClick={onSubmit}
-            className="inline-flex h-12 w-full items-center justify-center rounded-[10px] bg-ink text-[16px] font-bold text-white transition hover:bg-[#33291F]"
+            onClick={submit}
+            disabled={!canSubmit}
+            className="inline-flex h-12 w-full items-center justify-center rounded-[10px] bg-ink text-[16px] font-bold text-white transition hover:bg-[#33291F] disabled:cursor-not-allowed disabled:bg-sand-200 disabled:text-ink-faint"
           >
             만들고 #커머스팀에 요청 보내기
           </button>
+          {!canSubmit && (
+            <p className="mt-2 text-center text-[13px] text-ink-faint">
+              회의 이름 · 후보 기간 · 소요시간을 정하면 보낼 수 있어요.
+            </p>
+          )}
         </div>
       </motion.div>
     </div>

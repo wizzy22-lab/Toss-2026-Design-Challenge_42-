@@ -49,7 +49,7 @@ export default function DateRangePicker({
   const nextMon = useMemo(() => addDays(thisMon, 7), [thisMon]);
   const nextFri = useMemo(() => addDays(thisMon, 11), [thisMon]);
 
-  const [preset, setPreset] = useState<Preset>("next");
+  const [preset, setPreset] = useState<Preset | null>(null); // QA: 미선택 시작
   // 직접 선택용
   const [start, setStart] = useState(nextMon);
   const [end, setEnd] = useState(nextFri);
@@ -61,9 +61,9 @@ export default function DateRangePicker({
     return `직접 선택 · ${fmt(start, end)}`;
   };
 
-  // 프리셋/직접선택이 바뀔 때마다 상위로 라벨 반영 (기본값 '다음 주' 포함)
+  // 선택했을 때만 상위로 라벨 반영 (미선택 시작 → 프리필 없음)
   useEffect(() => {
-    onChange(labelFor(preset));
+    if (preset !== null) onChange(labelFor(preset));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preset, start, end]);
 
@@ -96,9 +96,9 @@ export default function DateRangePicker({
 
   return (
     <div>
-      {/* 프리셋 칩 — 기본 '다음 주' */}
+      {/* 프리셋 칩 — 시간순 [이번 주] → [다음 주] → [직접 선택], 미선택 시작 */}
       <div className="flex flex-wrap gap-2">
-        {(["next", "this", "custom"] as Preset[]).map((p) => (
+        {(["this", "next", "custom"] as Preset[]).map((p) => (
           <button
             key={p}
             onClick={() => setPreset(p)}
@@ -109,8 +109,8 @@ export default function DateRangePicker({
         ))}
       </div>
 
-      {/* 선택 요약 (프리셋일 때) */}
-      {preset !== "custom" && (
+      {/* 선택 요약 (프리셋 선택했을 때만) */}
+      {preset !== null && preset !== "custom" && (
         <p className="mt-2 text-[13px] text-ink-faint">
           후보 기간{" "}
           <span className="font-semibold text-brand-600">
