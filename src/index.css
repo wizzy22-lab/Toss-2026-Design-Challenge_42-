@@ -40,8 +40,8 @@
   .glow-accent {
     background-image: radial-gradient(
       120% 90% at 100% 0%,
-      rgba(255, 199, 158, 0.55) 0%,
-      transparent 58%
+      rgba(255, 199, 158, 0.65) 0%,
+      transparent 60%
     );
   }
   /* 오렌지 프레임 (히어로/인트로 외곽 장식 — 텍스트 안 얹음) */
