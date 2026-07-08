@@ -1,0 +1,68 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-cream text-ink font-sans antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    line-height: 1.6; /* 한글 넉넉한 행간 */
+    font-variant-numeric: tabular-nums; /* 시간·카운트 정렬 안정 */
+  }
+  /* 키보드 포커스 표시 (WCAG 2.4.7) — 전역 1곳 */
+  :where(button, a, [role="button"], input, select, [tabindex]):focus-visible {
+    outline: 2px solid #d24310;
+    outline-offset: 2px;
+    border-radius: inherit;
+  }
+}
+
+@layer utilities {
+  /* vivid 브랜드 그라데이션·글로우 (문서 §0) — 히어로 순간에만 (배경, 다크 텍스트 위) */
+  .bg-gradient-brand {
+    background-image: linear-gradient(135deg, #ff8a3d 0%, #f5591c 100%);
+  }
+  .bg-glow-hero {
+    background-image: radial-gradient(
+      120% 120% at 20% 0%,
+      #ffb07a 0%,
+      #ff6a2c 45%,
+      #f5591c 100%
+    );
+  }
+  /* 히어로 코너 소프트 글로우 (#FFC79E, 장식 · 다크 텍스트 가독성 유지) */
+  .glow-accent {
+    background-image: radial-gradient(
+      120% 90% at 100% 0%,
+      rgba(255, 199, 158, 0.55) 0%,
+      transparent 58%
+    );
+  }
+  /* 오렌지 프레임 (히어로/인트로 외곽 장식 — 텍스트 안 얹음) */
+  .orange-frame {
+    background-image: linear-gradient(135deg, #ff6a2c, #f5591c);
+  }
+  /* 필수자 hard 불가: 빗금 패턴 */
+  .hatch {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgba(110, 97, 82, 0.16),
+      rgba(110, 97, 82, 0.16) 3px,
+      transparent 3px,
+      transparent 7px
+    );
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
