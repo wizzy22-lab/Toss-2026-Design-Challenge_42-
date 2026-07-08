@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useApp } from "./store";
 import type { DemoStage } from "./types";
 import Shell from "./shell/Shell";
@@ -42,6 +42,19 @@ export default function App() {
     state.lastChange !== null,
     allIn,
   );
+
+  // (a) 자동 체이닝 — 주최자 collect: 응답이 1→6으로 채워지고(약 700ms×5),
+  // 6명 다 응답한 뒤 3초 delay → 추천 카드 자동 등장. (오버레이 없을 때만)
+  useEffect(() => {
+    if (state.viewAs !== "host" || stage !== "collect" || overlay !== null)
+      return;
+    const fillMs = 700 * Math.max(0, roster.length - 1); // 응답 채워지는 시간
+    const t = window.setTimeout(() => {
+      dispatch({ type: "DEMO", stage: "recommend" });
+    }, fillMs + 3000);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.viewAs, stage, overlay, roster.length]);
 
   // 정하기 = 최선(top[0])을 그대로 확정. 풀스크린 전환 없이 — confirmedKey만
   // 세팅되면 채널 카드가 인라인으로 확정 상태가 됨.

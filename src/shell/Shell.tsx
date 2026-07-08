@@ -53,15 +53,13 @@ const STAGE_LABEL: Record<DemoStage, string> = {
 };
 
 // 비트 판정 — 각 단계는 (a)자동체이닝 / (b)디제틱(제품 행동) / (c)읽기·대기 중 하나.
-//  create=디제틱(회의 만들기) · recommend=디제틱(정하기·자세히) · confirmed=종료(읽기) → 버튼 없음.
-//  collect(주최자)=응답이 채워지는 걸 읽는 대기 비트 → 여기서만 [다음]으로 추천으로 이동.
-// (제품 CTA엔 pulse 금지 · pulse는 이 [다음] 데모 크롬에만.)
+//  create=디제틱(회의 만들기) · collect(주최자)=(a)자동(6명 채워진 뒤 3초→추천, App 타이머)
+//  recommend=디제틱(정하기·자세히) · confirmed=종료(읽기) → 어디도 수동 [다음] 불필요.
+// (mechanism은 유지 — (c) 읽기 비트가 생기면 여기서 반환. pulse는 이 [다음] 데모 크롬에만.)
 function nextBeat(
-  viewAs: ViewAs,
-  stage: DemoStage,
+  _viewAs: ViewAs,
+  _stage: DemoStage,
 ): { to: DemoStage; label: string } | null {
-  if (viewAs === "host" && stage === "collect")
-    return { to: "recommend", label: "추천 보기" };
   return null;
 }
 
