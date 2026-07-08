@@ -98,7 +98,7 @@ export default function AttendeeInput({
           <span className="h-2.5 w-2.5 rounded-full bg-sand-200" />
           <span className="h-2.5 w-2.5 rounded-full bg-sand-200" />
           <span className="ml-2 text-[13px] font-semibold text-ink-faint">
-            MeetSync · 회의 시간 응답
+            42 · 회의 시간 응답
           </span>
 
           {/* 데모용 사람 스위처 */}

@@ -36,9 +36,9 @@ export default function Intro({
           <div className="px-6 py-6 sm:px-8 sm:py-7">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-2.5 py-1 text-[13px] font-bold uppercase tracking-wide text-brand-700">
             <span className="grid h-4 w-4 place-items-center rounded bg-ink text-[9px] font-bold text-white">
-              M
+              42
             </span>
-            MeetSync Demo
+            42 Demo
           </span>
 
           <h1 className="mt-3 text-2xl font-bold tracking-[-0.01em] text-ink">

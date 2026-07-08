@@ -97,7 +97,7 @@ export default function ChangeEntry({
           <span className="h-2.5 w-2.5 rounded-full bg-sand-200" />
           <span className="h-2.5 w-2.5 rounded-full bg-sand-200" />
           <span className="ml-2 text-[13px] font-semibold text-ink-faint">
-            MeetSync · 참석 조정
+            42 · 참석 조정
           </span>
           <button
             onClick={onClose}

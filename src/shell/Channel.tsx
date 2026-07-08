@@ -54,11 +54,11 @@ function BotMessage({ time, children }: { time: string; children: ReactNode }) {
       className="flex gap-2.5 px-1"
     >
       <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-[10px] bg-ink text-[16px] font-bold text-white shadow-sm">
-        M
+        42
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-1.5">
-          <span className="text-[13px] font-bold text-ink">MeetSync</span>
+          <span className="text-[13px] font-bold text-ink">42</span>
           <span className="rounded bg-brand-50 px-1 text-[13px] font-bold text-brand-600">
             앱
           </span>
@@ -86,11 +86,11 @@ function EphemeralMessage({
       className="flex gap-2.5 px-1"
     >
       <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-[10px] bg-ink text-[16px] font-bold text-white shadow-sm">
-        M
+        42
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">
-          <span className="text-[13px] font-bold text-ink">MeetSync</span>
+          <span className="text-[13px] font-bold text-ink">42</span>
           <span className="inline-flex items-center gap-1 rounded bg-slate-800 px-1.5 py-0.5 text-[13px] font-bold text-white">
             나에게만 보여요
           </span>
@@ -750,7 +750,7 @@ export default function Channel({
           #커머스팀 채널의 시작이에요
         </p>
         <p className="text-[13px] text-ink-faint">
-          MeetSync 봇이 이 채널에 추가됐어요.
+          42 봇이 이 채널에 추가됐어요.
         </p>
       </div>
 

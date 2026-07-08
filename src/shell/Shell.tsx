@@ -110,13 +110,13 @@ function SidebarBody({ persona }: { persona: string }) {
 
         <SectionLabel>앱</SectionLabel>
         {/* 셸은 지금 채널(#커머스팀)을 보는 중 — active는 채널 하나뿐.
-            MeetSync 앱은 앱 홈 뷰일 때만 하이라이트하므로 여기선 비활성. */}
+            42 앱은 앱 홈 뷰일 때만 하이라이트하므로 여기선 비활성. */}
         <ul className="space-y-0.5">
           <li className="flex items-center gap-2 rounded-md px-2 py-2 text-[#C3BBB2]">
             <span className="grid h-4 w-4 place-items-center rounded bg-ink text-[9px] font-bold text-white">
-              M
+              42
             </span>
-            <span className="truncate">MeetSync</span>
+            <span className="truncate">42</span>
             <span className="ml-auto rounded bg-white/[0.08] px-1 text-[9px] font-bold text-[#A69E96]">
               앱
             </span>
@@ -200,7 +200,7 @@ function DemoSwitcher({
       {/* 왼쪽: 브랜드 */}
       <span className="flex items-center gap-1.5 text-[13px] font-bold text-white/85">
         <Icon name="play" size={12} className="text-brand-500" />
-        MeetSync Demo
+        42 Demo
       </span>
 
       <span className="hidden h-4 w-px bg-white/15 sm:inline-block" />
@@ -314,10 +314,10 @@ export default function Shell({
           />
         </header>
 
-        {/* 메시지 영역 — MeetSync 무대 */}
+        {/* 메시지 영역 — 42 무대 */}
         <main className="flex-1 overflow-y-auto bg-cream">{children}</main>
 
-        {/* 컴포저 (정적 입력 + MeetSync 진입 버튼) */}
+        {/* 컴포저 (정적 입력 + 42 진입 버튼) */}
         <div className="border-t border-line bg-white px-4 py-3 md:px-6">
           <div className="flex items-center gap-2 rounded-[10px] border border-line bg-white px-2 py-2 shadow-sm">
             <button
