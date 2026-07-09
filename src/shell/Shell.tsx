@@ -45,7 +45,7 @@ const STAGE_TABS: Record<ViewAs, { id: DemoStage; label: string }[]> = {
 
 // Demo 바 상태 표시용 — 모든 스테이지의 한국어 라벨
 const STAGE_LABEL: Record<DemoStage, string> = {
-  create: "만들기",
+  create: "회의 만들기",
   collect: "응답",
   recommend: "추천",
   confirmed: "확정",
@@ -206,74 +206,60 @@ function DemoSwitcher({
   const seq = STAGE_TABS[viewAs];
   const curIdx = seq.findIndex((t) => t.id === stage);
   const inSeq = curIdx >= 0;
-  const effIdx = inSeq ? curIdx : seq.length; // 시퀀스 밖(변경 등) = 여정 완료로 간주
   const next = nextBeat(viewAs, stage);
 
+  // 3그룹: 정체성(좌) │ 상태(중앙) │ 컨트롤(우). dots 제거(1/N과 중복). 바 패딩 12·20, 그룹 간 16(hairline).
   return (
-    <div className="ml-auto flex flex-wrap items-center gap-2 rounded-xl border border-white/10 bg-[#2C2C2A] px-3 py-2">
-      {/* 왼쪽: 브랜드 */}
-      <span className="flex items-center gap-1.5 text-[13px] font-bold text-white/85">
+    <div className="ml-auto flex items-center gap-4 rounded-xl border border-white/10 bg-[#2C2C2A] px-5 py-3 text-[13px]">
+      {/* 정체성 (좌) — 아이콘↔텍스트 6 */}
+      <span className="flex items-center gap-1.5 font-bold text-white/85">
         <Icon name="play" size={12} className="text-brand-500" />
         42 Demo
       </span>
 
-      <span className="hidden h-4 w-px bg-white/15 sm:inline-block" />
+      {/* hairline (정체성↔상태, 좌우 16 = 바 gap-4) */}
+      <span className="h-4 w-px shrink-0 bg-white/15" />
 
-      {/* 가운데: 단계 라벨 "N/M · 이름" + 관점(뮤트) */}
-      <span className="text-[13px] font-normal text-white/50">
-        <span className="font-bold text-white/90">
-          {inSeq ? `${curIdx + 1}/${seq.length} · ` : ""}
+      {/* 상태 (중앙) — 두 조각: [N/M · 회의 만들기] · [이가영(주최자)], 조각 간 8·"·" 좌우 6 */}
+      <span className="flex items-center gap-2 font-normal text-white/50">
+        <span className="flex items-center gap-1.5 font-bold text-white/90">
+          {inSeq && (
+            <>
+              {curIdx + 1}/{seq.length}
+              <span className="text-white/30">·</span>
+            </>
+          )}
           {STAGE_LABEL[stage]}
         </span>
-        <span className="hidden sm:inline">
-          {" "}
-          · {persona} · {roleLabel}
+        <span className="hidden items-center gap-1.5 sm:flex">
+          <span className="text-white/30">·</span>
+          {persona}
+          <span className="text-white/45">({roleLabel})</span>
         </span>
       </span>
 
-      <span className="hidden h-4 w-px bg-white/15 sm:inline-block" />
+      {/* hairline (상태↔컨트롤) */}
+      <span className="hidden h-4 w-px shrink-0 bg-white/15 sm:inline-block" />
 
-      {/* 진행 점 — 표시 전용(현재만 오렌지). 클릭 유도 아님(호버 변화 없음),
-          이동은 [다음]/제품 행동으로. (접근성상 기능은 유지) */}
-      <div className="flex items-center gap-0.5">
-        {seq.map((t, i) => (
+      {/* 컨트롤 (우) — 버튼 간 8. 조건부 [다음] + 승격된 [처음부터] 버튼 */}
+      <div className="flex items-center gap-2">
+        {next && (
           <button
-            key={t.id}
-            onClick={() => onDemo(t.id)}
-            aria-label={`${i + 1}. ${t.label}`}
-            className="grid h-6 w-6 place-items-center rounded-full"
+            onClick={() => onDemo(next.to)}
+            className="demo-next-pulse inline-flex items-center gap-1.5 rounded-lg bg-brand-600 px-[14px] py-[7px] font-bold text-white transition hover:bg-brand-700"
           >
-            <span
-              className={`h-1.5 w-1.5 rounded-full ${
-                i === curIdx
-                  ? "bg-brand-500"
-                  : i < effIdx
-                    ? "bg-white/55"
-                    : "bg-white/20"
-              }`}
-            />
+            {next.label}
+            <Icon name="arrow-right" size={14} />
           </button>
-        ))}
-      </div>
-
-      {/* [다음 →] — (c)읽기·대기 비트에서만 조건부. 데모 크롬이라 subtle pulse 허용. */}
-      {next && (
+        )}
         <button
-          onClick={() => onDemo(next.to)}
-          className="demo-next-pulse ml-0.5 inline-flex items-center gap-1 rounded-[10px] bg-brand-600 px-2.5 py-1 text-[13px] font-bold text-white transition hover:bg-brand-700"
+          onClick={onRestart}
+          className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-[14px] py-[7px] font-semibold text-white/80 transition-colors hover:bg-white/[0.18] hover:text-white"
         >
-          {next.label}
-          <Icon name="arrow-right" size={14} />
+          <Icon name="rotate-ccw" size={14} />
+          처음부터
         </button>
-      )}
-
-      <button
-        onClick={onRestart}
-        className="flex items-center gap-1 rounded-[10px] px-2 py-1 text-[13px] font-semibold text-white/50 transition-colors hover:bg-white/10 hover:text-white/80"
-      >
-        <Icon name="rotate-ccw" size={14} />
-        처음부터
-      </button>
+      </div>
     </div>
   );
 }
