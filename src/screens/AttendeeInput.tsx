@@ -74,9 +74,6 @@ export default function AttendeeInput({
     setSubmitted(true);
   };
 
-  const busyCount = view.busy.length;
-  const softCount = view.softSlots.length;
-
   // 요일 헤더 날짜 = 후보 기간(데모 기본 '다음 주' 월~금) 반영 → 월13·화14·수15·목16·금17
   const weekDates = useMemo(() => {
     const nextMon = addDays(mondayOfWeek(atMidnight(new Date())), 7);
@@ -191,17 +188,6 @@ export default function AttendeeInput({
                 {TIMES.map((t) => (
                   <GridRow key={t} t={t} me={view} onCycle={cycle} />
                 ))}
-              </div>
-
-              {/* 범례 — 셀과 같은 아이콘 */}
-              <div className="mt-6 flex flex-wrap items-center gap-3 text-[13px] text-ink-soft">
-                <span className="flex items-center gap-1 text-block-ink">
-                  <Icon name="x" size={14} /> 불가 {busyCount}
-                </span>
-                <span className="flex items-center gap-1 text-avoid-ink">
-                  <Icon name="triangle" size={12} filled /> 피하고 싶어요{" "}
-                  {softCount}
-                </span>
               </div>
             </div>
 
