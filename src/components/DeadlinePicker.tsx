@@ -9,9 +9,9 @@ export default function DeadlinePicker({
   onChange: (label: string) => void;
 }) {
   const today = useMemo(() => atMidnight(new Date()), []);
-  // 날짜 = 내일부터 14일
+  // 날짜 = 회의 생성일 당일부터 14일
   const dayOptions = useMemo(
-    () => Array.from({ length: 14 }, (_, i) => fmtDay(addDays(today, i + 1))),
+    () => Array.from({ length: 14 }, (_, i) => fmtDay(addDays(today, i))),
     [today],
   );
   // 시간 = 09:00~22:00, 1시간 단위 (24시간제)

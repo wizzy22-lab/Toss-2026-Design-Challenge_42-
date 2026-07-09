@@ -73,6 +73,11 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
 
   const roster = state.attendees.filter((a) => !a.excluded);
   const unlinked = roster.filter((a) => !a.linked);
+  // park: 선택 참석자 있으면 "필참자는 모두", 없으면(전원 필참) "다들"
+  const hasOptional = roster.some((a) => !a.required);
+  const availLine = hasOptional
+    ? "필참자는 모두 참석할 수 있어요."
+    : "다들 참석할 수 있어요.";
 
   const confirm = (key: string) => {
     dispatch({ type: "CONFIRM", key });
@@ -153,7 +158,7 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
                             )}
                           </div>
                           <p className="mt-1.5 text-[13px] text-ink-soft">
-                            필참자는 모두 참석할 수 있어요.
+                            {availLine}
                           </p>
                           {r.softViolations > 0 && (
                             <p className="mt-1 flex items-center gap-1.5 text-[13px] font-semibold text-avoid-ink">
@@ -182,7 +187,7 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
                             </span>
                           )}
                           <span className="text-[13px] text-ink-soft">
-                            필참자는 모두 참석할 수 있어요.
+                            {availLine}
                           </span>
                           {r.softViolations > 0 && (
                             <span className="ml-auto flex items-center gap-1 text-[13px] font-semibold text-avoid-ink">
