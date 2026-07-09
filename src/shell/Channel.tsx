@@ -304,17 +304,17 @@ function EphemeralReco({
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <button
-            onClick={onDecide}
-            className="rounded-[10px] bg-ink px-4 py-3 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
-          >
-            이 시간으로 정하기
-          </button>
-          <button
             onClick={onDetails}
             className="inline-flex items-center gap-1 rounded-[10px] px-3 py-3 text-[13px] font-bold text-brand-600 transition hover:bg-brand-50"
           >
             다른 시간 보기{others > 0 ? ` (${others})` : ""}
             <Icon name="arrow-right" size={16} />
+          </button>
+          <button
+            onClick={onDecide}
+            className="rounded-[10px] bg-ink px-4 py-3 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
+          >
+            이 시간으로 정하기
           </button>
         </div>
         <p className="mt-2 text-[13px] text-ink-faint">
