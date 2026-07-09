@@ -168,7 +168,7 @@ export default function CreateMeeting({
               #커머스팀 인원을 자동으로 넣었어요. 토글로 <b>필참</b> 여부를
               정하고, 무관하면 <b>X</b>로 빼요.
             </p>
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <div className="grid grid-cols-1 items-start gap-2 sm:grid-cols-2">
               {included.map((a) => (
                 <div
                   key={a.id}

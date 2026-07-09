@@ -43,3 +43,10 @@ export function fmtTime(min: number) {
   const h12 = h % 12 === 0 ? 12 : h % 12;
   return `${ampm} ${h12}:${String(m).padStart(2, "0")}`;
 }
+
+/** 분(자정 기준) → "18:00" 24h */
+export function fmtTime24(min: number) {
+  return `${String(Math.floor(min / 60)).padStart(2, "0")}:${String(
+    min % 60,
+  ).padStart(2, "0")}`;
+}
