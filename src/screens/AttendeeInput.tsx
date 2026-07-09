@@ -63,6 +63,12 @@ export default function AttendeeInput({
     } else setLocalSoft((s) => s.filter((x) => x !== k));
   };
 
+  // 초기화 = 원래 캘린더 입력 상태로 (연동자=캘린더값, 미연동자=빈칸)
+  const reset = () => {
+    setLocalBusy(me.linked ? [...me.busy] : []);
+    setLocalSoft(me.linked ? [...me.softSlots] : []);
+  };
+
   // 제출 = 로컬 드래프트를 스토어에 반영 → 추천이 이 응답에 즉시 반응.
   const submit = () => {
     dispatch({
@@ -180,6 +186,16 @@ export default function AttendeeInput({
                     해제
                   </span>
                 </div>
+              </div>
+
+              {/* 초기화 — 원래 캘린더 입력 상태로 되돌리기 */}
+              <div className="mb-2 flex justify-end">
+                <button
+                  onClick={reset}
+                  className="inline-flex items-center gap-1 rounded-[10px] px-2 py-1 text-[13px] font-semibold text-ink-faint transition hover:bg-sand-100 hover:text-brand-600"
+                >
+                  <Icon name="rotate-ccw" size={13} /> 초기화
+                </button>
               </div>
 
               {/* 그리드 셀 gap = 8 */}
