@@ -56,6 +56,32 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.viewAs, stage, overlay, roster.length]);
 
+  // 참석자 응답 완료 → 3초 delay 후 다음 카드(확정) 자동 등장. (오버레이 없을 때만)
+  useEffect(() => {
+    if (
+      state.viewAs !== "attendee" ||
+      overlay !== null ||
+      state.confirmedKey ||
+      state.change ||
+      state.lastChange ||
+      !state.responded.includes(state.activeAttendeeId)
+    )
+      return;
+    const t = window.setTimeout(() => {
+      if (derived.top[0]) dispatch({ type: "CONFIRM", key: derived.top[0].key });
+    }, 3000);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    state.viewAs,
+    state.responded,
+    state.activeAttendeeId,
+    state.confirmedKey,
+    state.change,
+    state.lastChange,
+    overlay,
+  ]);
+
   // 정하기 = 최선(top[0])을 그대로 확정. 풀스크린 전환 없이 — confirmedKey만
   // 세팅되면 채널 카드가 인라인으로 확정 상태가 됨.
   const decide = () => {
