@@ -3,23 +3,22 @@ import { motion } from "framer-motion";
 import { useApp } from "../store";
 import { Toggle, Icon, personAvatar } from "../ui";
 import DateRangePicker from "../components/DateRangePicker";
-import DurationWheel from "../components/DurationWheel";
 import DeadlinePicker from "../components/DeadlinePicker";
+import Dropdown from "../components/Dropdown";
 
-// 소요시간 = 흔한 값 칩 2개 + 직접 입력(휠). (30분·1시간30분 제거)
-const DURATIONS = ["1시간", "2시간"];
+// 소요시간 = 드롭다운 옵션 (기본 1시간)
+const DURATIONS = [
+  "30분",
+  "1시간",
+  "1시간 30분",
+  "2시간",
+  "2시간 30분",
+  "3시간",
+  "4시간",
+];
 
 /** 섹션 라벨 — 전 섹션 동일 스타일(크기·굵기·아래 간격) */
 const LBL = "mb-2 block text-[16px] font-bold text-ink-soft";
-
-/** 세그먼트 칩 (기간·소요·마감 공통) */
-function segClass(active: boolean) {
-  return `rounded-full px-3.5 py-2 text-[13px] font-bold transition ${
-    active
-      ? "bg-brand-600 text-white shadow-sm"
-      : "bg-sand-100 text-ink-soft hover:bg-sand-200"
-  }`;
-}
 
 export default function CreateMeeting({
   onClose,
@@ -32,9 +31,7 @@ export default function CreateMeeting({
   // 프리필 금지 — 로컬 드래프트, 미선택 시작. 제출 때만 커밋.
   const [title, setTitle] = useState("");
   const [rangeLabel, setRangeLabel] = useState<string | null>(null);
-  const [duration, setDuration] = useState<string | null>(null);
-  const [wheelOpen, setWheelOpen] = useState(false); // 직접 입력(휠) 열림
-  const [customHours, setCustomHours] = useState(3);
+  const [duration, setDuration] = useState<string | null>("1시간"); // 기본 1시간
   const [, setDeadlineLabel] = useState(""); // 응답 마감 조합 라벨(저마찰·기본값 있음)
   const [showInvite, setShowInvite] = useState(false);
   const [invite, setInvite] = useState("");
@@ -115,95 +112,64 @@ export default function CreateMeeting({
 
         {/* 본문 스크롤 */}
         <div className="flex-1 overflow-y-auto px-6 py-5">
-          {/* 회의 이름 */}
-          <label className={LBL}>회의 이름</label>
-          <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Ex) 주간회의"
-            className={`w-full rounded-[10px] border px-3.5 py-3 text-[16px] font-bold outline-none placeholder:font-normal placeholder:text-[#C7BFB6] focus:ring-2 focus:ring-brand-100 ${
-              titleErr
-                ? "border-danger-ink focus:border-danger-ink"
-                : "border-edge focus:border-brand-400"
-            }`}
-          />
-          {titleErr && (
-            <p className="mt-1 text-[13px] font-semibold text-danger-ink">
-              회의 이름을 정해주세요.
-            </p>
-          )}
-
-          {/* 후보 기간 */}
-          <div className="mt-5">
-            <label className={LBL}>후보 기간</label>
-            <DateRangePicker onChange={setRangeLabel} />
-            {rangeErr && (
-              <p className="mt-1 text-[13px] font-semibold text-danger-ink">
-                후보 기간을 정해주세요.
-              </p>
-            )}
-          </div>
-
-          {/* 소요시간 — 칩(1·2시간) + 직접 입력(휠) */}
-          <div className="mt-5">
-            <label className={LBL}>소요시간</label>
-            <div className="flex flex-wrap gap-2">
-              {DURATIONS.map((d) => (
-                <button
-                  key={d}
-                  onClick={() => {
-                    setWheelOpen(false);
-                    setDuration(d);
-                  }}
-                  className={segClass(!wheelOpen && duration === d)}
-                >
-                  {d}
-                </button>
-              ))}
-              <button
-                onClick={() => {
-                  setWheelOpen(true);
-                  setDuration(`${customHours}시간`);
-                }}
-                className={segClass(wheelOpen)}
-              >
-                직접 입력
-              </button>
+          {/* 필드 4개 = 2행(2×2): 회의 이름·소요시간 / 후보 기간·응답 마감 */}
+          <div className="grid grid-cols-1 items-start gap-x-4 gap-y-5 sm:grid-cols-2">
+            {/* 회의 이름 */}
+            <div>
+              <label className={LBL}>회의 이름</label>
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="ex) 주간회의"
+                className={`w-full rounded-[10px] border px-3.5 py-2.5 text-[16px] font-bold outline-none placeholder:font-normal placeholder:text-[#C7BFB6] focus:ring-2 focus:ring-brand-100 ${
+                  titleErr
+                    ? "border-danger-ink focus:border-danger-ink"
+                    : "border-edge focus:border-brand-400"
+                }`}
+              />
+              {titleErr && (
+                <p className="mt-1 text-[13px] font-semibold text-danger-ink">
+                  회의 이름을 정해주세요.
+                </p>
+              )}
             </div>
 
-            {wheelOpen && (
-              <div className="mt-3 flex items-center gap-3 rounded-xl border border-line p-3">
-                <DurationWheel
-                  value={customHours}
-                  onChange={(h) => {
-                    setCustomHours(h);
-                    setDuration(`${h}시간`);
-                  }}
-                />
-                <p className="text-[13px] text-ink-faint">
-                  위아래로 굴려 정시 단위로 골라요.
-                  <br />
-                  현재{" "}
-                  <span className="font-bold text-brand-600">
-                    {customHours}시간
-                  </span>
+            {/* 소요시간 — 드롭다운(기본 1시간) */}
+            <div>
+              <label className={LBL}>소요시간</label>
+              <Dropdown
+                value={duration}
+                options={DURATIONS}
+                onChange={setDuration}
+                error={durErr}
+                widthClass="w-full"
+              />
+              {durErr && (
+                <p className="mt-1 text-[13px] font-semibold text-danger-ink">
+                  소요시간을 정해주세요.
                 </p>
-              </div>
-            )}
-            {durErr && (
-              <p className="mt-1 text-[13px] font-semibold text-danger-ink">
-                소요시간을 정해주세요.
-              </p>
-            )}
-          </div>
+              )}
+            </div>
 
-          {/* 응답 마감 — 날짜 + 시간 피커 (저마찰·기본값 있음) */}
-          <div className="mt-5">
-            <label className={LBL}>응답 마감</label>
-            <DeadlinePicker onChange={setDeadlineLabel} />
-            <p className="mt-1.5 text-[13px] text-ink-faint">
-              이때까지 참석자가 안 되는 시간을 알려줘요.
-            </p>
+            {/* 후보 기간 */}
+            <div>
+              <label className={LBL}>후보 기간</label>
+              <DateRangePicker onChange={setRangeLabel} />
+              {rangeErr && (
+                <p className="mt-1 text-[13px] font-semibold text-danger-ink">
+                  후보 기간을 정해주세요.
+                </p>
+              )}
+            </div>
+
+            {/* 응답 마감 — ~일 ~시까지 (드롭다운) */}
+            <div>
+              <label className={LBL}>응답 마감</label>
+              <DeadlinePicker onChange={setDeadlineLabel} />
+              <p className="mt-1.5 text-[13px] text-ink-faint">
+                이때까지 참석자가 안 되는 시간을 알려줘요.
+              </p>
+            </div>
           </div>
 
           {/* 참석자 — 2열 그리드로 한눈에 (스크롤 X) */}

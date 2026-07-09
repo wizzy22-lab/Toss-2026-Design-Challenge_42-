@@ -110,7 +110,7 @@ export default function DateRangePicker({
       {/* 직접 선택 — 월 달력 (오늘 표시 · 과거/주말 비활성 · 컴팩트) */}
       {preset === "custom" && (
         <div className="mt-3 select-none rounded-xl border border-line p-3">
-          <div className="mb-2 flex items-center justify-between">
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-y-1">
             <div className="flex items-center gap-1">
               <button
                 onClick={() => stepMonth(-1)}
