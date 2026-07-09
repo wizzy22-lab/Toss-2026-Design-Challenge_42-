@@ -154,8 +154,16 @@ export default function AttendeeInput({
           <>
             {/* 본문 (스크롤) — 보조문구 → 그리드 리듬 24 */}
             <div className="min-h-0 flex-1 overflow-y-auto px-6 pb-2 pt-6">
-              {/* 헬퍼 — 탭 사이클을 셀과 같은 색·아이콘 칩으로(가독성) */}
+              {/* 헬퍼 — (연동자) 캘린더 안내 + 탭 사이클 칩 */}
               <div className="mb-4 rounded-xl bg-sand-50 p-3">
+                {me.linked && (
+                  <p className="mb-2 text-[13px] leading-relaxed text-ink-soft">
+                    <b className="text-ink">
+                      {isSelfHost ? "내" : `${me.name}님`} 캘린더를 불러왔어요.
+                    </b>{" "}
+                    안 되는 시간만 확인하고 필요한 곳만 수정해주세요.
+                  </p>
+                )}
                 <p className="text-[13px] text-ink-soft">
                   <b className="text-ink">탭할 때마다</b> 바뀌어요
                 </p>
