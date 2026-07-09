@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { useApp } from "../store";
 import { DAYS, DAY_LABEL, TIMES, slotKey, timeLabel } from "../data";
 import type { Attendee, Day, TimeSlot } from "../types";
 import { Badge, Icon } from "../ui";
+import { addDays, atMidnight, mondayOfWeek } from "../lib/date";
 
 // 상태 2개만: 불가(hard) / 가능하면 피해요(soft). '외근'은 상태가 아니라 이유 → 삭제.
 type CellKind = "free" | "busy" | "soft";
@@ -76,6 +77,12 @@ export default function AttendeeInput({
   const busyCount = view.busy.length;
   const softCount = view.softSlots.length;
 
+  // 요일 헤더 날짜 = 후보 기간(데모 기본 '다음 주' 월~금) 반영 → 월13·화14·수15·목16·금17
+  const weekDates = useMemo(() => {
+    const nextMon = addDays(mondayOfWeek(atMidnight(new Date())), 7);
+    return DAYS.map((_, i) => addDays(nextMon, i).getDate());
+  }, []);
+
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center p-3 sm:p-4">
       <motion.div
@@ -92,39 +99,14 @@ export default function AttendeeInput({
         transition={{ type: "spring", stiffness: 320, damping: 32 }}
         className="relative z-10 flex max-h-[88vh] w-full max-w-[560px] flex-col overflow-hidden rounded-2xl bg-white shadow-pop ring-1 ring-line/70"
       >
-        {/* 헤더 (고정) */}
-        <div className="flex shrink-0 items-center gap-1.5 border-b border-line-soft px-4 py-2.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-sand-200" />
-          <span className="h-2.5 w-2.5 rounded-full bg-sand-200" />
-          <span className="h-2.5 w-2.5 rounded-full bg-sand-200" />
-          <span className="ml-2 text-[13px] font-semibold text-ink-faint">
+        {/* 헤더 (고정) — 신호등 dot·역할 스위처 제거(역할 전환은 Demo 바에서만) */}
+        <div className="flex shrink-0 items-center border-b border-line-soft px-4 py-2.5">
+          <span className="text-[13px] font-semibold text-ink-faint">
             42 · 회의 시간 응답
           </span>
-
-          {/* 데모용 사람 스위처 */}
-          <label className="ml-auto flex items-center gap-1.5">
-            <span className="text-[13px] font-semibold text-ink-faint">
-              데모: 누구로 볼까요
-            </span>
-            <select
-              value={me.id}
-              onChange={(e) => {
-                dispatch({ type: "SET_ACTIVE_ATTENDEE", id: e.target.value });
-                setSubmitted(false);
-              }}
-              className="rounded-[10px] border border-edge bg-white px-1.5 py-1 text-[13px] font-semibold text-ink-soft outline-none"
-            >
-              {state.attendees.map((a) => (
-                <option key={a.id} value={a.id}>
-                  {a.name}
-                  {a.linked ? "" : " · 직접 표시"}
-                </option>
-              ))}
-            </select>
-          </label>
           <button
             onClick={onClose}
-            className="grid h-6 w-6 place-items-center rounded-[10px] text-ink-faint transition hover:bg-sand-100"
+            className="ml-auto grid h-6 w-6 place-items-center rounded-[10px] text-ink-faint transition hover:bg-sand-100"
             aria-label="닫기"
           >
             <Icon name="x" size={16} />
@@ -152,7 +134,7 @@ export default function AttendeeInput({
                 {/* H1 = 입력자의 할 일 + 이름 호명 */}
                 <h1 className="mt-1 text-2xl font-bold tracking-[-0.01em]">
                   {isSelfHost
-                    ? "내 안 되는 시간만 알려주세요"
+                    ? "안 되는 시간만 알려주세요"
                     : `${me.name}님, 안 되는 시간만 알려주세요`}
                 </h1>
                 {/* H1 → 보조문구 = 8 */}
@@ -179,23 +161,31 @@ export default function AttendeeInput({
           <>
             {/* 본문 (스크롤) — 보조문구 → 그리드 리듬 24 */}
             <div className="min-h-0 flex-1 overflow-y-auto px-6 pb-2 pt-6">
-              {/* 헬퍼 — 한 줄 지시 + 짧은 클릭 상태 설명 (S 패딩 12) */}
-              <div className="mb-4 rounded-xl bg-sand-50 p-3 text-[13px] leading-relaxed text-ink-soft">
-                <b className="text-ink">안 되는 시간만 체크해주세요.</b>
-                <br />
-                클릭하면 <b className="text-ink">불가</b> → 다시 클릭{" "}
-                <b className="text-avoid-ink">가능하면 피해요</b> → 다시 클릭 해제.
+              {/* 헬퍼 — 클릭 안내만(아이콘). H1과 중복되는 지시문 제거 */}
+              <div className="mb-4 flex flex-wrap items-center gap-x-1.5 gap-y-1 rounded-xl bg-sand-50 p-3 text-[13px] leading-relaxed text-ink-soft">
+                한 번 누르면
+                <span className="inline-flex items-center gap-1 font-bold text-block-ink">
+                  <Icon name="x" size={14} />불가
+                </span>
+                → 다시 누르면
+                <span className="inline-flex items-center gap-1 font-bold text-avoid-ink">
+                  <Icon name="triangle" size={12} filled />
+                  피하고 싶어요
+                </span>
+                → 다시 누르면 해제.
               </div>
 
               {/* 그리드 셀 gap = 8 */}
               <div className="grid grid-cols-[36px_repeat(5,1fr)] sm:grid-cols-[44px_repeat(5,1fr)] gap-2">
                 <div />
-                {DAYS.map((d) => (
-                  <div
-                    key={d}
-                    className="pb-1 text-center text-[13px] font-bold text-ink-faint"
-                  >
-                    {DAY_LABEL[d]}
+                {DAYS.map((d, i) => (
+                  <div key={d} className="pb-1 text-center leading-tight">
+                    <div className="text-[13px] font-bold text-ink-faint">
+                      {DAY_LABEL[d]}
+                    </div>
+                    <div className="text-[13px] font-bold text-ink">
+                      {weekDates[i]}
+                    </div>
                   </div>
                 ))}
                 {TIMES.map((t) => (
@@ -203,24 +193,20 @@ export default function AttendeeInput({
                 ))}
               </div>
 
-              {/* 범례 */}
+              {/* 범례 — 셀과 같은 아이콘 */}
               <div className="mt-6 flex flex-wrap items-center gap-3 text-[13px] text-ink-soft">
-                <span className="flex items-center gap-1">
-                  <span className="h-2.5 w-2.5 rounded bg-block-ink" /> 불가{" "}
-                  {busyCount}
+                <span className="flex items-center gap-1 text-block-ink">
+                  <Icon name="x" size={14} /> 불가 {busyCount}
                 </span>
-                <span className="flex items-center gap-1">
-                  <span className="h-2.5 w-2.5 rounded bg-avoid-ink" /> 가능하면
-                  피해요 {softCount}
+                <span className="flex items-center gap-1 text-avoid-ink">
+                  <Icon name="triangle" size={12} filled /> 피하고 싶어요{" "}
+                  {softCount}
                 </span>
               </div>
             </div>
 
-            {/* CTA (고정 · 하단) — 하단 패딩 24 · CTA 높이 48 */}
+            {/* CTA (고정 · 하단) — 다크 primary(WCAG 통과). 중복 안내문 제거 */}
             <div className="shrink-0 border-t border-line-soft bg-white px-6 pb-6 pt-4">
-              <p className="mb-3 text-center text-[13px] font-normal text-ink-faint">
-                선택하지 않은 시간은 모두 '가능'으로 반영돼요.
-              </p>
               <button
                 onClick={submit}
                 className="h-12 w-full rounded-[10px] bg-ink text-[16px] font-bold text-white transition hover:bg-[#33291F]"
@@ -245,14 +231,9 @@ function GridRow({
   onCycle: (d: Day, t: TimeSlot) => void;
 }) {
   const styles: Record<CellKind, string> = {
-    free: "border-line bg-white text-ink-faint hover:border-sand-300",
-    busy: "border-block bg-block text-block-ink",
-    soft: "border-avoid bg-avoid text-avoid-ink",
-  };
-  const label: Record<CellKind, string> = {
-    free: "",
-    busy: "불가",
-    soft: "피해요",
+    free: "border-line bg-white hover:border-sand-300",
+    busy: "border-block bg-block text-block-ink", // 불가 = slate #EBE4DC + X
+    soft: "border-avoid bg-avoid text-avoid-ink", // 피하고 싶어요 = 앰버 #FBEDC8 + ▲
   };
   return (
     <>
@@ -266,9 +247,13 @@ function GridRow({
           <button
             key={k}
             onClick={() => onCycle(d, t)}
-            className={`flex h-12 items-center justify-center rounded-lg border text-[13px] font-bold transition ${styles[kind]}`}
+            aria-label={
+              kind === "busy" ? "불가" : kind === "soft" ? "피하고 싶어요" : "가능"
+            }
+            className={`flex h-12 items-center justify-center rounded-lg border transition ${styles[kind]}`}
           >
-            {label[kind]}
+            {kind === "busy" && <Icon name="x" size={18} />}
+            {kind === "soft" && <Icon name="triangle" size={15} filled />}
           </button>
         );
       })}
@@ -349,11 +334,11 @@ function Receipt({
           {echoLine(me)}
         </p>
         <div className="mt-1.5 flex items-center justify-center gap-2.5 text-[13px] text-ink-faint">
-          <span className="flex items-center gap-1">
-            <span className="h-2 w-2 rounded-[2px] bg-block-ink" /> 불가
+          <span className="flex items-center gap-1 text-block-ink">
+            <Icon name="x" size={13} /> 불가
           </span>
-          <span className="flex items-center gap-1">
-            <span className="h-2 w-2 rounded-[2px] bg-avoid-ink" /> 가능하면 피해요
+          <span className="flex items-center gap-1 text-avoid-ink">
+            <Icon name="triangle" size={11} filled /> 피하고 싶어요
           </span>
         </div>
       </div>

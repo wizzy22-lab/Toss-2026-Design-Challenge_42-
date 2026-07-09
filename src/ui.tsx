@@ -17,7 +17,8 @@ type IconName =
   | "menu"
   | "users"
   | "user"
-  | "info";
+  | "info"
+  | "triangle";
 
 const ICON_PATHS: Record<IconName, ReactNode> = {
   check: <polyline points="20 6 9 17 4 12" />,
@@ -78,6 +79,7 @@ const ICON_PATHS: Record<IconName, ReactNode> = {
       <path d="M12 16v-4M12 8h.01" />
     </>
   ),
+  triangle: <path d="M12 4 21 19H3z" />, // ▲ (filled 권장)
 };
 
 export function Icon({
