@@ -63,7 +63,7 @@ export default function Intro({
             onClick={onHost}
             className="mt-2 flex w-full items-center gap-3 rounded-2xl bg-ink px-4 py-3.5 text-left text-white transition hover:bg-[#33291F]"
           >
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-recommend text-[16px] font-bold text-brand-600">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-50 text-[16px] font-bold text-brand-600">
               가영
             </span>
             <div className="min-w-0">
@@ -79,7 +79,7 @@ export default function Intro({
           <button
             onClick={() => setShowAttendees((v) => !v)}
             aria-expanded={showAttendees}
-            className="mt-2.5 flex w-full items-center gap-3 rounded-2xl bg-[#F4EEE8] px-4 py-3.5 text-left transition hover:bg-[#F7F1EC]"
+            className="mt-2.5 flex w-full items-center gap-3 rounded-2xl bg-[#F4EEE8] px-4 py-3.5 text-left shadow-card transition hover:bg-[#F7F1EC]"
           >
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white text-ink-soft">
               <Icon name="users" size={18} />
