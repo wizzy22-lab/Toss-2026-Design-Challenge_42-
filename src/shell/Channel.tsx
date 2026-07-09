@@ -7,7 +7,6 @@ import {
   changeAnnounceLine,
   confirmedLine,
   requestLine,
-  tradeoffLine,
 } from "../copy";
 import { Badge, Icon, personAvatar } from "../ui";
 
@@ -95,13 +94,14 @@ function EphemeralMessage({
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">
           <span className="text-[13px] font-bold text-ink">42</span>
-          <span className="inline-flex items-center gap-1 rounded bg-slate-800 px-1.5 py-0.5 text-[13px] font-bold text-white">
-            나에게만 보여요
+          {/* '나에게만 보여요' = navy 배지 폐기 → eye 아이콘 + 웜뉴트럴 pill */}
+          <span className="inline-flex items-center gap-1 rounded-full bg-sand-100 px-2 py-0.5 text-[13px] font-semibold text-ink-soft">
+            <Icon name="eye" size={13} /> 나에게만 보여요
           </span>
           <span className="text-[13px] text-ink-faint">{time}</span>
         </div>
-        {/* 에페메럴 = 점선 테두리 + 살짝 인셋. 채널 공개 카드와 시각 구분 */}
-        <div className="mt-1.5 max-w-[560px] rounded-2xl border border-dashed border-sand-300 bg-sand-50/70 p-1.5">
+        {/* 에페메럴 = 점선 스트로크 폐기 → 은은한 틴트 면으로 구분(상태=스트로크 금지) */}
+        <div className="mt-2 max-w-[560px] rounded-2xl bg-sand-50 p-1.5">
           {children}
         </div>
       </div>
@@ -230,28 +230,28 @@ function EphemeralReco({
   onDecide: () => void;
   onDetails: () => void;
 }) {
-  const { derived } = useApp();
+  const { state, derived } = useApp();
   const best = derived.top[0];
-  // "다른 시간도 있어요" — 성립 후보 개수 (숨기지 않는다)
   const others = Math.max(0, derived.top.length - 1);
+  const roster = state.attendees.filter((a) => !a.excluded);
+  const hasOptional = roster.some((a) => !a.required);
+  const who = hasOptional ? "필수 참석자" : "다들"; // park: 선택 없으면 '다들'
 
-  // 필수 전원 되는 시간이 아예 없으면 — 정직하게 + 레버
+  // L3 — 성립 0(필수 전원 되는 시간 없음): 정직 + 조정 레버(변경 플로우 재사용)
   if (!best) {
     return (
-      <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-amber-200">
-        <div className="border-b border-line-soft bg-amber-50/70 px-4 py-3">
+      <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-avoid-ink/20">
+        <div className="border-b border-line-soft bg-avoid/60 px-4 py-3">
           <p className="text-[13px] font-bold tracking-[-0.01em] text-ink">
-            필수 참석자가 다 되는 시간이 없어요.
+            {who}가 모두 참석하는 시간은 없어요.
           </p>
           <p className="text-[13px] text-ink-soft">
-            지금 받은 응답으론 필수 참석자가 다 되는 시간이 없어요.
+            지금 받은 응답으론 다 되는 시간이 없어요 — 가장 가까운 시간으로
+            조정해볼까요?
           </p>
         </div>
         <div className="px-4 py-4">
-          <p className="text-[13px] font-semibold text-ink-soft">
-            이럴 땐 두 가지 레버가 있어요:
-          </p>
-          <div className="mt-2 flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2">
             <button
               onClick={onDetails}
               className="rounded-[10px] border border-edge px-3 py-2 text-[13px] font-bold text-ink-soft transition hover:bg-sand-50"
@@ -270,38 +270,45 @@ function EphemeralReco({
     );
   }
 
+  const perfect = best.softViolations === 0; // L1 여부
+  const avoidNames = best.softNames.map((n) => `${n}님`).join("·");
+
   return (
     <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-brand-100">
       <div className="border-b border-line-soft bg-gradient-to-r from-brand-50/80 to-white px-4 py-3">
         <p className="text-[13px] font-bold tracking-[-0.01em] text-ink">
-          6명 다 답했어요 — 추천 시간이에요
+          {roster.length}명 다 답했어요 — 추천 시간이에요
         </p>
+        {/* 긍정 프레임 (이중부정 폐기) */}
         <p className="text-[13px] text-ink-soft">
-          다들 편한 시간은 아니지만, 이 시간이 최선이에요.
+          {perfect
+            ? "다들 참석할 수 있는 시간이에요."
+            : `${who}는 모두 참석할 수 있어요.`}
         </p>
       </div>
 
       <div className="px-4 py-4">
-        {/* 최선 하나 크게 */}
         <div className="flex items-center gap-2.5">
           <span className="text-3xl font-bold tracking-[-0.01em] text-ink">
             {DAY_LABEL[best.day]} {timeLabel(best.time)}
           </span>
-          <Badge tone="emerald">필수 참석자 모두 가능</Badge>
+          {/* 시맨틱 success 태그(별도) */}
+          <Badge tone="emerald">{perfect ? "다들 가능" : `${who} 모두 가능`}</Badge>
         </div>
-        {/* 트레이드오프 투명 — 누가/왜 조금 불편한지 감추지 않음 */}
-        <p className="mt-1.5 text-[13px] font-semibold text-ink-soft">
-          {tradeoffLine(best)}
-        </p>
+        {/* WHY — L2에서만: 누가 피하고 싶어했는지(투명) */}
+        {!perfect && avoidNames && (
+          <p className="mt-2 text-[13px] font-semibold text-ink-soft">
+            {avoidNames}이 이 시간을 피하고 싶어 해요.
+          </p>
+        )}
 
-        <div className="mt-3.5 flex flex-wrap items-center gap-2">
+        <div className="mt-4 flex flex-wrap items-center gap-2">
           <button
             onClick={onDecide}
             className="rounded-[10px] bg-ink px-4 py-3 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
           >
             이 시간으로 정하기
           </button>
-          {/* 답은 하나, 선택권은 눈에 — 숨기지 않는다 */}
           <button
             onClick={onDetails}
             className="inline-flex items-center gap-1 rounded-[10px] px-3 py-3 text-[13px] font-bold text-brand-600 transition hover:bg-brand-50"
@@ -310,9 +317,7 @@ function EphemeralReco({
             <Icon name="arrow-right" size={16} />
           </button>
         </div>
-        <p className="mt-2 text-[13px] text-ink-faint">
-          정해야 채널에 공지돼요.
-        </p>
+        <p className="mt-2 text-[13px] text-ink-faint">정해야 채널에 공지돼요.</p>
       </div>
     </div>
   );
