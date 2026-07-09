@@ -122,30 +122,26 @@ export default function AttendeeInput({
             </p>
           </div>
         ) : (
-          <div className="shrink-0 px-6 pt-5">
-            <div className="flex items-start justify-between gap-2">
-              <div className="min-w-0">
-                {/* 뮤트 컨텍스트 한 줄 (기능적 "누가 주최해요" 문장 대신) */}
-                <p className="truncate text-[13px] font-normal text-ink-faint">
-                  {isSelfHost
-                    ? state.title
-                    : `주최 ${host.name} · ${state.title}`}
-                </p>
-                {/* H1 = 입력자의 할 일 + 이름 호명 */}
-                <h1 className="mt-1 text-2xl font-bold tracking-[-0.01em]">
-                  {isSelfHost
-                    ? "안 되는 시간만 알려주세요"
-                    : `${me.name}님, 안 되는 시간만 알려주세요`}
-                </h1>
-                {/* H1 → 보조문구 = 8 */}
-                <p className="mt-2 text-[13px] text-ink-soft">
-                  가능한 시간은 따로 선택하지 않아도 돼요.
-                </p>
-              </div>
-              {/* "캘린더에 일정이 없어요 · 직접 표시"는 우상단 태그로 한 번만 */}
+          <div className="shrink-0 px-6 pt-6">
+            {/* 아이브로(회의 제목) — H1과 4로 묶음 */}
+            <p className="truncate text-[13px] font-normal text-ink-faint">
+              {isSelfHost ? state.title : `주최 ${host.name} · ${state.title}`}
+            </p>
+            {/* H1 = 입력자의 할 일 */}
+            <h1 className="mt-1 text-2xl font-bold tracking-[-0.01em]">
+              {isSelfHost
+                ? "안 되는 시간만 알려주세요"
+                : `${me.name}님, 안 되는 시간만 알려주세요`}
+            </h1>
+            {/* H1 → 보조문구 = 8 */}
+            <p className="mt-2 text-[13px] text-ink-soft">
+              가능한 시간은 따로 선택하지 않아도 돼요.
+            </p>
+            {/* 연동 상태 — 우상단 플로트 대신 아래 왼쪽 칩(정렬·위계 정리) */}
+            <div className="mt-2">
               <Badge
                 tone={me.linked ? "emerald" : "amber"}
-                className="mt-0.5 shrink-0 !px-2 !py-0.5"
+                className="!px-2 !py-0.5"
               >
                 {me.linked ? "일정 자동" : "캘린더에 일정이 없어요 · 직접 표시"}
               </Badge>
@@ -161,31 +157,35 @@ export default function AttendeeInput({
           <>
             {/* 본문 (스크롤) — 보조문구 → 그리드 리듬 24 */}
             <div className="min-h-0 flex-1 overflow-y-auto px-6 pb-2 pt-6">
-              {/* 헬퍼 — 클릭 안내만(아이콘). H1과 중복되는 지시문 제거 */}
-              <div className="mb-4 flex flex-wrap items-center gap-x-1.5 gap-y-1 rounded-xl bg-sand-50 p-3 text-[13px] leading-relaxed text-ink-soft">
-                한 번 누르면
-                <span className="inline-flex items-center gap-1 font-bold text-block-ink">
-                  <Icon name="x" size={14} />불가
-                </span>
-                → 다시 누르면
-                <span className="inline-flex items-center gap-1 font-bold text-avoid-ink">
-                  <Icon name="triangle" size={12} filled />
-                  피하고 싶어요
-                </span>
-                → 다시 누르면 해제.
+              {/* 헬퍼 — 탭 사이클을 셀과 같은 색·아이콘 칩으로(가독성) */}
+              <div className="mb-4 rounded-xl bg-sand-50 p-3">
+                <p className="text-[13px] text-ink-soft">
+                  <b className="text-ink">탭할 때마다</b> 바뀌어요
+                </p>
+                <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[13px] font-bold">
+                  <span className="inline-flex items-center gap-1 rounded-md bg-block px-2 py-1 text-block-ink">
+                    <Icon name="x" size={13} /> 불가
+                  </span>
+                  <Icon name="arrow-right" size={13} className="text-ink-faint" />
+                  <span className="inline-flex items-center gap-1 rounded-md bg-avoid px-2 py-1 text-avoid-ink">
+                    <Icon name="triangle" size={11} filled /> 피하고 싶어요
+                  </span>
+                  <Icon name="arrow-right" size={13} className="text-ink-faint" />
+                  <span className="rounded-md border border-line px-2 py-1 text-ink-faint">
+                    해제
+                  </span>
+                </div>
               </div>
 
               {/* 그리드 셀 gap = 8 */}
               <div className="grid grid-cols-[36px_repeat(5,1fr)] sm:grid-cols-[44px_repeat(5,1fr)] gap-2">
                 <div />
                 {DAYS.map((d, i) => (
-                  <div key={d} className="pb-1 text-center leading-tight">
-                    <div className="text-[13px] font-bold text-ink-faint">
-                      {DAY_LABEL[d]}
-                    </div>
-                    <div className="text-[13px] font-bold text-ink">
-                      {weekDates[i]}
-                    </div>
+                  <div
+                    key={d}
+                    className="pb-1 text-center text-[13px] font-bold text-ink-faint"
+                  >
+                    {DAY_LABEL[d]} <span className="text-ink">{weekDates[i]}</span>
                   </div>
                 ))}
                 {TIMES.map((t) => (
@@ -321,7 +321,7 @@ function Receipt({
       </div>
       <h2 className="mt-4 text-xl font-bold">{me.name}님, 다 전했어요</h2>
       <p className="mt-1 text-[16px] text-ink-soft">
-        알려주신 시간이 회의 시간을 정하는 데 쓰여요. 시간이 정해지면 바로
+        이제 모두의 시간을 모아 회의 시간을 정하고 있어요. 정해지면 바로
         알려드릴게요.
       </p>
 
