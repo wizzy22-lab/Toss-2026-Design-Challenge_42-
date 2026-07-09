@@ -404,13 +404,7 @@ function ConfirmedAnnouncement({
           <p className="text-[13px] text-ink-faint">
             참석이 어려워지면 언제든 다시 조율할 수 있어요.
           </p>
-          <div className="mt-2 flex flex-wrap gap-2">
-            <button
-              onClick={onChangeEntry}
-              className="rounded-[10px] border border-edge px-3 py-1.5 text-[13px] font-bold text-ink-soft transition hover:bg-sand-50"
-            >
-              참석이 어려워요
-            </button>
+          <div className="mt-2">
             <button
               onClick={onChangeEntry}
               className="rounded-[10px] border border-edge px-3 py-1.5 text-[13px] font-bold text-ink-soft transition hover:bg-sand-50"
