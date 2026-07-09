@@ -103,7 +103,7 @@ export const INITIAL_ATTENDEES: Attendee[] = [
     id: "minyoung",
     name: "최민영",
     role: "데이터 분석가",
-    required: false, // 데이터 분석가 — 결정 회의엔 선택 참석이 자연스러움
+    required: true, // 기본은 6명 모두 필참
     linked: true,
     softAvoidLunch: false,
     softSlots: ["wed-14", "fri-15"], // 수14·금15 피하고 싶음
