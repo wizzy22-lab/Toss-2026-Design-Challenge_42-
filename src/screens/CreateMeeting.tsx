@@ -6,16 +6,8 @@ import DateRangePicker from "../components/DateRangePicker";
 import DeadlinePicker from "../components/DeadlinePicker";
 import Dropdown from "../components/Dropdown";
 
-// 소요시간 = 드롭다운 옵션 (기본 1시간)
-const DURATIONS = [
-  "30분",
-  "1시간",
-  "1시간 30분",
-  "2시간",
-  "2시간 30분",
-  "3시간",
-  "4시간",
-];
+// 소요시간 = 1시간 단위, 1~24시간 (기본 1시간)
+const DURATIONS = Array.from({ length: 24 }, (_, i) => `${i + 1}시간`);
 
 /** 섹션 라벨 — 전 섹션 동일 스타일(크기·굵기·아래 간격) */
 const LBL = "mb-2 block text-[16px] font-bold text-ink-soft";

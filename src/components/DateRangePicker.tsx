@@ -196,10 +196,6 @@ export default function DateRangePicker({
               );
             })}
           </div>
-          <p className="mt-2 text-[13px] text-ink-faint">
-            {tab === "start" ? "시작일" : "종료일"}을 눌러 정해요 · 평일만 · 현재{" "}
-            <span className="font-semibold text-brand-600">{fmtRange(start, end)}</span>
-          </p>
         </div>
       )}
     </div>
