@@ -64,8 +64,8 @@ export default function Intro({
             onClick={onHost}
             className="mt-2 flex w-full items-center gap-3 rounded-2xl bg-ink px-4 py-3.5 text-left text-white transition hover:bg-[#33291F]"
           >
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white text-ink-soft">
-              <Icon name="user" size={18} />
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white">
+              <Icon name="user" size={18} filled className="text-brand-600" />
             </span>
             <div className="min-w-0">
               <div className="text-[16px] font-bold">주최자로 보기 · 이가영</div>

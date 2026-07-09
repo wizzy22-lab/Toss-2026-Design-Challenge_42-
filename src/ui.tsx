@@ -77,18 +77,20 @@ export function Icon({
   name,
   size = 20,
   className = "",
+  filled = false,
 }: {
   name: IconName;
   size?: number;
   className?: string;
+  filled?: boolean; // 속 채움(예: 아바타 글리프) — currentColor로 fill
 }) {
   return (
     <svg
       width={size}
       height={size}
       viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
+      fill={filled ? "currentColor" : "none"}
+      stroke={filled ? "none" : "currentColor"}
       strokeWidth={1.75}
       strokeLinecap="round"
       strokeLinejoin="round"
