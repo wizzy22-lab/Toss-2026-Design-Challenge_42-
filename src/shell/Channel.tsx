@@ -364,55 +364,60 @@ function ConfirmedAnnouncement({
   r,
   showChangeEntry,
   onChangeEntry,
-  onCalendar,
   muted,
 }: {
   r: SlotResult;
   showChangeEntry: boolean;
   onChangeEntry: () => void;
-  onCalendar: () => void;
   muted?: boolean;
 }) {
-  const { state } = useApp();
   return (
     <div
       className={`overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-line/70 ${
         muted ? "opacity-70" : ""
       }`}
     >
-      <div className="flex items-center gap-2.5 px-4 py-4">
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ok text-lg text-ok-ink">
-          <Icon name="calendar-check" size={18} />
-        </span>
-        <div className="min-w-0">
-          <p className="text-[13px] font-bold text-ink">
-            회의가 정해졌어요 — {DAY_LABEL[r.day]} {timeLabel(r.time)}
-          </p>
+      <div className="px-4 py-4">
+        <div className="flex items-center gap-2.5">
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ok text-ok-ink">
+            <Icon name="calendar-check" size={18} />
+          </span>
+          <div className="min-w-0">
+            <p className="text-[13px] font-bold text-ink">회의가 정해졌어요.</p>
+            <p className="text-xl font-bold tracking-[-0.01em] text-ink">
+              {slotKorean(r.day, r.time)}
+            </p>
+          </div>
         </div>
-        {!muted && (
-          <AddToCalendarButton className="ml-auto shrink-0" onAdd={onCalendar} />
-        )}
-      </div>
-
-      {/* 배려 있는 확정 문구 — 누가 양보했는지 콕 집지 않고, 화상도 2등화 안 함 */}
-      <div className="border-t border-line-soft px-4 py-3">
-        <p className="text-[13px] leading-relaxed text-ink-soft">
-          {confirmedLine(state.title, slotKorean(r.day, r.time))}
+        {/* 캘린더 자동 추가 확인 */}
+        <p className="mt-2.5 inline-flex items-center gap-1 text-[13px] font-semibold text-ok-ink">
+          <Icon name="check" size={14} /> 캘린더에 추가됐어요.
+        </p>
+        <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">
+          다들 참석할 수 있는 시간으로 정했어요.
         </p>
       </div>
 
       {/* 빠져나갈 구멍은 항상 — 확정은 잠금이 아니다 */}
       {showChangeEntry && !muted && (
-        <div className="flex items-center gap-2 border-t border-line-soft bg-sand-50/70 px-4 py-3">
-          <span className="text-[13px] text-ink-faint">
-            참석이 어려워지면 언제든 바꿀 수 있어요.
-          </span>
-          <button
-            onClick={onChangeEntry}
-            className="ml-auto rounded-[10px] px-2.5 py-1.5 text-[13px] font-bold text-ink-faint transition hover:bg-sand-50 hover:text-brand-600"
-          >
-            참석 어려워요 / 시간 조정
-          </button>
+        <div className="border-t border-line-soft bg-sand-50/70 px-4 py-3">
+          <p className="text-[13px] text-ink-faint">
+            참석이 어려워지면 언제든 다시 조율할 수 있어요.
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            <button
+              onClick={onChangeEntry}
+              className="rounded-[10px] border border-edge px-3 py-1.5 text-[13px] font-bold text-ink-soft transition hover:bg-sand-50"
+            >
+              참석이 어려워요
+            </button>
+            <button
+              onClick={onChangeEntry}
+              className="rounded-[10px] border border-edge px-3 py-1.5 text-[13px] font-bold text-ink-soft transition hover:bg-sand-50"
+            >
+              시간 다시 정하기
+            </button>
+          </div>
         </div>
       )}
     </div>
@@ -797,7 +802,6 @@ export default function Channel({
             r={confirmedResult}
             showChangeEntry={!changed}
             onChangeEntry={onChangeEntry}
-            onCalendar={() => {}}
             muted={changing || changed}
           />
         </BotMessage>
