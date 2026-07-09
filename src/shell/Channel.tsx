@@ -9,7 +9,7 @@ import {
   requestLine,
   tradeoffLine,
 } from "../copy";
-import { Badge, Icon } from "../ui";
+import { Badge, Icon, personAvatar } from "../ui";
 
 /**
  * 채널 #커머스팀 타임라인 — 관점(주최자/참석자)에 따라 다르게 그린다.
@@ -30,7 +30,11 @@ function HumanMessage({
 }) {
   return (
     <div className="flex gap-2.5 px-1">
-      <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-sand-200 text-[13px] font-bold text-ink-soft">
+      <span
+        className={`mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-lg text-[13px] font-bold ${personAvatar(
+          name,
+        )}`}
+      >
         {name.slice(-2)}
       </span>
       <div className="min-w-0">
@@ -740,7 +744,7 @@ export default function Channel({
   const changed = state.lastChange !== null;
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-4 px-3 py-5 md:px-5">
+    <div className="flex max-w-3xl flex-col gap-4 px-4 py-5 md:px-6">
       {/* 채널 시작 안내 (정적) */}
       <div className="pb-1 text-center">
         <div className="mx-auto mb-2 grid h-11 w-11 place-items-center rounded-xl bg-sand-200 text-lg font-bold text-ink-soft">

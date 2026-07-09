@@ -102,6 +102,20 @@ export function Icon({
   );
 }
 
+// 사람별 아바타 컬러 — 연한 틴트 배경 + 같은 계열 진한 이니셜(전부 대비 ≥4.5, 조화·muted).
+// 색 단독 아님(이름도 함께 표시) → 1.4.1 OK. 배경 채팅에서 각자 구분되게.
+const PERSON_TINT: Record<string, string> = {
+  이가영: "bg-[#FFE7D6] text-[#B23A0E]", // 오렌지 5.04
+  윤지은: "bg-[#D2EDE8] text-[#0F6B60]", // 틸 5.17
+  박준호: "bg-[#DCE8FB] text-[#2A5AA6]", // 블루 5.46
+  정지훈: "bg-[#E9E1F6] text-[#6A3D9E]", // 퍼플 5.97
+  최민영: "bg-[#DCEFDE] text-[#22662C]", // 그린 5.81
+  한소희: "bg-[#FBDED7] text-[#B23A2C]", // 코랄 4.68
+};
+export function personAvatar(name: string): string {
+  return PERSON_TINT[name] ?? "bg-sand-200 text-ink-soft";
+}
+
 /** 참석 가능/불가 이진 표식 (대면 전용 — 참석 방식 개념 없음) */
 export function AvailPill({ available }: { available: boolean }) {
   return available ? (
