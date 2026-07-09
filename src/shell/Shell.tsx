@@ -210,12 +210,9 @@ function DemoSwitcher({
 
   // 3그룹: 정체성(좌) │ 상태(중앙) │ 컨트롤(우). dots 제거(1/N과 중복). 바 패딩 12·20, 그룹 간 16(hairline).
   return (
-    <div className="ml-auto flex items-center gap-4 rounded-xl border border-white/10 bg-[#2C2C2A] px-5 py-3 text-[13px]">
-      {/* 정체성 (좌) — 아이콘↔텍스트 6 */}
-      <span className="flex items-center gap-1.5 font-bold text-white/85">
-        <Icon name="play" size={12} className="text-brand-500" />
-        42 Demo
-      </span>
+    <div className="ml-auto flex items-center gap-4 rounded-xl border border-white/10 bg-[#2C2C2A] px-4 py-1.5 text-[13px]">
+      {/* 정체성 (좌) — ▶ 아이콘 제거, 텍스트만 */}
+      <span className="font-bold text-white/85">42 Demo</span>
 
       {/* hairline (정체성↔상태, 좌우 16 = 바 gap-4) */}
       <span className="h-4 w-px shrink-0 bg-white/15" />
@@ -246,7 +243,7 @@ function DemoSwitcher({
         {next && (
           <button
             onClick={() => onDemo(next.to)}
-            className="demo-next-pulse inline-flex items-center gap-1.5 rounded-lg bg-brand-600 px-[14px] py-[7px] font-bold text-white transition hover:bg-brand-700"
+            className="demo-next-pulse inline-flex items-center gap-1.5 rounded-lg bg-brand-600 px-3 py-1 font-bold text-white transition hover:bg-brand-700"
           >
             {next.label}
             <Icon name="arrow-right" size={14} />
@@ -254,7 +251,7 @@ function DemoSwitcher({
         )}
         <button
           onClick={onRestart}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-[14px] py-[7px] font-semibold text-white/80 transition-colors hover:bg-white/[0.18] hover:text-white"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1 font-semibold text-white/80 transition-colors hover:bg-white/[0.18] hover:text-white"
         >
           <Icon name="rotate-ccw" size={14} />
           처음부터
