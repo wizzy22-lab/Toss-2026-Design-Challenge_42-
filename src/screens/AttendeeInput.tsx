@@ -164,8 +164,7 @@ export default function AttendeeInput({
                 {me.linked && (
                   <p className="mb-2 text-[13px] leading-relaxed text-ink-soft">
                     <b className="text-ink">
-                      {isSelfHost ? "내 캘린더" : `${me.name}님의 캘린더`}를
-                      불러왔어요.
+                      {me.name}님의 캘린더를 불러왔어요.
                     </b>{" "}
                     안 되는 시간만 확인하고 필요한 곳만 수정해주세요.
                   </p>
