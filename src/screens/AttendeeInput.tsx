@@ -134,15 +134,14 @@ export default function AttendeeInput({
             <p className="mt-2 text-[13px] text-ink-soft">
               가능한 시간은 따로 선택하지 않아도 돼요.
             </p>
-            {/* 연동 상태 — 우상단 플로트 대신 아래 왼쪽 칩(정렬·위계 정리) */}
-            <div className="mt-2">
-              <Badge
-                tone={me.linked ? "emerald" : "amber"}
-                className="!px-2 !py-0.5"
-              >
-                {me.linked ? "일정 자동" : "캘린더에 일정이 없어요 · 직접 표시"}
-              </Badge>
-            </div>
+            {/* '일정 자동' 태그 삭제(연동자는 헬퍼 문구가 대신). 미연동자 '직접 표시'만 유지 */}
+            {!me.linked && (
+              <div className="mt-2">
+                <Badge tone="amber" className="!px-2 !py-0.5">
+                  캘린더에 일정이 없어요 · 직접 표시
+                </Badge>
+              </div>
+            )}
           </div>
         )}
 
@@ -159,7 +158,8 @@ export default function AttendeeInput({
                 {me.linked && (
                   <p className="mb-2 text-[13px] leading-relaxed text-ink-soft">
                     <b className="text-ink">
-                      {isSelfHost ? "내" : `${me.name}님`} 캘린더를 불러왔어요.
+                      {isSelfHost ? "내 캘린더" : `${me.name}님의 캘린더`}를
+                      불러왔어요.
                     </b>{" "}
                     안 되는 시간만 확인하고 필요한 곳만 수정해주세요.
                   </p>
