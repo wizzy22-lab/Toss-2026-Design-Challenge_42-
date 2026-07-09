@@ -16,7 +16,8 @@ type IconName =
   | "link"
   | "menu"
   | "users"
-  | "user";
+  | "user"
+  | "info";
 
 const ICON_PATHS: Record<IconName, ReactNode> = {
   check: <polyline points="20 6 9 17 4 12" />,
@@ -69,6 +70,12 @@ const ICON_PATHS: Record<IconName, ReactNode> = {
     <>
       <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
       <circle cx="12" cy="7" r="4" />
+    </>
+  ),
+  info: (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 16v-4M12 8h.01" />
     </>
   ),
 };

@@ -14,9 +14,9 @@ export default function DeadlinePicker({
     () => Array.from({ length: 14 }, (_, i) => fmtDay(addDays(today, i + 1))),
     [today],
   );
-  // 시간 = 09:00~22:00, 30분 단위 (24시간제)
+  // 시간 = 09:00~22:00, 1시간 단위 (24시간제)
   const timeOptions = useMemo(
-    () => Array.from({ length: 27 }, (_, i) => fmtTime24(9 * 60 + i * 30)),
+    () => Array.from({ length: 14 }, (_, i) => fmtTime24((9 + i) * 60)),
     [],
   );
   const [day, setDay] = useState(dayOptions[2]); // 기본 = 3일 뒤

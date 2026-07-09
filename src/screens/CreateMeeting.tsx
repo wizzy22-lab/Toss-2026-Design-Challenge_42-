@@ -26,6 +26,7 @@ export default function CreateMeeting({
   const [duration, setDuration] = useState<string | null>("1시간"); // 기본 1시간
   const [, setDeadlineLabel] = useState(""); // 응답 마감 조합 라벨(저마찰·기본값 있음)
   const [showInvite, setShowInvite] = useState(false);
+  const [showInfo, setShowInfo] = useState(false); // '필참이란?' 안내
   const [invite, setInvite] = useState("");
   const [attempted, setAttempted] = useState(false); // 제출 시도(인라인 에러 표시)
   const [toast, setToast] = useState<string | null>(null);
@@ -164,10 +165,25 @@ export default function CreateMeeting({
           {/* 참석자 — 2열 그리드로 한눈에 (스크롤 X) */}
           <div className="mt-6">
             <label className={LBL}>참석자 {included.length}명</label>
-            <p className="mb-2 text-[13px] text-ink-faint">
-              #커머스팀 인원을 자동으로 넣었어요. 토글로 <b>필참</b> 여부를
-              정하고, 무관하면 <b>X</b>로 빼요.
-            </p>
+            <div className="mb-2">
+              <p className="text-[13px] text-ink-faint">
+                기본은 모두 <b className="text-brand-600">필참</b>이에요. 필요하면
+                바꿔주세요.
+              </p>
+              <button
+                type="button"
+                onClick={() => setShowInfo((v) => !v)}
+                aria-expanded={showInfo}
+                className="mt-1 inline-flex items-center gap-1 text-[13px] font-semibold text-brand-600"
+              >
+                <Icon name="info" size={14} /> 필참이란?
+              </button>
+              {showInfo && (
+                <p className="mt-1 rounded-lg bg-brand-50 px-2.5 py-1.5 text-[13px] leading-relaxed text-ink-soft">
+                  필참은 모두 참석할 수 있는 시간으로 회의를 추천해드려요.
+                </p>
+              )}
+            </div>
             <div className="grid grid-cols-1 items-start gap-2 sm:grid-cols-2">
               {included.map((a) => (
                 <div
