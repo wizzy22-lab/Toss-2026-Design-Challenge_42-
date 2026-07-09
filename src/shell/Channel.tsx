@@ -3,12 +3,9 @@ import { motion } from "framer-motion";
 import { useApp } from "../store";
 import { DAY_LABEL, slotKorean, timeLabel } from "../data";
 import { parseKey, type SlotResult } from "../engine";
-import {
-  changeAnnounceLine,
-  confirmedLine,
-  requestLine,
-} from "../copy";
+import { changeAnnounceLine, confirmedLine } from "../copy";
 import { Badge, Icon, personAvatar } from "../ui";
+import { addDays, atMidnight, mondayOfWeek, wd } from "../lib/date";
 
 /**
  * 채널 #커머스팀 타임라인 — 관점(주최자/참석자)에 따라 다르게 그린다.
@@ -618,17 +615,53 @@ function ReceivedRequest({ onRespond }: { onRespond: () => void }) {
   const roster = state.attendees.filter((a) => !a.excluded);
   const allIn = roster.every((a) => state.responded.includes(a.id));
 
+  // 상대표현 + 실제 날짜 병기 · 응답 마감(이번 주 금요일)
+  const today = atMidnight(new Date());
+  const nextMon = addDays(mondayOfWeek(today), 7);
+  const nextFri = addDays(nextMon, 4);
+  const md = (d: Date) => `${d.getMonth() + 1}/${d.getDate()}`;
+  const hasDate = /\d/.test(state.rangeLabel);
+  const rangeText = hasDate
+    ? state.rangeLabel
+    : `${state.rangeLabel} (${md(nextMon)}–${nextFri.getDate()})`;
+  const deadline = addDays(mondayOfWeek(today), 4); // 이번 주 금
+
   return (
     <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-brand-100">
       <div className="px-4 py-4">
-        <p className="text-[16px] font-bold leading-relaxed text-ink">
-          {requestLine(host.name, state.title)}
-        </p>
-        <p className="mt-1 text-[13px] text-ink-faint">
-          {state.durationLabel} · {state.rangeLabel}
-        </p>
+        {/* 상단: [콘텐츠 | 응답하기] — CTA를 우측 액션 존에 분리 */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            {/* Primary: 회의명 + 할 일 */}
+            <p className="text-[16px] font-bold leading-snug text-ink">
+              {state.title}
+            </p>
+            <p className="text-[16px] font-bold leading-snug text-ink">
+              안 되는 시간만 알려주세요
+            </p>
+            {/* 또렷한 시간·날짜 (뮤트 X) */}
+            <p className="mt-1.5 text-[13px] font-semibold text-ink-soft">
+              {state.durationLabel} · {rangeText}
+            </p>
+            {/* 작은 보조: 주최자 + 응답 마감 */}
+            <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[13px] text-ink-faint">
+              <span>주최자 {host.name}</span>
+              <span className="inline-flex items-center gap-1 rounded-full bg-sand-100 px-2 py-0.5 font-semibold text-ink-soft">
+                {md(deadline)}({wd(deadline)})까지 응답
+              </span>
+            </div>
+          </div>
+          {!iResponded && (
+            <button
+              onClick={onRespond}
+              className="shrink-0 rounded-[10px] bg-ink px-4 py-3 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
+            >
+              응답하기
+            </button>
+          )}
+        </div>
 
-        {iResponded ? (
+        {iResponded && (
           <div className="mt-3 rounded-xl bg-ok px-3 py-3 text-[13px] font-semibold text-ok-ink">
             <Icon
               name="check"
@@ -640,87 +673,12 @@ function ReceivedRequest({ onRespond }: { onRespond: () => void }) {
               ? "주최자가 시간을 정하는 중이에요."
               : "나머지 참석자를 기다리는 중이에요."}
           </div>
-        ) : (
-          <div className="mt-3 flex items-center gap-2">
-            <button
-              onClick={onRespond}
-              className="rounded-[10px] bg-ink px-4 py-3 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
-            >
-              응답하기
-            </button>
-            <span className="text-[13px] text-ink-faint">
-              가능한 시간은 따로 선택하지 않아도 돼요.
-            </span>
-          </div>
         )}
       </div>
 
-      {/* 응답 현황 — 참석자도 팀 전체 공개 상태를 봄 (같은 데이터, 표면만 다름) */}
+      {/* 구분선 / 진행 — 응답 현황(1/6→6/6 자동 체이닝의 한 프레임) */}
       <div className="border-t border-line-soft px-4 py-3">
         <ResponseRoster />
-      </div>
-    </div>
-  );
-}
-
-/* ---------- 참석자 수신: ⓑ 확정 공지 받은 상태 ---------- */
-function ReceivedConfirmed({
-  r,
-  onChangeEntry,
-}: {
-  r: SlotResult;
-  onChangeEntry: () => void;
-}) {
-  const { state } = useApp();
-  const me = state.attendees.find((a) => a.id === state.activeAttendeeId)!;
-  const myState = r.states.find((s) => s.attendee.id === me.id);
-  const raised = state.change?.attendeeId === me.id;
-
-  return (
-    <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-line/70">
-      <div className="flex items-center gap-2.5 px-4 py-4">
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ok text-lg text-ok-ink">
-          <Icon name="calendar-check" size={18} />
-        </span>
-        <div className="min-w-0">
-          <p className="text-[13px] font-bold text-ink">
-            {DAY_LABEL[r.day]} {timeLabel(r.time)}로 정해졌어요
-          </p>
-        </div>
-        {myState && (
-          <span
-            className={`ml-auto shrink-0 rounded-full px-2 py-0.5 text-[13px] font-semibold ring-1 ring-inset ${
-              myState.available
-                ? "bg-ok text-ok-ink ring-ok-ink/20"
-                : "bg-block text-block-ink ring-block-ink/15"
-            }`}
-          >
-            {myState.available ? "참석 가능" : "이 시간은 어려워요"}
-          </span>
-        )}
-      </div>
-      <div className="border-t border-line-soft px-4 py-3">
-        <p className="text-[13px] leading-relaxed text-ink-soft">
-          {confirmedLine(state.title, slotKorean(r.day, r.time))}
-        </p>
-      </div>
-
-      {/* 두 액션 한 줄 — 참석 어려워요(부·좌, escape hatch 상시)
-          ··· 캘린더에 추가(주·우, 전진/확정 관례 + 균형). */}
-      <div className="flex items-center gap-2 border-t border-line-soft bg-sand-50/70 px-4 py-3">
-        {raised ? (
-          <span className="text-[13px] font-semibold text-brand-600">
-            조정 요청을 보냈어요 · 주최자가 조율 중이에요.
-          </span>
-        ) : (
-          <button
-            onClick={onChangeEntry}
-            className="rounded-[10px] px-2.5 py-1.5 text-[13px] font-bold text-ink-faint transition hover:bg-sand-50 hover:text-brand-600"
-          >
-            참석 어려워요
-          </button>
-        )}
-        <AddToCalendarButton className="ml-auto" />
       </div>
     </div>
   );
@@ -812,14 +770,21 @@ export default function Channel({
       )}
 
       {/* ===== 참석자 수신 관점 ===== */}
-      {!isHost && sent && !confirmed && !changed && (
+      {/* 요청 카드는 확정돼도 사라지지 않고 남고, 확정 카드가 아래에 추가로 뜬다(타임라인) */}
+      {!isHost && sent && !changed && (
         <BotMessage time="오전 9:46">
           <ReceivedRequest onRespond={onRespond} />
         </BotMessage>
       )}
       {!isHost && confirmedResult && (
         <BotMessage time="오전 10:03">
-          <ReceivedConfirmed r={confirmedResult} onChangeEntry={onChangeEntry} />
+          {/* 확정 카드 = 주최자 뷰와 동일(ConfirmedAnnouncement 재사용) */}
+          <ConfirmedAnnouncement
+            r={confirmedResult}
+            showChangeEntry={!changed}
+            onChangeEntry={onChangeEntry}
+            muted={changing || changed}
+          />
         </BotMessage>
       )}
       {!isHost && changed && (

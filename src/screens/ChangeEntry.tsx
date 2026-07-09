@@ -26,8 +26,12 @@ export default function ChangeEntry({
       ? state.attendees.find((a) => a.id !== "gayoung")?.id ?? roster[0].id
       : state.activeAttendeeId,
   );
-  // 고른 것: 대안 슬롯 key 또는 "drop"(선택자 불참). null이면 CTA 비활성.
-  const [choice, setChoice] = useState<string | null>(null);
+  // 고른 것(복수선택): 대안 슬롯 key들 · "drop"(선택자 불참). 비면 CTA 비활성.
+  const [choices, setChoices] = useState<string[]>([]);
+  const toggle = (key: string) =>
+    setChoices((c) =>
+      c.includes(key) ? c.filter((x) => x !== key) : [...c, key],
+    );
 
   const slot = useMemo(
     () => (state.confirmedKey ? parseKey(state.confirmedKey) : null),
@@ -53,7 +57,7 @@ export default function ChangeEntry({
   // who가 바뀌면(주최자 select) 선택 초기화
   const pickWho = (id: string) => {
     setWho(id);
-    setChoice(null);
+    setChoices([]);
   };
 
   // 제안/불참 모두 주최자에게 올림 — 최종 결정은 주최자 (재조율 카드에서).
@@ -68,13 +72,14 @@ export default function ChangeEntry({
         ? "border-brand-400 bg-brand-50 ring-1 ring-brand-100"
         : "border-line hover:border-sand-300"
     }`;
-  const radio = (on: boolean) => (
+  // 복수선택 = 체크박스(사각)
+  const checkbox = (on: boolean) => (
     <span
-      className={`grid h-4 w-4 shrink-0 place-items-center rounded-full border ${
+      className={`grid h-4 w-4 shrink-0 place-items-center rounded-[5px] border ${
         on ? "border-brand-600 bg-brand-600 text-white" : "border-sand-300"
       }`}
     >
-      {on && <span className="text-[9px] leading-none">✓</span>}
+      {on && <Icon name="check" size={11} />}
     </span>
   );
 
@@ -169,14 +174,14 @@ export default function ChangeEntry({
 
                 {/* 대안 시간 Top 2~3 (다들 되는 시간) */}
                 {alternatives.map((r) => {
-                  const on = choice === r.key;
+                  const on = choices.includes(r.key);
                   return (
                     <button
                       key={r.key}
-                      onClick={() => setChoice(r.key)}
+                      onClick={() => toggle(r.key)}
                       className={optClass(on)}
                     >
-                      {radio(on)}
+                      {checkbox(on)}
                       <span className="text-[13px] font-bold text-ink">
                         {DAY_LABEL[r.day]} {timeLabel(r.time)}
                       </span>
@@ -190,10 +195,10 @@ export default function ChangeEntry({
                 {/* 선택 참석자 — 불참 허용 */}
                 {!whoRequired && (
                   <button
-                    onClick={() => setChoice("drop")}
-                    className={optClass(choice === "drop")}
+                    onClick={() => toggle("drop")}
+                    className={optClass(choices.includes("drop"))}
                   >
-                    {radio(choice === "drop")}
+                    {checkbox(choices.includes("drop"))}
                     <span className="text-[13px] font-bold text-ink">
                       나 없이 진행해도 괜찮아요
                     </span>
@@ -207,12 +212,14 @@ export default function ChangeEntry({
               {/* 주 CTA */}
               <button
                 onClick={submit}
-                disabled={choice === null}
+                disabled={choices.length === 0}
                 className="mt-5 w-full rounded-[10px] bg-ink py-3 text-[16px] font-bold text-white transition hover:bg-[#33291F] disabled:cursor-not-allowed disabled:bg-sand-200 disabled:text-ink-faint"
               >
-                {choice === "drop"
+                {choices.length === 1 && choices[0] === "drop"
                   ? "나 없이 진행하도록 알리기"
-                  : "이 시간을 주최자에게 제안하기"}
+                  : `이 시간${
+                      choices.filter((c) => c !== "drop").length > 1 ? "들" : ""
+                    }을 주최자에게 제안하기`}
               </button>
 
               {/* DM — 구조화 제안 대신 개인적으로 알리고 싶을 때 */}
