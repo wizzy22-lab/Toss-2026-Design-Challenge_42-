@@ -628,41 +628,27 @@ function ReceivedRequest({ onRespond }: { onRespond: () => void }) {
 
   return (
     <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-brand-100">
-      <div className="px-4 py-4">
-        {/* 상단: [콘텐츠 | 응답하기] — CTA를 우측 액션 존에 분리 */}
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            {/* Primary: 회의명 + 할 일 */}
-            <p className="text-[16px] font-bold leading-snug text-ink">
-              {state.title}
-            </p>
-            <p className="text-[16px] font-bold leading-snug text-ink">
-              안 되는 시간만 알려주세요
-            </p>
-            {/* 또렷한 시간·날짜 (뮤트 X) */}
-            <p className="mt-1.5 text-[13px] font-semibold text-ink-soft">
-              {state.durationLabel} · {rangeText}
-            </p>
-            {/* 작은 보조: 주최자 + 응답 마감 */}
-            <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[13px] text-ink-faint">
-              <span>주최자 {host.name}</span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-sand-100 px-2 py-0.5 font-semibold text-ink-soft">
-                {md(deadline)}({wd(deadline)})까지 응답
-              </span>
-            </div>
-          </div>
-          {!iResponded && (
-            <button
-              onClick={onRespond}
-              className="shrink-0 rounded-[10px] bg-ink px-4 py-3 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
-            >
-              응답하기
-            </button>
-          )}
+      {/* 헤더 — 주최자 뷰(RequestProgress)와 동일한 제목 표기 */}
+      <div className="border-b border-line-soft px-4 py-3">
+        <div className="flex items-center gap-2">
+          <span className="text-[13px] font-bold tracking-[-0.01em] text-ink">
+            회의 시간 요청
+          </span>
+          <Badge tone="slate" className="!px-2 !py-0.5">
+            참석자 {roster.length}명
+          </Badge>
         </div>
+        <p className="mt-1 text-[13px] font-bold text-ink">{state.title}</p>
+        <p className="text-[13px] text-ink-faint">
+          {state.durationLabel} · {rangeText} · 주최 {host.name} ·{" "}
+          {md(deadline)}({wd(deadline)})까지
+        </p>
+      </div>
 
+      {/* 진행 — 응답 현황(1/6→6/6 자동 체이닝의 한 프레임) + 응답 완료 상태 */}
+      <div className="px-4 py-3">
         {iResponded && (
-          <div className="mt-3 rounded-xl bg-ok px-3 py-3 text-[13px] font-semibold text-ok-ink">
+          <div className="mb-3 rounded-xl bg-ok px-3 py-3 text-[13px] font-semibold text-ok-ink">
             <Icon
               name="check"
               size={14}
@@ -674,12 +660,20 @@ function ReceivedRequest({ onRespond }: { onRespond: () => void }) {
               : "나머지 참석자를 기다리는 중이에요."}
           </div>
         )}
-      </div>
-
-      {/* 구분선 / 진행 — 응답 현황(1/6→6/6 자동 체이닝의 한 프레임) */}
-      <div className="border-t border-line-soft px-4 py-3">
         <ResponseRoster />
       </div>
+
+      {/* 응답하기 = 카드 최하단 풀폭 다크 primary */}
+      {!iResponded && (
+        <div className="border-t border-line-soft px-4 py-3">
+          <button
+            onClick={onRespond}
+            className="w-full rounded-[10px] bg-ink py-3 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
+          >
+            응답하기
+          </button>
+        </div>
+      )}
     </div>
   );
 }
