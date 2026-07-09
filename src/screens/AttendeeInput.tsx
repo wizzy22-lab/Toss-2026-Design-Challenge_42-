@@ -102,7 +102,7 @@ export default function AttendeeInput({
         {/* 헤더 (고정) — 신호등 dot·역할 스위처 제거(역할 전환은 Demo 바에서만) */}
         <div className="flex shrink-0 items-center border-b border-line-soft px-4 py-2.5">
           <span className="text-[13px] font-semibold text-ink-faint">
-            42 · 회의 시간 응답
+            회의 시간 응답
           </span>
           <button
             onClick={onClose}
