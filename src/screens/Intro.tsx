@@ -58,13 +58,14 @@ export default function Intro({
             어느 입장에서 볼까요?
           </p>
 
-          {/* ① 주최자 — 다크 fill 카드. 아바타는 오렌지-틴트로 다크 위에서 pop */}
+          {/* ① 주최자 — 다크 fill 카드. 아바타 = 1인 person 글리프(참석자=그룹과 같은 패밀리).
+              정체성 '이가영'은 타이틀이 전달 → 아바타로 중복 안 함. 차이는 카드 톤으로만 */}
           <button
             onClick={onHost}
             className="mt-2 flex w-full items-center gap-3 rounded-2xl bg-ink px-4 py-3.5 text-left text-white transition hover:bg-[#33291F]"
           >
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-50 text-[16px] font-bold text-brand-600">
-              가영
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white text-ink-soft">
+              <Icon name="user" size={18} />
             </span>
             <div className="min-w-0">
               <div className="text-[16px] font-bold">주최자로 보기 · 이가영</div>
@@ -85,10 +86,8 @@ export default function Intro({
               <Icon name="users" size={18} />
             </span>
             <div className="min-w-0">
-              {/* 라벨 — 18·600·primary (주최자 프롬프트와 같은 급) */}
-              <div className="text-[18px] font-semibold text-ink">
-                참석자로 보기
-              </div>
+              {/* 라벨 — 주최자 카드 타이틀과 동일 급(16·700)으로 두 카드 높이 일치 */}
+              <div className="text-[16px] font-bold text-ink">참석자로 보기</div>
               <div className="text-[13px] text-ink-faint">
                 사람마다 상황이 달라요
               </div>
@@ -114,9 +113,9 @@ export default function Intro({
                 <button
                   key={a.id}
                   onClick={() => onAttendee(a.id)}
-                  className="flex w-full items-center gap-3 rounded-xl border border-line px-3 py-2.5 text-left transition hover:border-edge hover:bg-sand-50"
+                  className="flex w-full items-center gap-3 rounded-xl bg-sand-100 px-3 py-2.5 text-left transition hover:bg-[#F5EDE5]"
                 >
-                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-sand-100 text-[13px] font-bold text-ink-soft">
+                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white text-[13px] font-bold text-ink-soft">
                     {a.name.slice(-2)}
                   </span>
                   <span className="text-[16px] font-bold text-ink">
