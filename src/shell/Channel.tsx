@@ -302,19 +302,20 @@ function EphemeralReco({
           </p>
         )}
 
-        <div className="mt-4 flex flex-wrap items-center gap-2">
-          <button
-            onClick={onDetails}
-            className="inline-flex items-center gap-1 rounded-[10px] px-3 py-3 text-[13px] font-bold text-brand-600 transition hover:bg-brand-50"
-          >
-            다른 시간 보기{others > 0 ? ` (${others})` : ""}
-            <Icon name="arrow-right" size={16} />
-          </button>
+        {/* 액션 상하 배치 — 위=이걸 하세요(primary), 아래=아니면 대안(secondary 링크) */}
+        <div className="mt-4 flex flex-col items-start gap-1.5">
           <button
             onClick={onDecide}
-            className="rounded-[10px] bg-ink px-4 py-3 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
+            className="rounded-[10px] bg-ink px-5 py-3 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
           >
             이 시간으로 정하기
+          </button>
+          <button
+            onClick={onDetails}
+            className="inline-flex items-center gap-1 rounded-[10px] px-2.5 py-1.5 text-[13px] font-bold text-brand-600 transition hover:bg-brand-50"
+          >
+            다른 시간도 있어요{others > 0 ? ` (${others})` : ""}
+            <Icon name="arrow-right" size={16} />
           </button>
         </div>
         <p className="mt-2 text-[13px] text-ink-faint">
