@@ -157,7 +157,7 @@ export default function CreateMeeting({
               <label className={LBL}>응답 마감</label>
               <DeadlinePicker onChange={setDeadlineLabel} />
               <p className="mt-1.5 text-[13px] text-ink-faint">
-                이때까지 참석자가 안 되는 시간을 알려줘요.
+                이때까지 참석자가 안 되는 시간을 알려주세요.
               </p>
             </div>
           </div>
