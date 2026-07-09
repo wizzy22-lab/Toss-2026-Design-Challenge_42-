@@ -15,6 +15,13 @@ const ATTENDEES: { id: string; name: string; tag: string }[] = [
   { id: "sohee", name: "한소희", tag: "외근" },
 ];
 
+// 상황 라벨 → 상태색 매핑(스케줄링 색 언어 프리뷰). 색은 텍스트 라벨의 보강(1.4.1).
+function tagTone(tag: string): string {
+  if (tag === "일정 적은 편") return "bg-ok text-ok-ink"; // 여유·가능(그린)
+  if (tag === "외근") return "bg-block text-block-ink"; // 불가·중립
+  return "bg-avoid text-avoid-ink"; // 회의 많음·점심 직후 피함 = 피해요(앰버)
+}
+
 export default function Intro({
   onHost,
   onAttendee,
@@ -121,8 +128,12 @@ export default function Intro({
                   <span className="text-[16px] font-bold text-ink">
                     {a.name}
                   </span>
-                  {/* 상황 태그 = 뮤트(대비 유지): #F1ECE7 / #726A61 */}
-                  <span className="ml-auto rounded-full bg-wait px-2.5 py-1 text-[13px] font-semibold text-wait-ink">
+                  {/* 상황 태그 = 시맨틱 색 매핑(가능/피해요/불가) + shadow-sm로 행과 분리 */}
+                  <span
+                    className={`ml-auto rounded-full px-2.5 py-1 text-[13px] font-semibold shadow-sm ${tagTone(
+                      a.tag,
+                    )}`}
+                  >
                     {a.tag}
                   </span>
                 </button>
