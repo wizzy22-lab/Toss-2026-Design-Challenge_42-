@@ -116,38 +116,13 @@ export default function AttendeeInput({
           </button>
         </div>
 
-        {/* 맥락 헤더 (고정) — 응답 중엔 주최 안내가 주인공,
-            완료 화면에선 맥락이라 회의 제목만 작게·뮤트로 강등. */}
-        {submitted ? (
+        {/* 완료 화면만 상단 제목 고정. 응답 중 맥락 헤더는 본문 스크롤 안으로 이동
+            → 앱바·CTA만 고정, 헤더가 스크롤돼 그리드 공간 확보 */}
+        {submitted && (
           <div className="shrink-0 px-6 pt-5">
             <p className="text-[13px] font-semibold text-ink-faint">
               {state.title}
             </p>
-          </div>
-        ) : (
-          <div className="shrink-0 px-6 pt-6">
-            {/* 아이브로(회의 제목) — H1과 4로 묶음 */}
-            <p className="truncate text-[13px] font-normal text-ink-faint">
-              {isSelfHost ? state.title : `주최 ${host.name} · ${state.title}`}
-            </p>
-            {/* H1 = 입력자의 할 일 */}
-            <h1 className="mt-1 text-2xl font-bold tracking-[-0.01em]">
-              {isSelfHost
-                ? "안 되는 시간만 알려주세요"
-                : `${me.name}님, 안 되는 시간만 알려주세요`}
-            </h1>
-            {/* H1 → 보조문구 = 8 */}
-            <p className="mt-2 text-[13px] text-ink-soft">
-              가능한 시간은 따로 선택하지 않아도 돼요.
-            </p>
-            {/* '일정 자동' 태그 삭제(연동자는 헬퍼 문구가 대신). 미연동자 '직접 표시'만 유지 */}
-            {!me.linked && (
-              <div className="mt-2">
-                <Badge tone="amber" className="!px-2 !py-0.5">
-                  캘린더에 일정이 없어요 · 직접 표시
-                </Badge>
-              </div>
-            )}
           </div>
         )}
 
@@ -157,10 +132,30 @@ export default function AttendeeInput({
           </div>
         ) : (
           <>
-            {/* 본문 (스크롤) — 보조문구 → 그리드 리듬 24 */}
+            {/* 본문 (스크롤) — 맥락 헤더 + 헬퍼 + 그리드 함께 스크롤 */}
             <div className="min-h-0 flex-1 overflow-y-auto px-6 pb-2 pt-6">
-              {/* 헬퍼 — (연동자) 캘린더 안내 + 탭 사이클 칩 */}
-              <div className="mb-4 rounded-xl bg-sand-50 p-3">
+              {/* 맥락 헤더 (스크롤) */}
+              <p className="truncate text-[13px] font-normal text-ink-faint">
+                {isSelfHost ? state.title : `주최 ${host.name} · ${state.title}`}
+              </p>
+              <h1 className="mt-1 text-2xl font-bold tracking-[-0.01em]">
+                {isSelfHost
+                  ? "안 되는 시간만 알려주세요"
+                  : `${me.name}님, 안 되는 시간만 알려주세요`}
+              </h1>
+              <p className="mt-2 text-[13px] text-ink-soft">
+                가능한 시간은 따로 선택하지 않아도 돼요.
+              </p>
+              {!me.linked && (
+                <div className="mt-2">
+                  <Badge tone="amber" className="!px-2 !py-0.5">
+                    캘린더에 일정이 없어요 · 직접 표시
+                  </Badge>
+                </div>
+              )}
+
+              {/* 헬퍼 — 헤더와 24 간격, (연동자) 캘린더 안내 + 탭 사이클 칩 */}
+              <div className="mb-4 mt-6 rounded-xl bg-sand-50 p-3">
                 {me.linked && (
                   <p className="mb-2 text-[13px] leading-relaxed text-ink-soft">
                     <b className="text-ink">
@@ -329,9 +324,10 @@ function Receipt({
         <Icon name="check" size={28} />
       </div>
       <h2 className="mt-4 text-xl font-bold">{me.name}님, 다 전했어요</h2>
-      <p className="mt-1 text-[16px] text-ink-soft">
-        이제 모두의 시간을 모아 회의 시간을 정하고 있어요. 정해지면 바로
-        알려드릴게요.
+      <p className="mt-1 text-[16px] leading-relaxed text-ink-soft">
+        이제 모두의 시간을 모아 회의 시간을 정하고 있어요.
+        <br />
+        정해지면 바로 알려드릴게요.
       </p>
 
       <div className="mt-5">
@@ -342,14 +338,6 @@ function Receipt({
         <p className="mt-2.5 text-[13px] font-semibold text-ink-soft">
           {echoLine(me)}
         </p>
-        <div className="mt-1.5 flex items-center justify-center gap-2.5 text-[13px] text-ink-faint">
-          <span className="flex items-center gap-1 text-block-ink">
-            <Icon name="x" size={13} /> 불가
-          </span>
-          <span className="flex items-center gap-1 text-avoid-ink">
-            <Icon name="triangle" size={11} filled /> 피하고 싶어요
-          </span>
-        </div>
       </div>
 
       <div className="mx-auto mt-6 flex w-full max-w-[380px] gap-2">
