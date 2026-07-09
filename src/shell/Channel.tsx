@@ -745,9 +745,9 @@ export default function Channel({
 
   return (
     <div className="flex max-w-3xl flex-col gap-4 px-4 py-5 md:px-6">
-      {/* 채널 시작 안내 (정적) */}
-      <div className="pb-1 text-center">
-        <div className="mx-auto mb-2 grid h-11 w-11 place-items-center rounded-xl bg-sand-200 text-lg font-bold text-ink-soft">
+      {/* 채널 시작 안내 (정적) — 좌측 정렬(채팅과 동일, 슬랙 채널 인트로 패턴) */}
+      <div className="pb-1">
+        <div className="mb-2 grid h-11 w-11 place-items-center rounded-xl bg-sand-200 text-lg font-bold text-ink-soft">
           #
         </div>
         <p className="text-[13px] font-bold text-ink-soft">
