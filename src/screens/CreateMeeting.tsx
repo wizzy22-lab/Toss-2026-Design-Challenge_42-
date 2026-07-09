@@ -112,29 +112,39 @@ export default function CreateMeeting({
 
         {/* 본문 스크롤 */}
         <div className="flex-1 overflow-y-auto px-6 py-5">
-          {/* 필드 4개 = 2행(2×2): 회의 이름·소요시간 / 후보 기간·응답 마감 */}
-          <div className="grid grid-cols-1 items-start gap-x-4 gap-y-5 sm:grid-cols-2">
-            {/* 회의 이름 */}
-            <div>
-              <label className={LBL}>회의 이름</label>
-              <input
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="ex) 주간회의"
-                className={`w-full rounded-[10px] border px-3.5 py-2.5 text-[16px] font-bold outline-none placeholder:font-normal placeholder:text-[#C7BFB6] focus:ring-2 focus:ring-brand-100 ${
-                  titleErr
-                    ? "border-danger-ink focus:border-danger-ink"
-                    : "border-edge focus:border-brand-400"
-                }`}
-              />
-              {titleErr && (
-                <p className="mt-1 text-[13px] font-semibold text-danger-ink">
-                  회의 이름을 정해주세요.
-                </p>
-              )}
-            </div>
+          {/* 회의 이름 — 주인공, 전체폭 단독 */}
+          <div>
+            <label className={LBL}>회의 이름</label>
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="ex) 주간회의"
+              className={`w-full rounded-[10px] border px-3.5 py-2.5 text-[16px] font-bold outline-none placeholder:font-normal placeholder:text-[#C7BFB6] focus:ring-2 focus:ring-brand-100 ${
+                titleErr
+                  ? "border-danger-ink focus:border-danger-ink"
+                  : "border-edge focus:border-brand-400"
+              }`}
+            />
+            {titleErr && (
+              <p className="mt-1 text-[13px] font-semibold text-danger-ink">
+                회의 이름을 정해주세요.
+              </p>
+            )}
+          </div>
 
-            {/* 소요시간 — 드롭다운(기본 1시간) */}
+          {/* 후보 기간 — 전체폭(달력 여유) */}
+          <div className="mt-5">
+            <label className={LBL}>후보 기간</label>
+            <DateRangePicker onChange={setRangeLabel} />
+            {rangeErr && (
+              <p className="mt-1 text-[13px] font-semibold text-danger-ink">
+                후보 기간을 정해주세요.
+              </p>
+            )}
+          </div>
+
+          {/* 소설정 페어 — 소요시간 · 응답 마감 (가벼운 드롭다운, 한 줄) */}
+          <div className="mt-5 grid grid-cols-1 items-start gap-x-4 gap-y-5 sm:grid-cols-2">
             <div>
               <label className={LBL}>소요시간</label>
               <Dropdown
@@ -150,19 +160,6 @@ export default function CreateMeeting({
                 </p>
               )}
             </div>
-
-            {/* 후보 기간 */}
-            <div>
-              <label className={LBL}>후보 기간</label>
-              <DateRangePicker onChange={setRangeLabel} />
-              {rangeErr && (
-                <p className="mt-1 text-[13px] font-semibold text-danger-ink">
-                  후보 기간을 정해주세요.
-                </p>
-              )}
-            </div>
-
-            {/* 응답 마감 — ~일 ~시까지 (드롭다운) */}
             <div>
               <label className={LBL}>응답 마감</label>
               <DeadlinePicker onChange={setDeadlineLabel} />
