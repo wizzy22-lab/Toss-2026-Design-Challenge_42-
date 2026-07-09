@@ -184,6 +184,45 @@ export function Toggle({
   );
 }
 
+/** 체크박스 (선택 표식) — 박스 + 라벨 */
+export function Checkbox({
+  checked,
+  onChange,
+  label,
+}: {
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  label?: string;
+}) {
+  return (
+    <button
+      type="button"
+      role="checkbox"
+      aria-checked={checked}
+      aria-label={label}
+      onClick={() => onChange(!checked)}
+      className="inline-flex shrink-0 items-center gap-1.5"
+    >
+      <span
+        className={`grid h-[18px] w-[18px] place-items-center rounded-[5px] border transition ${
+          checked ? "border-brand-600 bg-brand-600 text-white" : "border-edge bg-white"
+        }`}
+      >
+        {checked && <Icon name="check" size={13} />}
+      </span>
+      {label && (
+        <span
+          className={`text-[13px] font-semibold ${
+            checked ? "text-brand-600" : "text-ink-faint"
+          }`}
+        >
+          {label}
+        </span>
+      )}
+    </button>
+  );
+}
+
 export function Card({
   children,
   className = "",

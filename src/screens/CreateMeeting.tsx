@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useApp } from "../store";
-import { Toggle, Icon, personAvatar } from "../ui";
+import { Checkbox, Icon, personAvatar } from "../ui";
 import DateRangePicker from "../components/DateRangePicker";
 import DeadlinePicker from "../components/DeadlinePicker";
 import Dropdown from "../components/Dropdown";
@@ -190,13 +190,13 @@ export default function CreateMeeting({
                       </div>
                     )}
                   </div>
-                  {/* 필참 on/off */}
-                  <Toggle
+                  {/* 필참 체크박스 */}
+                  <Checkbox
                     checked={a.required}
                     onChange={() =>
                       dispatch({ type: "TOGGLE_REQUIRED", id: a.id })
                     }
-                    label={`${a.name} 필참`}
+                    label="필참"
                   />
                   <button
                     onClick={() =>
