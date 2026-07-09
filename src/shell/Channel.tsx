@@ -277,28 +277,28 @@ function EphemeralReco({
     <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-brand-100">
       <div className="border-b border-line-soft bg-gradient-to-r from-brand-50/80 to-white px-4 py-3">
         <p className="text-[13px] font-bold tracking-[-0.01em] text-ink">
-          {roster.length}명 다 답했어요 — 추천 시간이에요
+          {roster.length}명 모두 답했어요.
         </p>
-        {/* 긍정 프레임 (이중부정 폐기) */}
+        {/* 긍정 프레임 — 참석 가능(피하고 싶은 건 아래 WHY로) */}
         <p className="text-[13px] text-ink-soft">
-          {perfect
-            ? "다들 참석할 수 있는 시간이에요."
-            : `${who}는 모두 참석할 수 있어요.`}
+          다들 참석할 수 있는 시간이에요.
         </p>
       </div>
 
       <div className="px-4 py-4">
-        <div className="flex items-center gap-2.5">
-          <span className="text-3xl font-bold tracking-[-0.01em] text-ink">
-            {DAY_LABEL[best.day]} {timeLabel(best.time)}
-          </span>
-          {/* 시맨틱 success 태그(별도) */}
-          <Badge tone="emerald">{perfect ? "다들 가능" : `${who} 모두 가능`}</Badge>
+        <div className="text-3xl font-bold tracking-[-0.01em] text-ink">
+          {DAY_LABEL[best.day]} {timeLabel(best.time)}
         </div>
-        {/* WHY — L2에서만: 누가 피하고 싶어했는지(투명) */}
+        {/* WHY — L2에서만: 누가 피하고 싶어했는지 (△ + 투명) */}
         {!perfect && avoidNames && (
-          <p className="mt-2 text-[13px] font-semibold text-ink-soft">
-            {avoidNames}이 이 시간을 피하고 싶어 해요.
+          <p className="mt-2 flex items-start gap-1.5 text-[13px] font-semibold text-ink-soft">
+            <Icon
+              name="triangle"
+              size={12}
+              filled
+              className="mt-0.5 shrink-0 text-avoid-ink"
+            />
+            {avoidNames}이 피하고 싶어 한 시간이에요.
           </p>
         )}
 
@@ -313,11 +313,13 @@ function EphemeralReco({
             onClick={onDetails}
             className="inline-flex items-center gap-1 rounded-[10px] px-3 py-3 text-[13px] font-bold text-brand-600 transition hover:bg-brand-50"
           >
-            다른 시간도 있어요{others > 0 ? ` (${others})` : ""}
+            다른 시간 보기{others > 0 ? ` (${others})` : ""}
             <Icon name="arrow-right" size={16} />
           </button>
         </div>
-        <p className="mt-2 text-[13px] text-ink-faint">정해야 채널에 공지돼요.</p>
+        <p className="mt-2 text-[13px] text-ink-faint">
+          정하면 채널에 바로 알려드려요.
+        </p>
       </div>
     </div>
   );
