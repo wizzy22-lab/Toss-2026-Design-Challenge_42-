@@ -4,7 +4,7 @@ import { useApp } from "../store";
 import { DAY_LABEL, slotKorean, timeLabel } from "../data";
 import { parseKey, type SlotResult } from "../engine";
 import { changeAnnounceLine, confirmedLine } from "../copy";
-import { Badge, Icon, personAvatar } from "../ui";
+import { Icon, personAvatar } from "../ui";
 import { addDays, atMidnight, mondayOfWeek, wd } from "../lib/date";
 
 /**
@@ -188,32 +188,50 @@ function RequestProgress() {
   const { state } = useApp();
   const roster = state.attendees.filter((a) => !a.excluded);
   const total = roster.length;
+  const host = state.attendees[0];
   // 아직 전원이 응답 전이면(수집 단계) 1→6 채우기 애니메이션
   const realDone = state.responded.filter((id) =>
     roster.some((a) => a.id === id),
   ).length;
 
+  // 날짜 병기 + 마감 (참석자 카드와 동일 규격)
+  const today = atMidnight(new Date());
+  const nextMon = addDays(mondayOfWeek(today), 7);
+  const nextFri = addDays(nextMon, 4);
+  const md = (d: Date) => `${d.getMonth() + 1}/${d.getDate()}`;
+  const hasDate = /\d/.test(state.rangeLabel);
+  const rangeText = hasDate
+    ? state.rangeLabel
+    : `${state.rangeLabel} (${md(nextMon)}–${nextFri.getDate()})`;
+  const deadline = addDays(mondayOfWeek(today), 4);
+
   return (
     <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-line/70">
-      <div className="border-b border-line-soft px-4 py-3">
-        <div className="flex items-center gap-2">
-          <span className="text-[13px] font-bold tracking-[-0.01em] text-ink">
-            회의 시간 요청
+      <div className="px-4 py-4">
+        {/* 제목 + 부제(대기) · 마감 태그(우상단) — 참석자 카드와 동일 레이아웃 */}
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <h3 className="text-[16px] font-bold leading-snug text-ink">
+              {state.title}
+            </h3>
+            <p className="mt-1 text-[13px] text-ink-soft">
+              참석자 응답을 모으고 있어요
+            </p>
+          </div>
+          <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-avoid px-2 py-0.5 text-[13px] font-semibold text-avoid-ink">
+            <Icon name="clock" size={12} /> {md(deadline)}({wd(deadline)})까지
           </span>
-          <Badge tone="slate" className="!px-2 !py-0.5">
-            참석자 {total}명
-          </Badge>
         </div>
-        <p className="mt-1 text-[13px] font-bold text-ink">
-          {state.title}
+
+        {/* 시간·날짜(bold) + 주최자(faint) */}
+        <p className="mt-3 text-[13px] font-bold text-ink">
+          {state.durationLabel} · {rangeText}
         </p>
-        <p className="text-[13px] text-ink-faint">
-          {state.durationLabel} · {state.rangeLabel} · 주최{" "}
-          {state.attendees[0].name}
-        </p>
+        <p className="mt-0.5 text-[13px] text-ink-faint">주최자 {host.name}</p>
       </div>
 
-      <div className="px-4 py-3">
+      {/* 구분선 + 진행(N명 중 M명 응답 · 바 · 칩) */}
+      <div className="border-t border-line-soft px-4 py-3">
         <ResponseRoster animateFill={realDone < total} />
       </div>
     </div>
