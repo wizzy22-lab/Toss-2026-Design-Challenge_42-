@@ -167,13 +167,14 @@ function ResponseRoster({ animateFill = false }: { animateFill?: boolean }) {
           return (
             <span
               key={a.id}
-              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[13px] font-semibold transition-colors ${
+              className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[13px] font-semibold transition-colors ${
                 ok
                   ? "bg-ok text-ok-ink ring-1 ring-ok-ink/20"
                   : "bg-wait text-wait-ink"
               }`}
             >
-              {ok ? <Icon name="check" size={13} /> : "…"} {a.name}
+              {ok && <Icon name="check" size={13} />}
+              <span>{a.name}</span>
             </span>
           );
         })}
@@ -627,28 +628,32 @@ function ReceivedRequest({ onRespond }: { onRespond: () => void }) {
   const deadline = addDays(mondayOfWeek(today), 4); // 이번 주 금
 
   return (
-    <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-brand-100">
-      {/* 헤더 — 주최자 뷰(RequestProgress)와 동일한 제목 표기 */}
-      <div className="border-b border-line-soft px-4 py-3">
-        <div className="flex items-center gap-2">
-          <span className="text-[13px] font-bold tracking-[-0.01em] text-ink">
-            회의 시간 요청
+    <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-line/70">
+      <div className="px-5 py-5">
+        {/* 제목(크게) + 부제(뮤트) · 마감 태그(우상단) */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h3 className="text-2xl font-bold leading-tight tracking-[-0.01em] text-ink">
+              {state.title}
+            </h3>
+            <p className="mt-1 text-[16px] text-ink-soft">
+              안 되는 시간만 알려주세요
+            </p>
+          </div>
+          <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-avoid px-3 py-1 text-[13px] font-semibold text-avoid-ink">
+            <Icon name="clock" size={13} /> {md(deadline)}({wd(deadline)})까지
           </span>
-          <Badge tone="slate" className="!px-2 !py-0.5">
-            참석자 {roster.length}명
-          </Badge>
         </div>
-        <p className="mt-1 text-[13px] font-bold text-ink">{state.title}</p>
-        <p className="text-[13px] text-ink-faint">
-          {state.durationLabel} · {rangeText} · 주최 {host.name} ·{" "}
-          {md(deadline)}({wd(deadline)})까지
-        </p>
-      </div>
 
-      {/* 진행 — 응답 현황(1/6→6/6 자동 체이닝의 한 프레임) + 응답 완료 상태 */}
-      <div className="px-4 py-3">
-        {iResponded && (
-          <div className="mb-3 rounded-xl bg-ok px-3 py-3 text-[13px] font-semibold text-ok-ink">
+        {/* 시간·날짜(bold) + 주최자(faint) */}
+        <p className="mt-4 text-[16px] font-bold text-ink">
+          {state.durationLabel} · {rangeText}
+        </p>
+        <p className="mt-0.5 text-[13px] text-ink-faint">주최자 {host.name}</p>
+
+        {/* 응답하기(풀폭 다크) 또는 응답 완료 상태 */}
+        {iResponded ? (
+          <div className="mt-4 rounded-xl bg-ok px-3 py-3 text-[13px] font-semibold text-ok-ink">
             <Icon
               name="check"
               size={14}
@@ -659,21 +664,20 @@ function ReceivedRequest({ onRespond }: { onRespond: () => void }) {
               ? "주최자가 시간을 정하는 중이에요."
               : "나머지 참석자를 기다리는 중이에요."}
           </div>
-        )}
-        <ResponseRoster />
-      </div>
-
-      {/* 응답하기 = 카드 최하단 풀폭 다크 primary */}
-      {!iResponded && (
-        <div className="border-t border-line-soft px-4 py-3">
+        ) : (
           <button
             onClick={onRespond}
-            className="w-full rounded-[10px] bg-ink py-3 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
+            className="mt-4 w-full rounded-xl bg-ink py-4 text-[16px] font-bold text-white transition hover:bg-[#33291F]"
           >
             응답하기
           </button>
-        </div>
-      )}
+        )}
+      </div>
+
+      {/* 구분선 + 진행(N명 중 M명 응답 · 바 · 칩) */}
+      <div className="border-t border-line-soft px-5 py-4">
+        <ResponseRoster />
+      </div>
     </div>
   );
 }

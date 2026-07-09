@@ -19,7 +19,8 @@ type IconName =
   | "user"
   | "info"
   | "triangle"
-  | "eye";
+  | "eye"
+  | "clock";
 
 const ICON_PATHS: Record<IconName, ReactNode> = {
   check: <polyline points="20 6 9 17 4 12" />,
@@ -85,6 +86,12 @@ const ICON_PATHS: Record<IconName, ReactNode> = {
     <>
       <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
       <circle cx="12" cy="12" r="3" />
+    </>
+  ),
+  clock: (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
     </>
   ),
 };
