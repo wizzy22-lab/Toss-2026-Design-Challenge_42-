@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Icon } from "../ui";
 
 /* 날짜 유틸 (앱 런타임이라 new Date() 사용 가능) */
 const DAY = 24 * 60 * 60 * 1000;
@@ -12,6 +13,9 @@ function mondayOfWeek(d: Date) {
   const m = atMidnight(d);
   const wd = (m.getDay() + 6) % 7; // 월=0
   return addDays(m, -wd);
+}
+function firstOfMonth(d: Date) {
+  return new Date(d.getFullYear(), d.getMonth(), 1);
 }
 // 요일까지 표시: "7월 13일(월)~17일(금)"
 const WD = ["일", "월", "화", "수", "목", "금", "토"];
@@ -49,11 +53,12 @@ export default function DateRangePicker({
   const nextMon = useMemo(() => addDays(thisMon, 7), [thisMon]);
   const nextFri = useMemo(() => addDays(thisMon, 11), [thisMon]);
 
-  const [preset, setPreset] = useState<Preset | null>(null); // QA: 미선택 시작
-  // 직접 선택용
+  const [preset, setPreset] = useState<Preset | null>(null); // 미선택 시작
   const [start, setStart] = useState(nextMon);
   const [end, setEnd] = useState(nextFri);
   const [tab, setTab] = useState<"start" | "end">("start");
+  // 달력이 보여주는 달 (기본 = 오늘이 든 달)
+  const [viewMonth, setViewMonth] = useState(() => firstOfMonth(today));
 
   const labelFor = (p: Preset): string => {
     if (p === "next") return `다음 주 · ${fmt(nextMon, nextFri)}`;
@@ -67,15 +72,19 @@ export default function DateRangePicker({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preset, start, end]);
 
-  const gridStart = useMemo(() => mondayOfWeek(nextMon), [nextMon]);
+  // 해당 월 전체를 정확히 렌더 — 그 달 1일이 든 주의 월요일부터 6주(42칸)
+  const gridStart = useMemo(() => mondayOfWeek(viewMonth), [viewMonth]);
   const days = useMemo(
-    () => Array.from({ length: 35 }, (_, i) => addDays(gridStart, i)),
+    () => Array.from({ length: 42 }, (_, i) => addDays(gridStart, i)),
     [gridStart],
   );
-  const monthLabel = `${nextMon.getFullYear()}년 ${nextMon.getMonth() + 1}월`;
+  const monthLabel = `${viewMonth.getFullYear()}년 ${viewMonth.getMonth() + 1}월`;
+  const curMonthStart = useMemo(() => firstOfMonth(today), [today]);
+  const canPrev = viewMonth.getTime() > curMonthStart.getTime();
+  const stepMonth = (n: number) =>
+    setViewMonth((m) => new Date(m.getFullYear(), m.getMonth() + n, 1));
 
   const pick = (d: Date) => {
-    if (d.getTime() < today.getTime()) return;
     if (tab === "start") {
       setStart(d);
       if (d.getTime() > end.getTime()) setEnd(d);
@@ -120,11 +129,30 @@ export default function DateRangePicker({
         </p>
       )}
 
-      {/* 직접 선택만 시작/종료 탭 + 달력 */}
+      {/* 직접 선택 — 월 달력 (오늘 표시 · 과거/주말 비활성 · 컴팩트) */}
       {preset === "custom" && (
         <div className="mt-3 select-none rounded-xl border border-line p-3">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-[16px] font-bold text-ink">{monthLabel}</span>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => stepMonth(-1)}
+                disabled={!canPrev}
+                aria-label="이전 달"
+                className="grid h-7 w-7 place-items-center rounded-lg text-ink-soft transition hover:bg-sand-100 disabled:opacity-30 disabled:hover:bg-transparent"
+              >
+                <Icon name="chevron-right" size={16} className="rotate-180" />
+              </button>
+              <span className="min-w-[92px] text-center text-[16px] font-bold text-ink">
+                {monthLabel}
+              </span>
+              <button
+                onClick={() => stepMonth(1)}
+                aria-label="다음 달"
+                className="grid h-7 w-7 place-items-center rounded-lg text-ink-soft transition hover:bg-sand-100"
+              >
+                <Icon name="chevron-right" size={16} />
+              </button>
+            </div>
             <div className="flex items-center gap-0.5 rounded-lg bg-sand-100 p-0.5">
               <button
                 onClick={() => setTab("start")}
@@ -149,7 +177,7 @@ export default function DateRangePicker({
               <div
                 key={w}
                 className={`text-center text-[13px] font-bold ${
-                  i >= 5 ? "text-ink-faint" : "text-ink-faint"
+                  i >= 5 ? "text-ink-disabled" : "text-ink-faint"
                 }`}
               >
                 {w}
@@ -159,35 +187,39 @@ export default function DateRangePicker({
           <div className="grid grid-cols-7 gap-1">
             {days.map((d) => {
               const t = d.getTime();
+              const inMonth = d.getMonth() === viewMonth.getMonth();
               const past = t < today.getTime();
+              const weekend = d.getDay() === 0 || d.getDay() === 6;
+              const disabled = past || weekend || !inMonth;
+              const isToday = t === today.getTime();
               const inRange = t >= lo && t <= hi;
-              const isStart = t === lo;
-              const isEnd = t === hi;
-              const weekend = (d.getDay() + 6) % 7 >= 5;
+              const endpoint = t === lo || t === hi;
+              let cls = "text-ink-soft hover:bg-sand-100"; // 평일·선택가능 기본
+              if (disabled) cls = "cursor-not-allowed text-ink-disabled";
+              else if (inRange)
+                cls = endpoint
+                  ? "bg-brand-600 text-white"
+                  : "bg-brand-100 text-brand-700";
               return (
                 <button
                   key={t}
-                  onClick={() => pick(d)}
-                  disabled={past}
-                  className={`h-9 rounded-lg text-[13px] font-semibold transition ${
-                    past
-                      ? "cursor-not-allowed text-sand-300"
-                      : inRange
-                        ? isStart || isEnd
-                          ? "bg-brand-600 text-white"
-                          : "bg-brand-100 text-brand-700"
-                        : weekend
-                          ? "text-ink-faint hover:bg-sand-50"
-                          : "text-ink-soft hover:bg-sand-100"
+                  onClick={() => !disabled && pick(d)}
+                  disabled={disabled}
+                  className={`relative h-8 rounded-lg text-[13px] font-semibold transition ${cls} ${
+                    // 오늘 = 링(선택 하이라이트와 다른 스타일)
+                    isToday && !inRange ? "ring-1 ring-inset ring-brand-400" : ""
                   }`}
                 >
                   {d.getDate()}
+                  {isToday && (
+                    <span className="pointer-events-none absolute bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-brand-500" />
+                  )}
                 </button>
               );
             })}
           </div>
           <p className="mt-2 text-[13px] text-ink-faint">
-            {tab === "start" ? "시작일" : "종료일"}을 눌러 정해요 · 현재{" "}
+            {tab === "start" ? "시작일" : "종료일"}을 눌러 정해요 · 평일만 · 현재{" "}
             <span className="font-semibold text-brand-600">{fmt(start, end)}</span>
           </p>
         </div>
