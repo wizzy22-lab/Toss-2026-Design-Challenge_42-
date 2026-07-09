@@ -4,6 +4,7 @@ import { useApp } from "../store";
 import { Toggle, Icon, personAvatar } from "../ui";
 import DateRangePicker from "../components/DateRangePicker";
 import DurationWheel from "../components/DurationWheel";
+import DeadlinePicker from "../components/DeadlinePicker";
 
 // 소요시간 = 흔한 값 칩 2개 + 직접 입력(휠). (30분·1시간30분 제거)
 const DURATIONS = ["1시간", "2시간"];
@@ -34,7 +35,7 @@ export default function CreateMeeting({
   const [duration, setDuration] = useState<string | null>(null);
   const [wheelOpen, setWheelOpen] = useState(false); // 직접 입력(휠) 열림
   const [customHours, setCustomHours] = useState(3);
-  const [deadline, setDeadline] = useState<"day1" | "day3">("day1"); // 응답 마감(기본 전날)
+  const [, setDeadlineLabel] = useState(""); // 응답 마감 조합 라벨(저마찰·기본값 있음)
   const [showInvite, setShowInvite] = useState(false);
   const [invite, setInvite] = useState("");
   const [attempted, setAttempted] = useState(false); // 제출 시도(인라인 에러 표시)
@@ -196,23 +197,10 @@ export default function CreateMeeting({
             )}
           </div>
 
-          {/* 응답 마감 (저마찰 · 기본값 있음) */}
+          {/* 응답 마감 — 날짜 + 시간 피커 (저마찰·기본값 있음) */}
           <div className="mt-5">
             <label className={LBL}>응답 마감</label>
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setDeadline("day1")}
-                className={segClass(deadline === "day1")}
-              >
-                후보 기간 시작 전날
-              </button>
-              <button
-                onClick={() => setDeadline("day3")}
-                className={segClass(deadline === "day3")}
-              >
-                3일 전
-              </button>
-            </div>
+            <DeadlinePicker onChange={setDeadlineLabel} />
             <p className="mt-1.5 text-[13px] text-ink-faint">
               이때까지 참석자가 안 되는 시간을 알려줘요.
             </p>

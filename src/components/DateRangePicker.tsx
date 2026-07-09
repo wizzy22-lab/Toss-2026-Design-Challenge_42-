@@ -1,34 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { Icon } from "../ui";
-
-/* 날짜 유틸 (앱 런타임이라 new Date() 사용 가능) */
-const DAY = 24 * 60 * 60 * 1000;
-function atMidnight(d: Date) {
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-}
-function addDays(d: Date, n: number) {
-  return atMidnight(new Date(d.getTime() + n * DAY));
-}
-function mondayOfWeek(d: Date) {
-  const m = atMidnight(d);
-  const wd = (m.getDay() + 6) % 7; // 월=0
-  return addDays(m, -wd);
-}
-function firstOfMonth(d: Date) {
-  return new Date(d.getFullYear(), d.getMonth(), 1);
-}
-// 요일까지 표시: "7월 13일(월)~17일(금)"
-const WD = ["일", "월", "화", "수", "목", "금", "토"];
-const wd = (d: Date) => WD[d.getDay()];
-function fmt(start: Date, end: Date) {
-  const a = start.getTime() <= end.getTime() ? start : end;
-  const b = start.getTime() <= end.getTime() ? end : start;
-  if (a.getMonth() === b.getMonth() && a.getDate() === b.getDate())
-    return `${a.getMonth() + 1}월 ${a.getDate()}일(${wd(a)})`;
-  if (a.getMonth() === b.getMonth())
-    return `${a.getMonth() + 1}월 ${a.getDate()}일(${wd(a)})~${b.getDate()}일(${wd(b)})`;
-  return `${a.getMonth() + 1}월 ${a.getDate()}일(${wd(a)}) ~ ${b.getMonth() + 1}월 ${b.getDate()}일(${wd(b)})`;
-}
+import {
+  addDays,
+  atMidnight,
+  firstOfMonth,
+  fmtRange,
+  mondayOfWeek,
+} from "../lib/date";
 
 const WEEK = ["월", "화", "수", "목", "금", "토", "일"];
 type Preset = "next" | "this" | "custom";
@@ -61,9 +39,9 @@ export default function DateRangePicker({
   const [viewMonth, setViewMonth] = useState(() => firstOfMonth(today));
 
   const labelFor = (p: Preset): string => {
-    if (p === "next") return `다음 주 · ${fmt(nextMon, nextFri)}`;
-    if (p === "this") return `이번 주 · ${fmt(thisMon, thisFri)}`;
-    return `직접 선택 · ${fmt(start, end)}`;
+    if (p === "next") return `다음 주 · ${fmtRange(nextMon, nextFri)}`;
+    if (p === "this") return `이번 주 · ${fmtRange(thisMon, thisFri)}`;
+    return `직접 선택 · ${fmtRange(start, end)}`;
   };
 
   // 선택했을 때만 상위로 라벨 반영 (미선택 시작 → 프리필 없음)
@@ -123,7 +101,7 @@ export default function DateRangePicker({
         <p className="mt-2 text-[13px] text-ink-faint">
           후보 기간{" "}
           <span className="font-semibold text-brand-600">
-            {fmt(preset === "next" ? nextMon : thisMon, preset === "next" ? nextFri : thisFri)}
+            {fmtRange(preset === "next" ? nextMon : thisMon, preset === "next" ? nextFri : thisFri)}
           </span>{" "}
           월–금 안에서 시간을 찾아요.
         </p>
@@ -220,7 +198,7 @@ export default function DateRangePicker({
           </div>
           <p className="mt-2 text-[13px] text-ink-faint">
             {tab === "start" ? "시작일" : "종료일"}을 눌러 정해요 · 평일만 · 현재{" "}
-            <span className="font-semibold text-brand-600">{fmt(start, end)}</span>
+            <span className="font-semibold text-brand-600">{fmtRange(start, end)}</span>
           </p>
         </div>
       )}
