@@ -53,17 +53,17 @@ export default function Intro({
             회사에서 회의 잡기 — 서로 언제 되는지 몰라 늘 번거로웠죠.
           </p>
 
-          {/* 프롬프트 헤더 — 18·600·primary */}
-          <p className="mt-6 text-[18px] font-semibold text-ink">
+          {/* 프롬프트 헤더 — 18·600·primary. subtitle과는 띄우고(mt-7) 카드와는 붙여(카드 mt-2) 한 그룹 */}
+          <p className="mt-7 text-[18px] font-semibold text-ink">
             어느 입장에서 볼까요?
           </p>
 
-          {/* ① 주최자 — 다크 primary 카드 */}
+          {/* ① 주최자 — 다크 fill 카드. 아바타는 오렌지-틴트로 다크 위에서 pop */}
           <button
             onClick={onHost}
-            className="mt-3 flex w-full items-center gap-3 rounded-2xl bg-ink px-4 py-3.5 text-left text-white transition hover:bg-[#33291F]"
+            className="mt-2 flex w-full items-center gap-3 rounded-2xl bg-ink px-4 py-3.5 text-left text-white transition hover:bg-[#33291F]"
           >
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/20 text-[16px] font-bold">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-recommend text-[16px] font-bold text-brand-600">
               가영
             </span>
             <div className="min-w-0">
@@ -75,13 +75,13 @@ export default function Intro({
             <Icon name="arrow-right" size={18} className="ml-auto" />
           </button>
 
-          {/* ① 참석자 — secondary(크림/아웃라인) · 클릭 시 아래로 펼침 */}
+          {/* ① 참석자 — 라이트 fill 카드(스트로크 대신 톤으로 surface 정의). 다크(주최자)와 fill 언어 통일 */}
           <button
             onClick={() => setShowAttendees((v) => !v)}
             aria-expanded={showAttendees}
-            className="mt-2.5 flex w-full items-center gap-3 rounded-2xl border border-edge bg-cream px-4 py-3.5 text-left transition hover:bg-brand-50"
+            className="mt-2.5 flex w-full items-center gap-3 rounded-2xl bg-[#F4EEE8] px-4 py-3.5 text-left transition hover:bg-[#F7F1EC]"
           >
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sand-100 text-ink-soft">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white text-ink-soft">
               <Icon name="users" size={18} />
             </span>
             <div className="min-w-0">
