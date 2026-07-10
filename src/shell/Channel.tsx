@@ -389,7 +389,11 @@ function ConfirmedAnnouncement({
   const { state, dispatch } = useApp();
   const roster = state.attendees.filter((a) => !a.excluded);
   const host = state.attendees[0];
-  const me = state.attendees.find((a) => a.id === state.activeAttendeeId)!;
+  // 확정 카드의 '나' = 현재 뷰어(주최자 뷰=주최자 본인, 참석자 뷰=활성 참석자)
+  const me = state.attendees.find(
+    (a) =>
+      a.id === (state.viewAs === "host" ? host.id : state.activeAttendeeId),
+  )!;
   const total = roster.length;
   const confirmedIds = state.attendConfirmed;
   const iConfirmed = confirmedIds.includes(me.id);
@@ -487,7 +491,8 @@ function ConfirmedAnnouncement({
           </div>
         </div>
 
-        {/* ⑤ 탈출구 — subtle 텍스트 버튼(디모션) */}
+        {/* ⑤ 탈출구 — subtle 텍스트 버튼(디모션).
+            참석자가 조율 요청 후엔(재조율 카드는 주최자 전용) 피드백 문구로 대체(막다른 길 방지). */}
         {showChangeEntry && !muted ? (
           <div className="px-6 pb-5 pt-4">
             <button
@@ -496,6 +501,14 @@ function ConfirmedAnnouncement({
             >
               참석이 어려우면 다시 조율하기
             </button>
+          </div>
+        ) : state.change !== null &&
+          state.lastChange === null &&
+          state.viewAs !== "host" ? (
+          <div className="px-6 pb-5 pt-4">
+            <p className="text-[13px] font-semibold text-brand-600">
+              조정 요청을 보냈어요 · 주최자가 조율 중이에요.
+            </p>
           </div>
         ) : (
           <div className="pb-6" />

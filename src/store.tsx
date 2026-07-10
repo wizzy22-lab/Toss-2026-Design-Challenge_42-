@@ -134,7 +134,12 @@ function pushUnique(list: string[], key: string): string[] {
 
 /** DEMO 단계 = 관련 상태를 한 번에 세팅 (관점은 그대로 유지) */
 function applyDemo(state: State, stage: DemoStage): State {
-  const allIds = state.attendees.filter((a) => !a.excluded).map((a) => a.id);
+  const active = state.attendees.filter((a) => !a.excluded);
+  const allIds = active.map((a) => a.id);
+  // 확정 슬롯 = 현재 후보 기간(activeDays) 안의 최선. 기본(월–금 5일)이면 mon-11.
+  const bestKey =
+    topRecommendations(evalAll(active, state.quorum, state.activeDays), 1)[0]
+      ?.key ?? BEST_KEY;
   const base: State = { ...state, change: null, lastChange: null };
   switch (stage) {
     case "create":
@@ -162,14 +167,14 @@ function applyDemo(state: State, stage: DemoStage): State {
       return {
         ...base,
         screen: "dashboard",
-        confirmedKey: BEST_KEY,
+        confirmedKey: bestKey,
         responded: allIds,
       };
     case "change":
       return {
         ...base,
         screen: "dashboard",
-        confirmedKey: BEST_KEY,
+        confirmedKey: bestKey,
         responded: allIds,
         change: { attendeeId: CHANGE_DEMO_ID },
       };
