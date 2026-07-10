@@ -268,38 +268,26 @@ function EphemeralReco({
   const best = derived.top[0];
   const others = Math.max(0, derived.top.length - 1);
   const roster = state.attendees.filter((a) => !a.excluded);
-  const hasOptional = roster.some((a) => !a.required);
-  const who = hasOptional ? "필수 참석자" : "다들"; // park: 선택 없으면 '다들'
 
-  // L3 — 성립 0(필수 전원 되는 시간 없음): 정직 + 조정 레버(변경 플로우 재사용)
+  // 성립 0 — 시간을 추천하지 않는다. 상태 + 단일 CTA(후보 시간 보기)로 상세 뷰 유도.
   if (!best) {
     return (
-      <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-avoid-ink/20">
-        <div className="border-b border-line-soft bg-avoid/60 px-4 py-3">
-          <p className="text-[13px] font-bold tracking-[-0.01em] text-ink">
-            {who}가 모두 참석하는 시간은 없어요.
-          </p>
-          <p className="text-[13px] text-ink-soft">
-            지금 받은 응답으론 다 되는 시간이 없어요 — 가장 가까운 시간으로
-            조정해볼까요?
-          </p>
-        </div>
-        <div className="px-4 py-4">
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={onDetails}
-              className="rounded-[10px] border border-edge px-3 py-2 text-[13px] font-bold text-ink-soft transition hover:bg-sand-50"
-            >
-              후보 기간 넓히기
-            </button>
-            <button
-              onClick={onDetails}
-              className="rounded-[10px] border border-edge px-3 py-2 text-[13px] font-bold text-ink-soft transition hover:bg-sand-50"
-            >
-              참석자 조정
-            </button>
-          </div>
-        </div>
+      <div className="rounded-2xl border border-line bg-cream p-6 shadow-card">
+        <span className="inline-flex items-center rounded-full bg-avoid px-2.5 py-1 text-[13px] font-semibold text-avoid-ink">
+          다 되는 시간 없음
+        </span>
+        <p className="mt-3 text-[16px] font-semibold text-ink">
+          후보 기간엔 모두가 참석할 수 있는 시간이 없어요.
+        </p>
+        <p className="mt-1 text-[16px] leading-relaxed text-ink-soft">
+          그래도 가까운 시간들이 있어요. 직접 보고 골라주세요.
+        </p>
+        <button
+          onClick={onDetails}
+          className="mt-4 h-12 w-full rounded-[10px] bg-ink text-[16px] font-bold text-white transition hover:bg-[#33291F]"
+        >
+          후보 시간 보기
+        </button>
       </div>
     );
   }

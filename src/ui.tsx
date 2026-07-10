@@ -20,7 +20,9 @@ type IconName =
   | "info"
   | "triangle"
   | "eye"
-  | "clock";
+  | "clock"
+  | "minus"
+  | "warn";
 
 const ICON_PATHS: Record<IconName, ReactNode> = {
   check: <polyline points="20 6 9 17 4 12" />,
@@ -92,6 +94,13 @@ const ICON_PATHS: Record<IconName, ReactNode> = {
     <>
       <circle cx="12" cy="12" r="10" />
       <polyline points="12 6 12 12 16 14" />
+    </>
+  ),
+  minus: <path d="M5 12h14" />,
+  warn: (
+    <>
+      <path d="m10.29 3.86-8.18 14A2 2 0 0 0 3.83 21h16.34a2 2 0 0 0 1.72-3.14l-8.18-14a2 2 0 0 0-3.42 0Z" />
+      <path d="M12 9v4M12 17h.01" />
     </>
   ),
 };

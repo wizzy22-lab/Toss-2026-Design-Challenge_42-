@@ -4,7 +4,11 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useApp } from "../store";
 import { DAY_LABEL, TIMES, timeLabel, slotKorean } from "../data";
 import type { Day } from "../types";
-import { topRecommendations, type SlotResult } from "../engine";
+import {
+  rankedCandidates,
+  topRecommendations,
+  type SlotResult,
+} from "../engine";
 import type { TimeSlot } from "../types";
 import { Icon } from "../ui";
 
@@ -87,6 +91,67 @@ function TipCard({ r }: { r: SlotResult }) {
   );
 }
 
+/* ---------- 성립 0 후보 행 — 시간 + 가능/불가/피해요 칩 + secondary '이 시간으로 정하기' ---------- */
+function ListRow({
+  r,
+  onPick,
+}: {
+  r: SlotResult;
+  onPick: (r: SlotResult) => void;
+}) {
+  const blockedReq = r.states
+    .filter((s) => s.attendee.required && !s.available)
+    .map((s) => s.attendee.name);
+  const blockedOpt = r.states
+    .filter((s) => !s.attendee.required && !s.available)
+    .map((s) => s.attendee.name);
+  const softNames = r.states.filter((s) => s.soft).map((s) => s.attendee.name);
+  return (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-[14px] bg-white p-4 ring-1 ring-line/70 transition hover:bg-[#F7F1EC]">
+      <div className="min-w-0 flex-1">
+        <p className="text-[16px] font-semibold tracking-[-0.01em] text-ink [font-variant-numeric:tabular-nums]">
+          {DAY_LABEL[r.day]} {timeLabel(r.time)}
+        </p>
+        <div className="mt-1.5 flex flex-wrap gap-1.5 text-[13px] font-semibold">
+          <span className="inline-flex items-center gap-1 rounded-md bg-ok px-2 py-0.5 text-ok-ink">
+            <Icon name="check" size={12} /> {r.counts.in}명 가능
+          </span>
+          {blockedReq.map((n) => (
+            <span
+              key={n}
+              className="inline-flex items-center gap-1 rounded-md bg-danger px-2 py-0.5 text-danger-ink"
+            >
+              <Icon name="warn" size={12} /> {n} · 꼭 참석
+            </span>
+          ))}
+          {blockedOpt.map((n) => (
+            <span
+              key={n}
+              className="hatch inline-flex items-center gap-1 rounded-md bg-block px-2 py-0.5 text-block-ink"
+            >
+              <Icon name="x" size={12} /> {n} · 선택
+            </span>
+          ))}
+          {softNames.map((n) => (
+            <span
+              key={n}
+              className="inline-flex items-center gap-1 rounded-md bg-avoid px-2 py-0.5 text-avoid-ink"
+            >
+              <Icon name="minus" size={12} /> {n} · 피하고 싶어요
+            </span>
+          ))}
+        </div>
+      </div>
+      <button
+        onClick={() => onPick(r)}
+        className="h-11 shrink-0 rounded-[10px] border border-edge px-3 text-[13px] font-bold text-ink-soft transition hover:bg-sand-50"
+      >
+        이 시간으로 정하기
+      </button>
+    </div>
+  );
+}
+
 /* ---------- 회의 시간 정하기 (모달) ----------
    답-먼저 한 스크롤: 추천 하나 크게 → 대안(탭하면 top으로 승격 · FLIP) → 전체 히트맵 → 참석자 요약. */
 export default function Dashboard({ onClose }: { onClose: () => void }) {
@@ -97,6 +162,7 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
   const [tip, setTip] = useState<Tip | null>(null);
+  const [confirmKey, setConfirmKey] = useState<string | null>(null); // 꼭 참석자 불가 확인
 
   const byKey = useMemo(() => {
     const m = new Map<string, SlotResult>();
@@ -125,9 +191,20 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
     ? "필참자는 모두 참석할 수 있어요."
     : "다들 참석할 수 있어요.";
 
+  // 성립 0 후보 리스트 — 점수순 정렬 후 필수 전원 가능/불가로 분리
+  const ranked = useMemo(() => rankedCandidates(results), [results]);
+  const okReq = ranked.filter((r) => r.requiredAllIn);
+  const blockedReq = ranked.filter((r) => !r.requiredAllIn).slice(0, 8);
+
   const confirm = (key: string) => {
     dispatch({ type: "CONFIRM", key });
     onClose();
+  };
+  // 행 선택 — 꼭 참석자 불가면 확인 다이얼로그 1회, 아니면 바로 확정
+  const pick = (r: SlotResult) => {
+    const reqBlocked = r.states.some((s) => s.attendee.required && !s.available);
+    if (reqBlocked) setConfirmKey(r.key);
+    else confirm(r.key);
   };
 
   return (
@@ -149,9 +226,13 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
         <div className="flex items-center gap-2 border-b border-line-soft px-6 py-4">
           <div className="min-w-0">
             <h1 className="text-2xl font-bold tracking-[-0.01em]">
-              회의 시간 정하기
+              {sel ? "회의 시간 정하기" : "후보 시간"}
             </h1>
-            <p className="truncate text-[13px] text-ink-faint">{state.title}</p>
+            <p className="truncate text-[13px] text-ink-faint">
+              {sel
+                ? state.title
+                : "다 되는 시간은 없지만, 가까운 순으로 모았어요."}
+            </p>
           </div>
           <button
             onClick={onClose}
@@ -258,66 +339,97 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
                   </button>
                 )}
               </div>
-
-              {/* 전체 시간 히트맵 (톤) — 칸 호버 시 누가 불가/피하고 싶어 하는지 */}
-              <div className="mt-6">
-                <p className="mb-3 text-[13px] font-bold text-ink-soft">
-                  전체 시간
-                </p>
-                <div className="mb-2 flex flex-wrap items-center gap-2.5 text-[13px] text-ink-soft">
-                  <span className="flex items-center gap-1">
-                    <span className="h-2.5 w-2.5 rounded bg-ok" /> 다 돼요
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <span className="h-2.5 w-2.5 rounded bg-avoid" /> 아쉬운 사람
-                    있음(숫자=인원)
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <span className="hatch h-2.5 w-2.5 rounded bg-sand-50" /> 안
-                    되는 사람 있음
-                  </span>
-                </div>
-                <div
-                  className="grid gap-2"
-                  style={{
-                    gridTemplateColumns: `36px repeat(${days.length}, minmax(0,1fr))`,
-                  }}
-                >
-                  <div />
-                  {days.map((d) => (
-                    <div
-                      key={d}
-                      className="pb-1 text-center text-[13px] font-bold text-ink-soft"
-                    >
-                      {DAY_LABEL[d]}
-                    </div>
-                  ))}
-                  {TIMES.map((t) => (
-                    <Row
-                      key={t}
-                      time={t}
-                      byKey={byKey}
-                      confirmedKey={state.confirmedKey}
-                      onHover={setTip}
-                      days={days}
-                    />
-                  ))}
-                </div>
-                <p className="mt-2 text-[13px] text-ink-faint">
-                  칸에 마우스를 올리면 누가 불가·피하고 싶어 하는지 볼 수 있어요.
-                </p>
-              </div>
             </>
           ) : (
-            /* 성립 0 — 톤 카드 */
-            <div className="rounded-2xl bg-avoid/60 p-6">
-              <p className="text-[16px] font-bold text-ink">
-                다 되는 시간이 없어요
-              </p>
-              <p className="mt-2 text-[13px] leading-relaxed text-ink-soft">
-                지금 응답으론 필참자가 다 되는 시간이 없어요. 후보 기간을 넓히면
-                찾을 수 있어요.
-              </p>
+            /* 성립 0 — 후보 시간 리스트(추천 없음·점수순·주최자 직접 선택) */
+            <>
+              {okReq.length > 0 && (
+                <div className="space-y-2">
+                  {okReq.map((r) => (
+                    <ListRow key={r.key} r={r} onPick={pick} />
+                  ))}
+                </div>
+              )}
+              {blockedReq.length > 0 && (
+                <div className={okReq.length > 0 ? "mt-5" : ""}>
+                  <p className="mb-2 text-[13px] font-semibold text-ink-soft">
+                    꼭 와야 하는 사람이 어려운 시간이에요
+                  </p>
+                  <div className="space-y-2">
+                    {blockedReq.map((r) => (
+                      <ListRow key={r.key} r={r} onPick={pick} />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
+          {/* 전체 시간 히트맵 — 성립 여부와 무관하게 항상 열람 가능 */}
+          <div className="mt-6">
+            <p className="mb-3 text-[13px] font-bold text-ink-soft">전체 시간</p>
+            <div className="mb-2 flex flex-wrap items-center gap-2.5 text-[13px] text-ink-soft">
+              <span className="flex items-center gap-1">
+                <span className="h-2.5 w-2.5 rounded bg-ok" /> 다 돼요
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="h-2.5 w-2.5 rounded bg-avoid" /> 아쉬운 사람
+                있음(숫자=인원)
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="hatch h-2.5 w-2.5 rounded bg-sand-50" /> 안 되는
+                사람 있음
+              </span>
+            </div>
+            <div
+              className="grid gap-2"
+              style={{
+                gridTemplateColumns: `36px repeat(${days.length}, minmax(0,1fr))`,
+              }}
+            >
+              <div />
+              {days.map((d) => (
+                <div
+                  key={d}
+                  className="pb-1 text-center text-[13px] font-bold text-ink-soft"
+                >
+                  {DAY_LABEL[d]}
+                </div>
+              ))}
+              {TIMES.map((t) => (
+                <Row
+                  key={t}
+                  time={t}
+                  byKey={byKey}
+                  confirmedKey={state.confirmedKey}
+                  onHover={setTip}
+                  days={days}
+                />
+              ))}
+            </div>
+            <p className="mt-2 text-[13px] text-ink-faint">
+              칸에 마우스를 올리면 누가 불가·피하고 싶어 하는지 볼 수 있어요.
+            </p>
+          </div>
+
+          {/* 성립 0 폴백 — 이미 받은 응답으로 푸는 길이 먼저, 구조 변경은 강등 */}
+          {!sel && (
+            <div className="mt-6 border-t border-line-soft pt-4">
+              <p className="text-[13px] text-ink-soft">맞는 시간이 없나요?</p>
+              <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1">
+                <button
+                  onClick={onClose}
+                  className="py-1 text-[14px] font-semibold text-brand-600"
+                >
+                  후보 기간 넓히기
+                </button>
+                <button
+                  onClick={onClose}
+                  className="py-1 text-[14px] font-semibold text-brand-600"
+                >
+                  참석자 조정
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -339,6 +451,44 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
           </div>,
           document.body,
         )}
+
+      {/* 꼭 참석자 불가 슬롯 선택 시 확인 1회 */}
+      {confirmKey &&
+        (() => {
+          const r = byKey.get(confirmKey);
+          if (!r) return null;
+          const names = r.states
+            .filter((s) => s.attendee.required && !s.available)
+            .map((s) => s.attendee.name)
+            .join("·");
+          return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+              <div
+                className="absolute inset-0 bg-black/40"
+                onClick={() => setConfirmKey(null)}
+              />
+              <div className="relative z-10 w-full max-w-sm rounded-2xl bg-white p-5 shadow-pop">
+                <p className="text-[16px] font-bold leading-relaxed text-ink">
+                  {names}님(꼭 참석)이 올 수 없는 시간이에요. 이대로 정할까요?
+                </p>
+                <div className="mt-4 flex justify-end gap-2">
+                  <button
+                    onClick={() => setConfirmKey(null)}
+                    className="rounded-[10px] px-3 py-2 text-[13px] font-bold text-ink-soft transition hover:bg-sand-50"
+                  >
+                    취소
+                  </button>
+                  <button
+                    onClick={() => confirm(confirmKey)}
+                    className="rounded-[10px] bg-ink px-3 py-2 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
+                  >
+                    이대로 정하기
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
     </div>
   );
 }

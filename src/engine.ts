@@ -120,6 +120,21 @@ export function evalAll(
   return out;
 }
 
+/**
+ * 성립 0 상세 뷰용 — 전 슬롯을 점수순으로.
+ * ① 필수 전원 가능 우선(불가한 필수 있으면 하단) → ② 가능 인원 많은 순 →
+ * ③ 회피(soft) 적은 순 → ④ 시간순. (점수 숫자는 UI 비노출)
+ */
+export function rankedCandidates(results: SlotResult[]): SlotResult[] {
+  return [...results].sort((a, b) => {
+    if (a.requiredAllIn !== b.requiredAllIn) return a.requiredAllIn ? -1 : 1;
+    if (b.counts.in !== a.counts.in) return b.counts.in - a.counts.in;
+    if (a.softViolations !== b.softViolations)
+      return a.softViolations - b.softViolations;
+    return TIMES.indexOf(a.time) - TIMES.indexOf(b.time);
+  });
+}
+
 /** 상위 추천 (성립 슬롯만, 회피 적은 순·점수·시간순) */
 export function topRecommendations(
   results: SlotResult[],
