@@ -2,7 +2,8 @@ import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion, useReducedMotion } from "framer-motion";
 import { useApp } from "../store";
-import { DAYS, DAY_LABEL, TIMES, timeLabel, slotKorean } from "../data";
+import { DAY_LABEL, TIMES, timeLabel, slotKorean } from "../data";
+import type { Day } from "../types";
 import { topRecommendations, type SlotResult } from "../engine";
 import type { TimeSlot } from "../types";
 import { Icon } from "../ui";
@@ -91,6 +92,7 @@ function TipCard({ r }: { r: SlotResult }) {
 export default function Dashboard({ onClose }: { onClose: () => void }) {
   const { state, dispatch, derived } = useApp();
   const { results } = derived;
+  const days = state.activeDays; // 후보 기간의 활성 요일 (히트맵 열)
   const reduce = useReducedMotion();
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
@@ -275,9 +277,14 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
                     되는 사람 있음
                   </span>
                 </div>
-                <div className="grid grid-cols-[36px_repeat(5,1fr)] gap-2">
+                <div
+                  className="grid gap-2"
+                  style={{
+                    gridTemplateColumns: `36px repeat(${days.length}, minmax(0,1fr))`,
+                  }}
+                >
                   <div />
-                  {DAYS.map((d) => (
+                  {days.map((d) => (
                     <div
                       key={d}
                       className="pb-1 text-center text-[13px] font-bold text-ink-soft"
@@ -292,6 +299,7 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
                       byKey={byKey}
                       confirmedKey={state.confirmedKey}
                       onHover={setTip}
+                      days={days}
                     />
                   ))}
                 </div>
@@ -340,18 +348,20 @@ function Row({
   byKey,
   confirmedKey,
   onHover,
+  days,
 }: {
   time: TimeSlot;
   byKey: Map<string, SlotResult>;
   confirmedKey: string | null;
   onHover?: (t: Tip | null) => void;
+  days: Day[];
 }) {
   return (
     <>
       <div className="flex items-center justify-end pr-1 text-[13px] font-semibold text-ink-faint">
         {timeLabel(time)}
       </div>
-      {DAYS.map((d) => {
+      {days.map((d) => {
         const key = `${d}-${time}`;
         const r = byKey.get(key)!;
         return (

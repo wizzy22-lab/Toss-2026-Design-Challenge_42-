@@ -9,12 +9,14 @@ import type {
   Attendee,
   ChangeKind,
   ChangeRequest,
+  Day,
   DemoStage,
   LastChange,
   ScreenId,
   ViewAs,
 } from "./types";
-import { INITIAL_ATTENDEES, INITIAL_MEETING } from "./data";
+import { DAYS, INITIAL_ATTENDEES, INITIAL_MEETING } from "./data";
+import { addDays, atMidnight, mondayOfWeek } from "./lib/date";
 import {
   evalAll,
   reCoordinate,
@@ -31,6 +33,8 @@ export const HOST_ID = INITIAL_ATTENDEES[0].id;
 const CHANGE_DEMO_ID = "jihoon";
 /** 확정 카드 초기 참석 확인 = 2명 미리 확인(윤지은·박준호) → "확인 2/6"에서 시작 */
 const SEED_ATTEND_CONFIRM = ["jieun", "junho"];
+/** 기본 후보 기간 = 다음 주 월요일 시작, 월–금 5일 */
+const DEFAULT_RANGE_START = addDays(mondayOfWeek(atMidnight(new Date())), 7);
 
 interface State {
   title: string;
@@ -50,6 +54,10 @@ interface State {
   lastChange: LastChange | null;
   /** 확정된 시간에 "참석 확인"한 사람 id들 (순수 표명 · 어떤 것의 조건도 아님) */
   attendConfirmed: string[];
+  /** 후보 기간의 활성 요일 (DAYS의 순서 있는 부분집합 · 한 주 내 1~5일) */
+  activeDays: Day[];
+  /** activeDays[0]의 실제 날짜(로컬 자정) — 그리드·카드 날짜 파생의 기준 */
+  rangeStart: Date;
 }
 
 type Action =
@@ -60,7 +68,7 @@ type Action =
   | { type: "RESPOND"; id: string }
   | { type: "SET_TITLE"; title: string }
   | { type: "SET_DURATION"; label: string }
-  | { type: "SET_RANGE"; label: string }
+  | { type: "SET_RANGE"; label: string; days: Day[]; start: Date }
   | { type: "TOGGLE_REQUIRED"; id: string }
   | { type: "TOGGLE_EXCLUDED"; id: string }
   | { type: "ADD_EXTERNAL"; name: string }
@@ -95,6 +103,8 @@ const initialState: State = {
   change: null,
   lastChange: null,
   attendConfirmed: SEED_ATTEND_CONFIRM,
+  activeDays: DAYS,
+  rangeStart: DEFAULT_RANGE_START,
 };
 
 /** 데모 단계별 응답 진행도 정규화 */
@@ -198,7 +208,12 @@ function reducer(state: State, action: Action): State {
     case "SET_DURATION":
       return { ...state, durationLabel: action.label };
     case "SET_RANGE":
-      return { ...state, rangeLabel: action.label };
+      return {
+        ...state,
+        rangeLabel: action.label,
+        activeDays: action.days,
+        rangeStart: action.start,
+      };
     case "TOGGLE_REQUIRED":
       return {
         ...state,
@@ -365,7 +380,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const derived = useMemo<Derived>(() => {
     const active = state.attendees.filter((a) => !a.excluded);
-    const results = evalAll(active, state.quorum);
+    const results = evalAll(active, state.quorum, state.activeDays);
     const recoord =
       state.change && state.confirmedKey
         ? reCoordinate(
@@ -373,6 +388,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
             state.confirmedKey,
             state.change.attendeeId,
             state.quorum,
+            state.activeDays,
           )
         : null;
     return {
@@ -381,7 +397,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
       hasPerfect: results.some((r) => r.perfect),
       recoord,
     };
-  }, [state.attendees, state.quorum, state.confirmedKey, state.change]);
+  }, [
+    state.attendees,
+    state.quorum,
+    state.confirmedKey,
+    state.change,
+    state.activeDays,
+  ]);
 
   return (
     <AppContext.Provider value={{ state, dispatch, derived }}>

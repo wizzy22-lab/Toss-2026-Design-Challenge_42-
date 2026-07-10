@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import { useApp } from "../store";
-import { DAY_LABEL, DAYS, slotKorean, timeLabel } from "../data";
+import { DAY_LABEL, slotKorean, timeLabel } from "../data";
 import { parseKey, type SlotResult } from "../engine";
 import { changeAnnounceLine } from "../copy";
 import { Icon, personAvatar } from "../ui";
@@ -194,16 +194,15 @@ function RequestProgress() {
     roster.some((a) => a.id === id),
   ).length;
 
-  // 날짜 병기 + 마감 (참석자 카드와 동일 규격)
-  const today = atMidnight(new Date());
-  const nextMon = addDays(mondayOfWeek(today), 7);
-  const nextFri = addDays(nextMon, 4);
+  // 날짜 병기 + 마감 — 후보 기간(시작일·활성 요일 수) 반영
+  const start = state.rangeStart;
+  const end = addDays(start, state.activeDays.length - 1);
   const md = (d: Date) => `${d.getMonth() + 1}/${d.getDate()}`;
   const hasDate = /\d/.test(state.rangeLabel);
   const rangeText = hasDate
     ? state.rangeLabel
-    : `${state.rangeLabel} (${md(nextMon)}–${nextFri.getDate()})`;
-  const deadline = addDays(mondayOfWeek(today), 4);
+    : `${state.rangeLabel} (${md(start)}–${end.getDate()})`;
+  const deadline = addDays(mondayOfWeek(atMidnight(new Date())), 4);
 
   return (
     <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-line/70">
@@ -397,10 +396,9 @@ function ConfirmedAnnouncement({
   const confirmCount = roster.filter((a) => confirmedIds.includes(a.id)).length;
   const allConfirmed = confirmCount >= total;
 
-  // 날짜 특정 — "7월 13일 (월) 오전 11:00" (요일 단독 금지)
-  const dayIdx = Math.max(0, DAYS.indexOf(r.day));
-  const nextMon = addDays(mondayOfWeek(atMidnight(new Date())), 7);
-  const date = addDays(nextMon, dayIdx);
+  // 날짜 특정 — "7월 13일 (월) 오전 11:00" (요일 단독 금지). 후보 기간 시작일 기준.
+  const dayIdx = Math.max(0, state.activeDays.indexOf(r.day));
+  const date = addDays(state.rangeStart, dayIdx);
   const ampm = r.time < 12 ? "오전" : "오후";
   const h12 = r.time % 12 === 0 ? 12 : r.time % 12;
   const dateTimeStr = `${date.getMonth() + 1}월 ${date.getDate()}일 (${wd(
@@ -707,16 +705,15 @@ function ReceivedRequest({ onRespond }: { onRespond: () => void }) {
   const roster = state.attendees.filter((a) => !a.excluded);
   const allIn = roster.every((a) => state.responded.includes(a.id));
 
-  // 상대표현 + 실제 날짜 병기 · 응답 마감(이번 주 금요일)
-  const today = atMidnight(new Date());
-  const nextMon = addDays(mondayOfWeek(today), 7);
-  const nextFri = addDays(nextMon, 4);
+  // 상대표현 + 실제 날짜 병기 — 후보 기간(시작일·활성 요일 수) 반영. 응답 마감=이번 주 금
+  const start = state.rangeStart;
+  const end = addDays(start, state.activeDays.length - 1);
   const md = (d: Date) => `${d.getMonth() + 1}/${d.getDate()}`;
   const hasDate = /\d/.test(state.rangeLabel);
   const rangeText = hasDate
     ? state.rangeLabel
-    : `${state.rangeLabel} (${md(nextMon)}–${nextFri.getDate()})`;
-  const deadline = addDays(mondayOfWeek(today), 4); // 이번 주 금
+    : `${state.rangeLabel} (${md(start)}–${end.getDate()})`;
+  const deadline = addDays(mondayOfWeek(atMidnight(new Date())), 4);
 
   return (
     <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-line/70">

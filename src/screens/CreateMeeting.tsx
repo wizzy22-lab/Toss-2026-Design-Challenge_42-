@@ -2,7 +2,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useApp } from "../store";
 import { Checkbox, Icon, personAvatar } from "../ui";
-import DateRangePicker from "../components/DateRangePicker";
+import DateRangePicker, {
+  type RangeSelection,
+} from "../components/DateRangePicker";
 import DeadlinePicker from "../components/DeadlinePicker";
 import Dropdown from "../components/Dropdown";
 
@@ -22,7 +24,7 @@ export default function CreateMeeting({
   const { state, dispatch } = useApp();
   // 프리필 금지 — 로컬 드래프트, 미선택 시작. 제출 때만 커밋.
   const [title, setTitle] = useState("");
-  const [rangeLabel, setRangeLabel] = useState<string | null>(null);
+  const [range, setRange] = useState<RangeSelection | null>(null);
   const [duration, setDuration] = useState<string | null>("1시간"); // 기본 1시간
   const [, setDeadlineLabel] = useState(""); // 응답 마감 조합 라벨(저마찰·기본값 있음)
   const [showInvite, setShowInvite] = useState(false);
@@ -37,7 +39,7 @@ export default function CreateMeeting({
   };
 
   const canSubmit =
-    title.trim() !== "" && rangeLabel !== null && duration !== null;
+    title.trim() !== "" && range !== null && duration !== null;
 
   const handleSubmit = () => {
     // 비활성 느낌이되 클릭 시 안내(토스트+인라인). 갖춰지면 제출.
@@ -46,14 +48,19 @@ export default function CreateMeeting({
       showToast(
         title.trim() === ""
           ? "회의 이름을 정해주세요"
-          : rangeLabel === null
+          : range === null
             ? "후보 기간을 정해주세요"
             : "소요시간을 정해주세요",
       );
       return;
     }
     dispatch({ type: "SET_TITLE", title: title.trim() });
-    dispatch({ type: "SET_RANGE", label: rangeLabel! });
+    dispatch({
+      type: "SET_RANGE",
+      label: range!.label,
+      days: range!.days,
+      start: range!.start,
+    });
     dispatch({ type: "SET_DURATION", label: duration! });
     onSubmit();
   };
@@ -73,7 +80,7 @@ export default function CreateMeeting({
   const included = state.attendees.filter((a) => !a.excluded);
   const excluded = state.attendees.filter((a) => a.excluded);
   const titleErr = attempted && title.trim() === "";
-  const rangeErr = attempted && rangeLabel === null;
+  const rangeErr = attempted && range === null;
   const durErr = attempted && duration === null;
 
   return (
@@ -128,7 +135,7 @@ export default function CreateMeeting({
           {/* 후보 기간 — 전체폭(달력 여유) */}
           <div className="mt-5">
             <label className={LBL}>후보 기간</label>
-            <DateRangePicker onChange={setRangeLabel} />
+            <DateRangePicker onChange={setRange} />
             {rangeErr && (
               <p className="mt-1 text-[13px] font-semibold text-danger-ink">
                 후보 기간을 정해주세요.

@@ -109,9 +109,13 @@ export function evalSlot(
   };
 }
 
-export function evalAll(attendees: Attendee[], quorum: number): SlotResult[] {
+export function evalAll(
+  attendees: Attendee[],
+  quorum: number,
+  days: Day[] = DAYS,
+): SlotResult[] {
   const out: SlotResult[] = [];
-  for (const d of DAYS)
+  for (const d of days)
     for (const t of TIMES) out.push(evalSlot(d, t, attendees, quorum));
   return out;
 }
@@ -155,6 +159,7 @@ export function reCoordinate(
   fromKey: string,
   changerId: string,
   quorum: number,
+  days: Day[] = DAYS,
 ): ReCoordination | null {
   const changer = attendees.find((a) => a.id === changerId);
   if (!changer) return null;
@@ -169,7 +174,7 @@ export function reCoordinate(
   const reData = attendees.map((a) =>
     a.id === changerId ? { ...a, busy: [...a.busy, fromKey] } : a,
   );
-  const reTop = topRecommendations(evalAll(reData, quorum), 3).filter(
+  const reTop = topRecommendations(evalAll(reData, quorum, days), 3).filter(
     (r) => r.key !== fromKey,
   );
 

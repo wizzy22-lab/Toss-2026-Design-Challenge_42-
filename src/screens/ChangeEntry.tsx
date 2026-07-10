@@ -48,11 +48,12 @@ export default function ChangeEntry({
     const reData = roster.map((a) =>
       a.id === who ? { ...a, busy: [...a.busy, key] } : a,
     );
-    return topRecommendations(evalAll(reData, state.quorum), 3).filter(
-      (r) => r.key !== key,
-    );
+    return topRecommendations(
+      evalAll(reData, state.quorum, state.activeDays),
+      3,
+    ).filter((r) => r.key !== key);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.attendees, state.confirmedKey, who, state.quorum]);
+  }, [state.attendees, state.confirmedKey, who, state.quorum, state.activeDays]);
 
   // who가 바뀌면(주최자 select) 선택 초기화
   const pickWho = (id: string) => {

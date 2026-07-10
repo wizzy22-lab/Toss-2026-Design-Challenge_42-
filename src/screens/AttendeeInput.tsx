@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { useApp } from "../store";
-import { DAYS, DAY_LABEL, TIMES, slotKey, timeLabel } from "../data";
+import { DAY_LABEL, TIMES, slotKey, timeLabel } from "../data";
 import type { Attendee, Day, TimeSlot } from "../types";
 import { Badge, Icon } from "../ui";
-import { addDays, atMidnight, mondayOfWeek } from "../lib/date";
+import { addDays } from "../lib/date";
 
 // 상태 2개만: 불가(hard) / 가능하면 피해요(soft). '외근'은 상태가 아니라 이유 → 삭제.
 type CellKind = "free" | "busy" | "soft";
@@ -26,6 +26,7 @@ export default function AttendeeInput({
   const { state, dispatch } = useApp();
   const me = state.attendees.find((x) => x.id === state.activeAttendeeId)!;
   const host = state.attendees[0];
+  const days = state.activeDays; // 후보 기간의 활성 요일 (열 수·순서)
   // 주최자 본인 시간 입력(만들기 직후) — 참석자와 같은 그리드를 재사용
   const isSelfHost = me.id === host.id;
   const [submitted, setSubmitted] = useState(false);
@@ -80,11 +81,11 @@ export default function AttendeeInput({
     setSubmitted(true);
   };
 
-  // 요일 헤더 날짜 = 후보 기간(데모 기본 '다음 주' 월~금) 반영 → 월13·화14·수15·목16·금17
-  const weekDates = useMemo(() => {
-    const nextMon = addDays(mondayOfWeek(atMidnight(new Date())), 7);
-    return DAYS.map((_, i) => addDays(nextMon, i).getDate());
-  }, []);
+  // 요일 헤더 날짜 = 후보 기간(활성 요일·시작일) 반영
+  const weekDates = useMemo(
+    () => days.map((_, i) => addDays(state.rangeStart, i).getDate()),
+    [days, state.rangeStart],
+  );
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center p-3 sm:p-4">
@@ -192,10 +193,15 @@ export default function AttendeeInput({
                 </button>
               </div>
 
-              {/* 그리드 셀 gap = 8 */}
-              <div className="grid grid-cols-[36px_repeat(5,1fr)] sm:grid-cols-[44px_repeat(5,1fr)] gap-2">
+              {/* 그리드 셀 gap = 8 · 열 수 = 활성 요일 수 */}
+              <div
+                className="grid gap-2"
+                style={{
+                  gridTemplateColumns: `44px repeat(${days.length}, minmax(0,1fr))`,
+                }}
+              >
                 <div />
-                {DAYS.map((d, i) => (
+                {days.map((d, i) => (
                   <div
                     key={d}
                     className="pb-1 text-center text-[13px] font-bold text-ink-faint"
@@ -234,6 +240,8 @@ function GridRow({
   me: Attendee;
   onCycle: (d: Day, t: TimeSlot) => void;
 }) {
+  const { state } = useApp();
+  const days = state.activeDays;
   const styles: Record<CellKind, string> = {
     free: "border-line bg-white hover:border-sand-300",
     busy: "border-block bg-block text-block-ink", // 불가 = slate #EBE4DC + X
@@ -244,7 +252,7 @@ function GridRow({
       <div className="flex items-center justify-end pr-1 text-[13px] font-semibold text-ink-faint">
         {timeLabel(t)}
       </div>
-      {DAYS.map((d) => {
+      {days.map((d) => {
         const kind = cellKind(me, d, t);
         const k = slotKey(d, t);
         return (
@@ -276,10 +284,13 @@ function echoLine(me: Attendee): string {
 
 /** 제출 내용 검증용 미니 썸네일 (읽기 전용) */
 function MiniGrid({ me }: { me: Attendee }) {
+  const { state } = useApp();
+  const days = state.activeDays;
+  const cols = { gridTemplateColumns: `repeat(${days.length}, minmax(0,1fr))` };
   return (
     <div className="inline-block rounded-lg bg-sand-50 p-2">
-      <div className="mb-1 grid grid-cols-5 gap-[3px]">
-        {DAYS.map((d) => (
+      <div className="mb-1 grid gap-[3px]" style={cols}>
+        {days.map((d) => (
           <div
             key={d}
             className="text-center text-[8px] font-bold text-ink-faint"
@@ -288,9 +299,9 @@ function MiniGrid({ me }: { me: Attendee }) {
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-5 gap-[3px]">
+      <div className="grid gap-[3px]" style={cols}>
         {TIMES.map((t) =>
-          DAYS.map((d) => {
+          days.map((d) => {
             const kind = cellKind(me, d, t);
             let c = "bg-white";
             if (kind === "busy") c = "bg-block-ink";

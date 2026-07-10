@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Icon } from "../ui";
+import { DAYS } from "../data";
+import type { Day } from "../types";
 import {
   addDays,
   atMidnight,
@@ -7,6 +9,13 @@ import {
   fmtRange,
   mondayOfWeek,
 } from "../lib/date";
+
+/** 상위로 넘기는 구조화 범위 — 라벨 + 활성 요일 + 시작일 */
+export interface RangeSelection {
+  label: string;
+  days: Day[];
+  start: Date;
+}
 
 const WEEK = ["월", "화", "수", "목", "금", "토", "일"];
 type Preset = "next" | "this" | "custom";
@@ -23,7 +32,7 @@ function segClass(active: boolean) {
 export default function DateRangePicker({
   onChange,
 }: {
-  onChange: (label: string) => void;
+  onChange: (range: RangeSelection) => void;
 }) {
   const today = useMemo(() => atMidnight(new Date()), []);
   const thisMon = useMemo(() => mondayOfWeek(today), [today]);
@@ -38,15 +47,36 @@ export default function DateRangePicker({
   // 달력이 보여주는 달 (기본 = 오늘이 든 달)
   const [viewMonth, setViewMonth] = useState(() => firstOfMonth(today));
 
-  const labelFor = (p: Preset): string => {
-    if (p === "next") return `다음 주 · ${fmtRange(nextMon, nextFri)}`;
-    if (p === "this") return `이번 주 · ${fmtRange(thisMon, thisFri)}`;
-    return `직접 선택 · ${fmtRange(start, end)}`;
+  const weekdayIdx = (d: Date) => (d.getDay() + 6) % 7; // 월=0..금=4 (주말 비활성)
+
+  // 선택 → 구조화 범위(라벨·활성 요일·시작일). 커스텀은 시작 '주' 내로 클램프.
+  const rangeFor = (p: Preset): RangeSelection => {
+    if (p === "next")
+      return {
+        label: `다음 주 · ${fmtRange(nextMon, nextFri)}`,
+        days: DAYS,
+        start: nextMon,
+      };
+    if (p === "this")
+      return {
+        label: `이번 주 · ${fmtRange(thisMon, thisFri)}`,
+        days: DAYS,
+        start: thisMon,
+      };
+    const sIdx = weekdayIdx(start);
+    const weekFri = addDays(mondayOfWeek(start), 4); // 시작 주 금요일
+    const clampedEnd = end.getTime() > weekFri.getTime() ? weekFri : end;
+    const eIdx = Math.max(sIdx, weekdayIdx(clampedEnd));
+    return {
+      label: `직접 선택 · ${fmtRange(start, clampedEnd)}`,
+      days: DAYS.slice(sIdx, eIdx + 1),
+      start,
+    };
   };
 
-  // 선택했을 때만 상위로 라벨 반영 (미선택 시작 → 프리필 없음)
+  // 선택했을 때만 상위로 반영 (미선택 시작 → 프리필 없음)
   useEffect(() => {
-    if (preset !== null) onChange(labelFor(preset));
+    if (preset !== null) onChange(rangeFor(preset));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preset, start, end]);
 
