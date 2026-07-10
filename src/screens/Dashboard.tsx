@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, useReducedMotion } from "framer-motion";
 import { useApp } from "../store";
 import { DAYS, DAY_LABEL, TIMES, timeLabel, slotKorean } from "../data";
@@ -6,7 +7,9 @@ import { topRecommendations, type SlotResult } from "../engine";
 import type { TimeSlot } from "../types";
 import { Icon } from "../ui";
 
-/* ---------- 히트맵 셀 (읽기 전용 · 톤(스트로크 X) · 호버 브레이크다운) ---------- */
+type Tip = { r: SlotResult; x: number; y: number };
+
+/* ---------- 히트맵 셀 (읽기 전용 · 톤(스트로크 X) · 호버 시 셀 위 툴팁) ---------- */
 function HeatCell({
   r,
   confirmed,
@@ -14,7 +17,7 @@ function HeatCell({
 }: {
   r: SlotResult;
   confirmed: boolean;
-  onHover?: (r: SlotResult | null) => void;
+  onHover?: (t: Tip | null) => void;
 }) {
   let tint = "bg-sand-50 text-ink-faint";
   let label = "";
@@ -28,7 +31,10 @@ function HeatCell({
   }
   return (
     <div
-      onMouseEnter={() => onHover?.(r)}
+      onMouseEnter={(e) => {
+        const b = e.currentTarget.getBoundingClientRect();
+        onHover?.({ r, x: b.left + b.width / 2, y: b.top });
+      }}
       onMouseLeave={() => onHover?.(null)}
       className={`flex h-9 cursor-default items-center justify-center rounded-lg text-[13px] font-bold transition ${tint} ${
         confirmed ? "ring-2 ring-brand-500 ring-offset-1" : "hover:brightness-95"
@@ -39,38 +45,44 @@ function HeatCell({
   );
 }
 
-/* 호버 슬롯의 간결 브레이크다운 — ✕ 불가 / ▲ 피하고 싶어요 */
-function HoverBreakdown({ r }: { r: SlotResult | null }) {
-  if (!r)
-    return (
-      <span className="text-ink-faint">
-        칸에 마우스를 올리면 누가 불가·피하고 싶어 하는지 볼 수 있어요.
-      </span>
-    );
+/* 호버 툴팁 카드 (셀 바로 위) — ✕ 불가 / ▲ 피하고 싶어요 */
+function TipCard({ r }: { r: SlotResult }) {
   const blocked = r.states
     .filter((s) => !s.available)
     .map((s) => s.attendee.name);
   const soft = r.states.filter((s) => s.soft).map((s) => s.attendee.name);
+  const empty = !blocked.length && !soft.length;
   return (
-    <>
-      <b className="font-bold text-ink">{slotKorean(r.day, r.time)}</b>
-      {!blocked.length && !soft.length ? (
-        <span className="font-semibold text-ok-ink">다들 가능</span>
+    <div className="relative w-max max-w-[220px] rounded-lg bg-ink px-2.5 py-1.5 text-[13px] font-semibold leading-snug text-white shadow-pop">
+      <div className="mb-1 font-bold text-white/55">
+        {slotKorean(r.day, r.time)}
+      </div>
+      {empty ? (
+        <div>다들 가능한 시간이에요</div>
       ) : (
-        <>
+        <div className="space-y-0.5">
           {blocked.length > 0 && (
-            <span className="inline-flex items-center gap-1 font-semibold text-block-ink">
-              <Icon name="x" size={12} /> {blocked.join("·")}
-            </span>
+            <div className="flex items-start gap-1">
+              <Icon name="x" size={12} className="mt-0.5 shrink-0 text-white/70" />
+              <span>{blocked.join("·")}</span>
+            </div>
           )}
           {soft.length > 0 && (
-            <span className="inline-flex items-center gap-1 font-semibold text-avoid-ink">
-              <Icon name="triangle" size={11} filled /> {soft.join("·")}
-            </span>
+            <div className="flex items-start gap-1">
+              <Icon
+                name="triangle"
+                size={10}
+                filled
+                className="mt-0.5 shrink-0 text-avoid"
+              />
+              <span>{soft.join("·")}</span>
+            </div>
           )}
-        </>
+        </div>
       )}
-    </>
+      {/* 아래 화살표 */}
+      <span className="absolute left-1/2 top-full h-2 w-2 -translate-x-1/2 -translate-y-1 rotate-45 bg-ink" />
+    </div>
   );
 }
 
@@ -82,7 +94,7 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
   const reduce = useReducedMotion();
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
-  const [hovered, setHovered] = useState<SlotResult | null>(null);
+  const [tip, setTip] = useState<Tip | null>(null);
 
   const byKey = useMemo(() => {
     const m = new Map<string, SlotResult>();
@@ -279,14 +291,13 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
                       time={t}
                       byKey={byKey}
                       confirmedKey={state.confirmedKey}
-                      onHover={setHovered}
+                      onHover={setTip}
                     />
                   ))}
                 </div>
-                {/* 호버 브레이크다운 — 스크롤 컨테이너에서 안 잘리게 그리드 하단 캡션으로 */}
-                <div className="mt-2 flex min-h-[20px] flex-wrap items-center gap-x-2 gap-y-1 text-[13px]">
-                  <HoverBreakdown r={hovered} />
-                </div>
+                <p className="mt-2 text-[13px] text-ink-faint">
+                  칸에 마우스를 올리면 누가 불가·피하고 싶어 하는지 볼 수 있어요.
+                </p>
               </div>
             </>
           ) : (
@@ -303,6 +314,23 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
           )}
         </div>
       </motion.div>
+
+      {/* 호버 툴팁 — 셀 rect 기준 fixed 좌표, 포털로 스크롤/transform 클리핑 회피 */}
+      {tip &&
+        createPortal(
+          <div
+            style={{
+              position: "fixed",
+              left: tip.x,
+              top: tip.y,
+              transform: "translate(-50%, calc(-100% - 8px))",
+            }}
+            className="pointer-events-none z-[100]"
+          >
+            <TipCard r={tip.r} />
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }
@@ -316,7 +344,7 @@ function Row({
   time: TimeSlot;
   byKey: Map<string, SlotResult>;
   confirmedKey: string | null;
-  onHover?: (r: SlotResult | null) => void;
+  onHover?: (t: Tip | null) => void;
 }) {
   return (
     <>
