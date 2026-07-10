@@ -121,7 +121,7 @@ export default function CreateMeeting({
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="ex) 주간회의"
+              placeholder="ex) 신규 프로모션 회의"
               className={`w-full rounded-[10px] border px-3.5 py-2.5 text-[16px] font-bold outline-none placeholder:font-normal placeholder:text-[#C7BFB6] focus:ring-2 focus:ring-brand-100 ${
                 titleErr
                   ? "border-danger-ink focus:border-danger-ink"
