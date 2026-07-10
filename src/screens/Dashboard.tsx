@@ -7,7 +7,15 @@ import type { TimeSlot } from "../types";
 import { Icon } from "../ui";
 
 /* ---------- 히트맵 셀 (읽기 전용 · 톤(스트로크 X) · 호버 브레이크다운) ---------- */
-function HeatCell({ r, confirmed }: { r: SlotResult; confirmed: boolean }) {
+function HeatCell({
+  r,
+  confirmed,
+  onHover,
+}: {
+  r: SlotResult;
+  confirmed: boolean;
+  onHover?: (r: SlotResult | null) => void;
+}) {
   let tint = "bg-sand-50 text-ink-faint";
   let label = "";
   if (!r.requiredAllIn) {
@@ -18,27 +26,51 @@ function HeatCell({ r, confirmed }: { r: SlotResult; confirmed: boolean }) {
   } else if (r.feasible) {
     tint = "bg-ok"; // 다 돼요
   }
-  // 호버 브레이크다운 — X: 불가한 사람 / ▲: 피하고 싶은 사람
-  const blocked = r.states
-    .filter((s) => !s.available)
-    .map((s) => s.attendee.name);
-  const soft = r.states.filter((s) => s.soft).map((s) => s.attendee.name);
-  const title =
-    [
-      blocked.length ? `✕ 불가: ${blocked.join("·")}` : "",
-      soft.length ? `▲ 피하고 싶어요: ${soft.join("·")}` : "",
-    ]
-      .filter(Boolean)
-      .join("\n") || "다들 가능한 시간이에요";
   return (
     <div
-      title={title}
-      className={`flex h-9 items-center justify-center rounded-lg text-[13px] font-bold ${tint} ${
-        confirmed ? "ring-2 ring-brand-500 ring-offset-1" : ""
+      onMouseEnter={() => onHover?.(r)}
+      onMouseLeave={() => onHover?.(null)}
+      className={`flex h-9 cursor-default items-center justify-center rounded-lg text-[13px] font-bold transition ${tint} ${
+        confirmed ? "ring-2 ring-brand-500 ring-offset-1" : "hover:brightness-95"
       }`}
     >
       {label}
     </div>
+  );
+}
+
+/* 호버 슬롯의 간결 브레이크다운 — ✕ 불가 / ▲ 피하고 싶어요 */
+function HoverBreakdown({ r }: { r: SlotResult | null }) {
+  if (!r)
+    return (
+      <span className="text-ink-faint">
+        칸에 마우스를 올리면 누가 불가·피하고 싶어 하는지 볼 수 있어요.
+      </span>
+    );
+  const blocked = r.states
+    .filter((s) => !s.available)
+    .map((s) => s.attendee.name);
+  const soft = r.states.filter((s) => s.soft).map((s) => s.attendee.name);
+  return (
+    <>
+      <b className="font-bold text-ink">{slotKorean(r.day, r.time)}</b>
+      {!blocked.length && !soft.length ? (
+        <span className="font-semibold text-ok-ink">다들 가능</span>
+      ) : (
+        <>
+          {blocked.length > 0 && (
+            <span className="inline-flex items-center gap-1 font-semibold text-block-ink">
+              <Icon name="x" size={12} /> {blocked.join("·")}
+            </span>
+          )}
+          {soft.length > 0 && (
+            <span className="inline-flex items-center gap-1 font-semibold text-avoid-ink">
+              <Icon name="triangle" size={11} filled /> {soft.join("·")}
+            </span>
+          )}
+        </>
+      )}
+    </>
   );
 }
 
@@ -50,6 +82,7 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
   const reduce = useReducedMotion();
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
+  const [hovered, setHovered] = useState<SlotResult | null>(null);
 
   const byKey = useMemo(() => {
     const m = new Map<string, SlotResult>();
@@ -72,7 +105,6 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
   const moreCount = ordered.length - 3;
 
   const roster = state.attendees.filter((a) => !a.excluded);
-  const unlinked = roster.filter((a) => !a.linked);
   // park: 선택 참석자 있으면 "필참자는 모두", 없으면(전원 필참) "다들"
   const hasOptional = roster.some((a) => !a.required);
   const availLine = hasOptional
@@ -247,22 +279,14 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
                       time={t}
                       byKey={byKey}
                       confirmedKey={state.confirmedKey}
+                      onHover={setHovered}
                     />
                   ))}
                 </div>
-                <p className="mt-2 text-[13px] text-ink-faint">
-                  칸에 마우스를 올리면 누가 불가·피하고 싶어 하는지 볼 수 있어요.
-                </p>
-              </div>
-
-              {/* 참석자 — 요약만 (조정 기능 삭제) */}
-              <div className="mt-6 rounded-xl bg-sand-50 px-4 py-3">
-                <p className="text-[13px] font-semibold text-ink-soft">
-                  참석자 {roster.length}명 · {roster.length - unlinked.length}명
-                  일정 자동
-                  {unlinked.length > 0 &&
-                    ` · ${unlinked.map((a) => a.name).join("·")} 직접 표시`}
-                </p>
+                {/* 호버 브레이크다운 — 스크롤 컨테이너에서 안 잘리게 그리드 하단 캡션으로 */}
+                <div className="mt-2 flex min-h-[20px] flex-wrap items-center gap-x-2 gap-y-1 text-[13px]">
+                  <HoverBreakdown r={hovered} />
+                </div>
               </div>
             </>
           ) : (
@@ -287,10 +311,12 @@ function Row({
   time,
   byKey,
   confirmedKey,
+  onHover,
 }: {
   time: TimeSlot;
   byKey: Map<string, SlotResult>;
   confirmedKey: string | null;
+  onHover?: (r: SlotResult | null) => void;
 }) {
   return (
     <>
@@ -300,7 +326,14 @@ function Row({
       {DAYS.map((d) => {
         const key = `${d}-${time}`;
         const r = byKey.get(key)!;
-        return <HeatCell key={key} r={r} confirmed={confirmedKey === key} />;
+        return (
+          <HeatCell
+            key={key}
+            r={r}
+            confirmed={confirmedKey === key}
+            onHover={onHover}
+          />
+        );
       })}
     </>
   );
