@@ -31,7 +31,10 @@ export default function DeadlinePicker({
 
   useEffect(() => {
     const idx = Math.max(0, dayOptions.indexOf(day));
-    onChange({ label: `${day} ${time}`, date: dayDates[idx] });
+    const [h, m] = time.split(":").map(Number);
+    const date = new Date(dayDates[idx]);
+    date.setHours(h, m, 0, 0); // 선택한 시각을 마감에 반영(카운트다운 기준)
+    onChange({ label: `${day} ${time}`, date });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [day, time]);
 

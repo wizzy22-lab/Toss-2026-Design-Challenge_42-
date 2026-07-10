@@ -184,6 +184,28 @@ function ResponseRoster({ animateFill = false }: { animateFill?: boolean }) {
 }
 
 /* ---------- 요청 카드 (주최자 관점 · 응답 진행도) ---------- */
+/* 응답 마감 실시간 카운트다운 태그 — 요청/대기 카드 공용(host·attendee 동일) */
+function DeadlineCountdown({ deadline }: { deadline: Date }) {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const id = window.setInterval(() => setNow(new Date()), 1000);
+    return () => window.clearInterval(id);
+  }, []);
+  const diff = deadline.getTime() - now.getTime();
+  const s = Math.max(0, Math.floor(diff / 1000));
+  const days = Math.floor(s / 86400);
+  const hh = String(Math.floor((s % 86400) / 3600)).padStart(2, "0");
+  const mm = String(Math.floor((s % 3600) / 60)).padStart(2, "0");
+  const ss = String(s % 60).padStart(2, "0");
+  const text =
+    diff <= 0 ? "마감됨" : `${days > 0 ? `${days}일 ` : ""}${hh}:${mm}:${ss}`;
+  return (
+    <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-avoid px-2 py-0.5 text-[13px] font-semibold text-avoid-ink [font-variant-numeric:tabular-nums]">
+      <Icon name="clock" size={12} /> {text}
+    </span>
+  );
+}
+
 function RequestProgress() {
   const { state } = useApp();
   const roster = state.attendees.filter((a) => !a.excluded);
@@ -202,7 +224,6 @@ function RequestProgress() {
   const rangeText = hasDate
     ? state.rangeLabel
     : `${state.rangeLabel} (${md(start)}–${end.getDate()})`;
-  const deadline = state.deadline;
 
   return (
     <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-line/70">
@@ -217,9 +238,7 @@ function RequestProgress() {
               참석자 응답을 모으고 있어요
             </p>
           </div>
-          <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-avoid px-2 py-0.5 text-[13px] font-semibold text-avoid-ink">
-            <Icon name="clock" size={12} /> {md(deadline)}({wd(deadline)})까지
-          </span>
+          <DeadlineCountdown deadline={state.deadline} />
         </div>
 
         {/* 시간·날짜(bold) + 주최자(faint) */}
@@ -411,7 +430,7 @@ function ConfirmedAnnouncement({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-[14px] border border-line bg-cream shadow-card ${
+      className={`relative overflow-hidden rounded-2xl border border-line bg-cream shadow-card ${
         muted ? "opacity-70" : ""
       }`}
     >
@@ -419,19 +438,19 @@ function ConfirmedAnnouncement({
       <div aria-hidden className="glow-accent pointer-events-none absolute inset-0" />
 
       <div className="relative">
-        {/* ① 타이틀 행 (패딩 24) — 회의명 + 확정 태그(색+아이콘) */}
-        <div className="flex items-start justify-between gap-2 px-6 pt-6">
-          <h3 className="text-[20px] font-bold leading-tight tracking-[-0.01em] text-ink">
+        {/* ① 타이틀 행 — 회의명 + 확정 태그(색+아이콘) */}
+        <div className="flex items-start justify-between gap-2 px-4 pt-4">
+          <h3 className="text-[16px] font-bold leading-snug tracking-[-0.01em] text-ink">
             {state.title}
           </h3>
-          <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-ok px-3 py-1.5 text-[13px] font-semibold text-ok-ink">
+          <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-ok px-2 py-0.5 text-[13px] font-semibold text-ok-ink">
             <Icon name="check" size={13} /> 확정
           </span>
         </div>
 
-        {/* ② 시간 = One Thing (Display 30 · accent-large flame · tabular-nums) */}
-        <div className="px-6 pt-2">
-          <div className="text-[30px] font-bold leading-[1.3] tracking-[-0.01em] text-flame [font-variant-numeric:tabular-nums]">
+        {/* ② 시간 = One Thing (accent-large flame · tabular-nums) */}
+        <div className="px-4 pt-2">
+          <div className="text-2xl font-bold leading-[1.3] tracking-[-0.01em] text-flame [font-variant-numeric:tabular-nums]">
             {dateTimeStr}
           </div>
           <p className="mt-1 text-[13px] text-ink-soft">
@@ -439,13 +458,13 @@ function ConfirmedAnnouncement({
           </p>
         </div>
 
-        {/* ③ 사실 문장 (Body 16) */}
-        <p className="px-6 pt-3 text-[16px] leading-relaxed text-ink">
+        {/* ③ 사실 문장 */}
+        <p className="px-4 pt-3 text-[13px] leading-relaxed text-ink-soft">
           다들 올 수 있는 괜찮은 시간으로 정했어요.
         </p>
 
         {/* ④ 참석 확인 */}
-        <div className="px-6 pt-5">
+        <div className="px-4 pt-4">
           {!muted &&
             (iConfirmed ? (
               <span className="inline-flex items-center gap-1.5 rounded-full bg-ok px-3 py-1.5 text-[13px] font-semibold text-ok-ink">
@@ -454,7 +473,7 @@ function ConfirmedAnnouncement({
             ) : (
               <button
                 onClick={() => dispatch({ type: "CONFIRM_ATTEND", id: me.id })}
-                className="h-12 w-full rounded-[10px] bg-ink text-[16px] font-semibold text-white transition hover:bg-[#33291F]"
+                className="w-full rounded-[10px] bg-ink py-3 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
               >
                 참석 확인하기
               </button>
@@ -478,7 +497,7 @@ function ConfirmedAnnouncement({
                 return (
                   <span
                     key={a.id}
-                    className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[13px] font-semibold ${
+                    className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[13px] font-semibold ${
                       ok ? "bg-ok text-ok-ink" : "bg-wait text-ink-faint"
                     }`}
                   >
@@ -494,10 +513,10 @@ function ConfirmedAnnouncement({
         {/* ⑤ 탈출구 — subtle 텍스트 버튼(디모션).
             참석자가 조율 요청 후엔(재조율 카드는 주최자 전용) 피드백 문구로 대체(막다른 길 방지). */}
         {showChangeEntry && !muted ? (
-          <div className="px-6 pb-5 pt-4">
+          <div className="px-4 pb-4 pt-3">
             <button
               onClick={onChangeEntry}
-              className="py-2 text-[14px] font-semibold text-brand-600"
+              className="py-2 text-[13px] font-semibold text-brand-600"
             >
               참석이 어려우면 다시 조율하기
             </button>
@@ -505,7 +524,7 @@ function ConfirmedAnnouncement({
         ) : state.change !== null &&
           state.lastChange === null &&
           state.viewAs !== "host" ? (
-          <div className="px-6 pb-5 pt-4">
+          <div className="px-4 pb-4 pt-3">
             <p className="text-[13px] font-semibold text-brand-600">
               조정 요청을 보냈어요 · 주최자가 조율 중이에요.
             </p>
@@ -766,7 +785,6 @@ function ReceivedRequest({ onRespond }: { onRespond: () => void }) {
   const rangeText = hasDate
     ? state.rangeLabel
     : `${state.rangeLabel} (${md(start)}–${end.getDate()})`;
-  const deadline = state.deadline;
 
   return (
     <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-line/70">
@@ -781,9 +799,7 @@ function ReceivedRequest({ onRespond }: { onRespond: () => void }) {
               안 되는 시간만 알려주세요
             </p>
           </div>
-          <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-avoid px-2 py-0.5 text-[13px] font-semibold text-avoid-ink">
-            <Icon name="clock" size={12} /> {md(deadline)}({wd(deadline)})까지
-          </span>
+          <DeadlineCountdown deadline={state.deadline} />
         </div>
 
         {/* 시간·날짜(bold) + 주최자(faint) */}

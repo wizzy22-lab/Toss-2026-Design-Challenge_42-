@@ -35,8 +35,12 @@ const CHANGE_DEMO_ID = "jihoon";
 const SEED_ATTEND_CONFIRM = ["jieun", "junho"];
 /** 기본 후보 기간 = 다음 주 월요일 시작, 월–금 5일 */
 const DEFAULT_RANGE_START = addDays(mondayOfWeek(atMidnight(new Date())), 7);
-/** 기본 응답 마감 = 오늘로부터 2일 뒤 (DeadlinePicker 기본값과 동일) */
-const DEFAULT_DEADLINE = addDays(atMidnight(new Date()), 2);
+/** 기본 응답 마감 = 오늘로부터 2일 뒤 18:00 (DeadlinePicker 기본값과 동일) */
+const DEFAULT_DEADLINE = (() => {
+  const d = addDays(atMidnight(new Date()), 2);
+  d.setHours(18, 0, 0, 0);
+  return d;
+})();
 
 interface State {
   title: string;
