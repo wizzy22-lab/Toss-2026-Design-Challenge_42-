@@ -1,9 +1,9 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import { useApp } from "../store";
-import { DAY_LABEL, slotKorean, timeLabel } from "../data";
+import { DAY_LABEL, DAYS, slotKorean, timeLabel } from "../data";
 import { parseKey, type SlotResult } from "../engine";
-import { changeAnnounceLine, confirmedLine } from "../copy";
+import { changeAnnounceLine } from "../copy";
 import { Icon, personAvatar } from "../ui";
 import { addDays, atMidnight, mondayOfWeek, wd } from "../lib/date";
 
@@ -387,49 +387,122 @@ function ConfirmedAnnouncement({
   onChangeEntry: () => void;
   muted?: boolean;
 }) {
+  const { state, dispatch } = useApp();
+  const roster = state.attendees.filter((a) => !a.excluded);
+  const host = state.attendees[0];
+  const me = state.attendees.find((a) => a.id === state.activeAttendeeId)!;
+  const total = roster.length;
+  const confirmedIds = state.attendConfirmed;
+  const iConfirmed = confirmedIds.includes(me.id);
+  const confirmCount = roster.filter((a) => confirmedIds.includes(a.id)).length;
+  const allConfirmed = confirmCount >= total;
+
+  // 날짜 특정 — "7월 13일 (월) 오전 11:00" (요일 단독 금지)
+  const dayIdx = Math.max(0, DAYS.indexOf(r.day));
+  const nextMon = addDays(mondayOfWeek(atMidnight(new Date())), 7);
+  const date = addDays(nextMon, dayIdx);
+  const ampm = r.time < 12 ? "오전" : "오후";
+  const h12 = r.time % 12 === 0 ? 12 : r.time % 12;
+  const dateTimeStr = `${date.getMonth() + 1}월 ${date.getDate()}일 (${wd(
+    date,
+  )}) ${ampm} ${h12}:00`;
+
   return (
     <div
-      className={`overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-line/70 ${
+      className={`relative overflow-hidden rounded-[14px] border border-line bg-cream shadow-card ${
         muted ? "opacity-70" : ""
       }`}
     >
-      <div className="px-4 py-4">
-        <div className="flex items-center gap-2.5">
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ok text-ok-ink">
-            <Icon name="calendar-check" size={18} />
+      {/* 소프트 글로우 — 성사(finality)에만. 장식·포인터 무시 */}
+      <div aria-hidden className="glow-accent pointer-events-none absolute inset-0" />
+
+      <div className="relative">
+        {/* ① 타이틀 행 (패딩 24) — 회의명 + 확정 태그(색+아이콘) */}
+        <div className="flex items-start justify-between gap-2 px-6 pt-6">
+          <h3 className="text-[20px] font-bold leading-tight tracking-[-0.01em] text-ink">
+            {state.title}
+          </h3>
+          <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-ok px-3 py-1.5 text-[13px] font-semibold text-ok-ink">
+            <Icon name="check" size={13} /> 확정
           </span>
-          <div className="min-w-0">
-            <p className="text-[13px] font-bold text-ink">회의가 정해졌어요.</p>
-            <p className="text-xl font-bold tracking-[-0.01em] text-ink">
-              {slotKorean(r.day, r.time)}
-            </p>
+        </div>
+
+        {/* ② 시간 = One Thing (Display 30 · accent-large flame · tabular-nums) */}
+        <div className="px-6 pt-2">
+          <div className="text-[30px] font-bold leading-[1.3] tracking-[-0.01em] text-flame [font-variant-numeric:tabular-nums]">
+            {dateTimeStr}
+          </div>
+          <p className="mt-1 text-[13px] text-ink-soft">
+            {state.durationLabel} · 주최 {host.name}
+          </p>
+        </div>
+
+        {/* ③ 사실 문장 (Body 16) */}
+        <p className="px-6 pt-3 text-[16px] leading-relaxed text-ink">
+          다들 올 수 있는 괜찮은 시간으로 정했어요.
+        </p>
+
+        {/* ④ 참석 확인 */}
+        <div className="px-6 pt-5">
+          {!muted &&
+            (iConfirmed ? (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-ok px-3 py-1.5 text-[13px] font-semibold text-ok-ink">
+                <Icon name="check" size={14} /> 참석 확인했어요
+              </span>
+            ) : (
+              <button
+                onClick={() => dispatch({ type: "CONFIRM_ATTEND", id: me.id })}
+                className="h-12 w-full rounded-[10px] bg-ink text-[16px] font-semibold text-white transition hover:bg-[#33291F]"
+              >
+                참석 확인하기
+              </button>
+            ))}
+
+          {/* 확인 현황 — 행 위 여백 16 */}
+          <div className="mt-4">
+            {allConfirmed ? (
+              <p className="inline-flex items-center gap-1 text-[14px] font-semibold text-ok-ink [font-variant-numeric:tabular-nums]">
+                <Icon name="check" size={15} /> {total}명 모두 확인했어요
+              </p>
+            ) : (
+              <p className="text-[13px] font-semibold text-ink-soft [font-variant-numeric:tabular-nums]">
+                확인 {confirmCount}/{total}
+              </p>
+            )}
+            {/* 인원 칩 — 간격 8, 색+아이콘+이름 3중 구분 */}
+            <div className="mt-2 flex flex-wrap gap-2">
+              {roster.map((a) => {
+                const ok = confirmedIds.includes(a.id);
+                return (
+                  <span
+                    key={a.id}
+                    className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[13px] font-semibold ${
+                      ok ? "bg-ok text-ok-ink" : "bg-wait text-ink-faint"
+                    }`}
+                  >
+                    <Icon name={ok ? "check" : "clock"} size={13} />
+                    {a.name}
+                  </span>
+                );
+              })}
+            </div>
           </div>
         </div>
-        {/* 캘린더 자동 추가 확인 */}
-        <p className="mt-2.5 inline-flex items-center gap-1 text-[13px] font-semibold text-ok-ink">
-          <Icon name="check" size={14} /> 캘린더에 추가됐어요.
-        </p>
-        <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">
-          다들 참석할 수 있는 시간으로 정했어요.
-        </p>
-      </div>
 
-      {/* 빠져나갈 구멍은 항상 — 확정은 잠금이 아니다 */}
-      {showChangeEntry && !muted && (
-        <div className="border-t border-line-soft bg-sand-50/70 px-4 py-3">
-          <p className="text-[13px] text-ink-faint">
-            참석이 어려워지면 언제든 다시 조율할 수 있어요.
-          </p>
-          <div className="mt-2">
+        {/* ⑤ 탈출구 — subtle 텍스트 버튼(디모션) */}
+        {showChangeEntry && !muted ? (
+          <div className="px-6 pb-5 pt-4">
             <button
               onClick={onChangeEntry}
-              className="rounded-[10px] border border-edge px-3 py-1.5 text-[13px] font-bold text-ink-soft transition hover:bg-sand-50"
+              className="py-2 text-[14px] font-semibold text-brand-600"
             >
-              시간 다시 정하기
+              참석이 어려우면 다시 조율하기
             </button>
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="pb-6" />
+        )}
+      </div>
     </div>
   );
 }

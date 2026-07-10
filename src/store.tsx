@@ -29,6 +29,8 @@ const BEST_KEY = "mon-11";
 export const HOST_ID = INITIAL_ATTENDEES[0].id;
 /** 변경 데모에서 "참석 어려워졌다"고 올리는 사람 (필수·대면) */
 const CHANGE_DEMO_ID = "jihoon";
+/** 확정 카드 초기 참석 확인 = 2명 미리 확인(윤지은·박준호) → "확인 2/6"에서 시작 */
+const SEED_ATTEND_CONFIRM = ["jieun", "junho"];
 
 interface State {
   title: string;
@@ -46,6 +48,8 @@ interface State {
   change: ChangeRequest | null;
   /** 방금 반영된 변경 — 중립적 변경 공지용 */
   lastChange: LastChange | null;
+  /** 확정된 시간에 "참석 확인"한 사람 id들 (순수 표명 · 어떤 것의 조건도 아님) */
+  attendConfirmed: string[];
 }
 
 type Action =
@@ -67,6 +71,7 @@ type Action =
   // 응답 제출 = 참석자의 안 되는/피하고 싶은 시간을 통째로 반영 (추천 즉시 재계산)
   | { type: "SET_AVAILABILITY"; id: string; busy: string[]; softSlots: string[] }
   | { type: "CONFIRM"; key: string }
+  | { type: "CONFIRM_ATTEND"; id: string }
   // 변경/재조율
   | { type: "OPEN_CHANGE"; attendeeId: string }
   | { type: "CANCEL_CHANGE" }
@@ -89,6 +94,7 @@ const initialState: State = {
   responded: ALL_IDS,
   change: null,
   lastChange: null,
+  attendConfirmed: SEED_ATTEND_CONFIRM,
 };
 
 /** 데모 단계별 응답 진행도 정규화 */
@@ -264,8 +270,11 @@ function reducer(state: State, action: Action): State {
         })),
       };
     case "CONFIRM":
-      // 정하기 = 에페메럴 추천을 채널 공지로 전환 (인라인)
+      // 정하기 = 에페메럴 추천을 채널 공지로 전환 (인라인). 확정 순간 캘린더 전원 자동 추가(개념).
       return { ...state, confirmedKey: action.key, screen: "confirm" };
+    case "CONFIRM_ATTEND":
+      // 참석 확인 = 순수 표명(조건 아님). 기존 카드 제자리 갱신 · 새 메시지 없음.
+      return { ...state, attendConfirmed: pushUnique(state.attendConfirmed, action.id) };
     case "OPEN_CHANGE":
       return { ...state, change: { attendeeId: action.attendeeId } };
     case "CANCEL_CHANGE":
@@ -319,6 +328,7 @@ function reducer(state: State, action: Action): State {
         })),
         confirmedKey: toKey,
         change: null,
+        attendConfirmed: SEED_ATTEND_CONFIRM, // 새 확정 = 참석 확인 새로 시작
         lastChange: {
           kind: "reschedule",
           attendeeName: changer.name,
