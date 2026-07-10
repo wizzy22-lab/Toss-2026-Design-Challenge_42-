@@ -27,7 +27,8 @@ function HeatCell({
   let tint = "bg-sand-50 text-ink-faint";
   let label = "";
   if (!r.requiredAllIn) {
-    tint = "hatch bg-sand-50"; // 안 되는 사람 있음
+    tint = "hatch bg-sand-50 text-ink-faint"; // 안 되는 사람 있음
+    label = String(r.counts.out); // 숫자 = 안 되는 사람 수
   } else if (r.feasible && r.softViolations > 0) {
     tint = "bg-avoid text-avoid-ink"; // 아쉬운 사람 있음
     label = String(r.softViolations);
@@ -378,7 +379,7 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
               </span>
               <span className="flex items-center gap-1">
                 <span className="hatch h-2.5 w-2.5 rounded bg-sand-50" /> 안 되는
-                사람 있음
+                사람 있음(숫자=인원)
               </span>
             </div>
             <div
