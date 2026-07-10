@@ -157,9 +157,10 @@ export default function AttendeeInput({
 
               {/* 헬퍼 — 헤더와 24 간격, (연동자) 캘린더 안내 + 탭 사이클 칩 */}
               <div className="mb-4 mt-6 rounded-xl bg-sand-50 p-3">
+                {/* 주 안내(무엇을 할지) = Body 16, 탭 레전드 = 13 → 크기로 위계 */}
                 {me.linked && (
-                  <p className="mb-2 text-[13px] leading-relaxed text-ink-soft">
-                    <b className="text-ink">
+                  <p className="mb-3 text-[16px] leading-relaxed text-ink-soft">
+                    <b className="font-bold text-ink">
                       {me.name}님의 캘린더를 불러왔어요.
                     </b>{" "}
                     안 되는 시간만 확인하고 필요한 곳만 수정해주세요.
