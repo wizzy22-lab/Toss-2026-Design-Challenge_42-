@@ -318,8 +318,8 @@ function EphemeralReco({
           </p>
         )}
 
-        {/* 액션 상하 배치 — 위=이걸 하세요(primary·풀폭), 아래=아니면 대안(secondary 링크) */}
-        <div className="mt-4 flex flex-col items-start gap-1.5">
+        {/* 액션 상하 배치 — 위=이걸 하세요(primary·풀폭), 아래=아니면 대안(secondary 링크·중앙) */}
+        <div className="mt-4 flex flex-col items-center gap-1.5">
           <button
             onClick={onDecide}
             className="w-full rounded-[10px] bg-ink px-5 py-3 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
