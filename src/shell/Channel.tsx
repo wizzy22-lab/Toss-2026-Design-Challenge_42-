@@ -5,7 +5,7 @@ import { DAY_LABEL, slotKorean, timeLabel } from "../data";
 import { parseKey, type SlotResult } from "../engine";
 import { changeAnnounceLine } from "../copy";
 import { Icon, personAvatar } from "../ui";
-import { addDays, atMidnight, mondayOfWeek, wd } from "../lib/date";
+import { addDays, wd } from "../lib/date";
 
 /**
  * 채널 #커머스팀 타임라인 — 관점(주최자/참석자)에 따라 다르게 그린다.
@@ -202,7 +202,7 @@ function RequestProgress() {
   const rangeText = hasDate
     ? state.rangeLabel
     : `${state.rangeLabel} (${md(start)}–${end.getDate()})`;
-  const deadline = addDays(mondayOfWeek(atMidnight(new Date())), 4);
+  const deadline = state.deadline;
 
   return (
     <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-line/70">
@@ -525,6 +525,7 @@ function ReCoordCard() {
   if (!rc) return null;
   const name = rc.changer.name;
   const others = state.attendees.filter((a) => !a.excluded).length - 1;
+  const proposed = state.change?.proposedKeys ?? []; // 참석자가 고른 대안 시간(들)
 
   const Option = ({
     order,
@@ -574,7 +575,9 @@ function ReCoordCard() {
           {name}님이 참석이 어려워졌어요
         </p>
         <p className="text-[13px] text-ink-soft">
-          받아둔 응답으로 바로 정리했어요. 가장 적게 흔드는 순서로 골랐어요.
+          {proposed.length > 0
+            ? `${name}님이 제안한 시간이에요. 고르면 바로 반영돼요.`
+            : "받아둔 응답으로 바로 정리했어요. 가장 적게 흔드는 순서로 골랐어요."}
         </p>
       </div>
       <div className="space-y-2 px-4 py-4">
@@ -588,8 +591,45 @@ function ReCoordCard() {
             onClick={() => dispatch({ type: "RESOLVE_CHANGE", kind: "drop" })}
           />
         )}
-        {rc.newSlot ? (
-          // 새 시간은 메인 추천처럼 크게 — "새로 추천"은 작은 라벨, WHY 한 줄.
+        {proposed.length > 0 ? (
+          // 참석자가 고른 대안 시간(들)을 그대로 노출 → 주최자가 고르면 반영
+          proposed.map((key, i) => {
+            const { day, time } = parseKey(key);
+            return (
+              <div
+                key={key}
+                className="rounded-xl bg-white px-3 py-3 ring-1 ring-brand-100"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-sand-100 text-[13px] font-bold text-ink-soft">
+                    {(rc.canDrop ? 1 : 0) + i + 1}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-[13px] font-bold text-brand-500">
+                      {name}님이 제안
+                    </p>
+                    <p className="text-xl font-bold tracking-[-0.01em] text-ink">
+                      {DAY_LABEL[day]} {timeLabel(time)}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() =>
+                      dispatch({
+                        type: "RESOLVE_CHANGE",
+                        kind: "reschedule",
+                        newKey: key,
+                      })
+                    }
+                    className="ml-auto shrink-0 rounded-[10px] bg-ink px-3 py-2 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
+                  >
+                    이 시간으로 변경
+                  </button>
+                </div>
+              </div>
+            );
+          })
+        ) : rc.newSlot ? (
+          // 시간 제안 없이 올렸을 때 — 엔진이 재수집 없이 다음 시간을 추천
           <div className="rounded-xl bg-white px-3 py-3 ring-1 ring-brand-100">
             <div className="flex items-center gap-3">
               <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-sand-100 text-[13px] font-bold text-ink-soft">
@@ -726,7 +766,7 @@ function ReceivedRequest({ onRespond }: { onRespond: () => void }) {
   const rangeText = hasDate
     ? state.rangeLabel
     : `${state.rangeLabel} (${md(start)}–${end.getDate()})`;
-  const deadline = addDays(mondayOfWeek(atMidnight(new Date())), 4);
+  const deadline = state.deadline;
 
   return (
     <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-line/70">

@@ -5,7 +5,9 @@ import { Checkbox, Icon, personAvatar } from "../ui";
 import DateRangePicker, {
   type RangeSelection,
 } from "../components/DateRangePicker";
-import DeadlinePicker from "../components/DeadlinePicker";
+import DeadlinePicker, {
+  type DeadlineSelection,
+} from "../components/DeadlinePicker";
 import Dropdown from "../components/Dropdown";
 
 // 소요시간 = 1시간 단위, 1~24시간 (기본 1시간)
@@ -26,7 +28,7 @@ export default function CreateMeeting({
   const [title, setTitle] = useState("");
   const [range, setRange] = useState<RangeSelection | null>(null);
   const [duration, setDuration] = useState<string | null>("1시간"); // 기본 1시간
-  const [, setDeadlineLabel] = useState(""); // 응답 마감 조합 라벨(저마찰·기본값 있음)
+  const [deadline, setDeadline] = useState<DeadlineSelection | null>(null); // 응답 마감(기본값 있음)
   const [showInvite, setShowInvite] = useState(false);
   const [showInfo, setShowInfo] = useState(false); // '필참이란?' 안내
   const [invite, setInvite] = useState("");
@@ -62,6 +64,7 @@ export default function CreateMeeting({
       start: range!.start,
     });
     dispatch({ type: "SET_DURATION", label: duration! });
+    if (deadline) dispatch({ type: "SET_DEADLINE", date: deadline.date });
     onSubmit();
   };
 
@@ -162,7 +165,7 @@ export default function CreateMeeting({
             </div>
             <div>
               <label className={LBL}>응답 마감</label>
-              <DeadlinePicker onChange={setDeadlineLabel} />
+              <DeadlinePicker onChange={setDeadline} />
               <p className="mt-1.5 text-[13px] text-ink-faint">
                 이 시간까지 참석자들의 응답을 받을게요.
               </p>

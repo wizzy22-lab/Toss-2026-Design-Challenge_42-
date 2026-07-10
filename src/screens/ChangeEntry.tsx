@@ -61,9 +61,10 @@ export default function ChangeEntry({
     setChoices([]);
   };
 
-  // 제안/불참 모두 주최자에게 올림 — 최종 결정은 주최자 (재조율 카드에서).
+  // 제안/불참 모두 주최자에게 올림 — 고른 대안 시간을 함께 전달(재조율 카드에 노출).
   const submit = () => {
-    dispatch({ type: "OPEN_CHANGE", attendeeId: who });
+    const proposedKeys = choices.filter((c) => c !== "drop");
+    dispatch({ type: "OPEN_CHANGE", attendeeId: who, proposedKeys });
     onSubmit();
   };
 

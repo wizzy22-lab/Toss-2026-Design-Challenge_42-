@@ -35,6 +35,8 @@ const CHANGE_DEMO_ID = "jihoon";
 const SEED_ATTEND_CONFIRM = ["jieun", "junho"];
 /** 기본 후보 기간 = 다음 주 월요일 시작, 월–금 5일 */
 const DEFAULT_RANGE_START = addDays(mondayOfWeek(atMidnight(new Date())), 7);
+/** 기본 응답 마감 = 오늘로부터 2일 뒤 (DeadlinePicker 기본값과 동일) */
+const DEFAULT_DEADLINE = addDays(atMidnight(new Date()), 2);
 
 interface State {
   title: string;
@@ -58,6 +60,8 @@ interface State {
   activeDays: Day[];
   /** activeDays[0]의 실제 날짜(로컬 자정) — 그리드·카드 날짜 파생의 기준 */
   rangeStart: Date;
+  /** 응답 마감 날짜 — 요청/대기 카드의 "~까지" 표기 */
+  deadline: Date;
 }
 
 type Action =
@@ -69,6 +73,7 @@ type Action =
   | { type: "SET_TITLE"; title: string }
   | { type: "SET_DURATION"; label: string }
   | { type: "SET_RANGE"; label: string; days: Day[]; start: Date }
+  | { type: "SET_DEADLINE"; date: Date }
   | { type: "TOGGLE_REQUIRED"; id: string }
   | { type: "TOGGLE_EXCLUDED"; id: string }
   | { type: "ADD_EXTERNAL"; name: string }
@@ -81,7 +86,7 @@ type Action =
   | { type: "CONFIRM"; key: string }
   | { type: "CONFIRM_ATTEND"; id: string }
   // 변경/재조율
-  | { type: "OPEN_CHANGE"; attendeeId: string }
+  | { type: "OPEN_CHANGE"; attendeeId: string; proposedKeys?: string[] }
   | { type: "CANCEL_CHANGE" }
   | { type: "RESOLVE_CHANGE"; kind: ChangeKind; newKey?: string }
   | { type: "RESET" };
@@ -105,6 +110,7 @@ const initialState: State = {
   attendConfirmed: SEED_ATTEND_CONFIRM,
   activeDays: DAYS,
   rangeStart: DEFAULT_RANGE_START,
+  deadline: DEFAULT_DEADLINE,
 };
 
 /** 데모 단계별 응답 진행도 정규화 */
@@ -219,6 +225,8 @@ function reducer(state: State, action: Action): State {
         activeDays: action.days,
         rangeStart: action.start,
       };
+    case "SET_DEADLINE":
+      return { ...state, deadline: action.date };
     case "TOGGLE_REQUIRED":
       return {
         ...state,
@@ -296,7 +304,13 @@ function reducer(state: State, action: Action): State {
       // 참석 확인 = 순수 표명(조건 아님). 기존 카드 제자리 갱신 · 새 메시지 없음.
       return { ...state, attendConfirmed: pushUnique(state.attendConfirmed, action.id) };
     case "OPEN_CHANGE":
-      return { ...state, change: { attendeeId: action.attendeeId } };
+      return {
+        ...state,
+        change: {
+          attendeeId: action.attendeeId,
+          proposedKeys: action.proposedKeys,
+        },
+      };
     case "CANCEL_CHANGE":
       return { ...state, change: null };
     case "RESOLVE_CHANGE": {

@@ -57,6 +57,8 @@ export type ChangeKind = "drop" | "reschedule" | "cancel";
 /** 참석자가 "참석 어려워요"로 올린 구조화된 사정 */
 export interface ChangeRequest {
   attendeeId: string;
+  /** 참석자가 고른 대안 시간 슬롯 키들 (재조율 카드에서 주최자에게 제안으로 표시) */
+  proposedKeys?: string[];
 }
 
 /** 방금 반영된 변경 — 중립적 변경 공지 카드용 */
