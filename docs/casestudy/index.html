@@ -8,7 +8,7 @@
 
   <!-- Pretendard -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
-  <link rel="stylesheet" href="css/styles.css?v=26" />
+  <link rel="stylesheet" href="css/styles.css?v=27" />
 </head>
 <body>
   <!-- ===== NAV + PROGRESS (P5) ===== -->
@@ -421,12 +421,13 @@
           </div>
 
           <div class="fd-desc">
-            <!-- ① 모으기 -->
+            <!-- ① 모으기 · 입력 부담 ↓ (주최자 + 참석자) -->
             <div class="fd-panel__body is-active" data-ch="0">
               <p class="fd-lede">주최자와 참석자, 양쪽 입력을 함께 줄입니다.</p>
               <p class="fd-b"><b>주최자</b> — 회의 이름과 후보 기간만 정하면 됩니다. 소요시간·응답 마감·참석자(전원 필참)는 기본값으로 오고, 요청은 채널에 자동 게시돼 따로 공지를 쓰지 않습니다.</p>
-              <p class="fd-b"><b>참석자</b> — 캘린더를 자동으로 불러와 안 되는 시간만 표시합니다. ‘가능/불가’ 이분법과 달리 X(불가)와 ▲(피하고 싶어요)를 구분해 버려지던 선호까지 담습니다.</p>
-              <p class="fd-b"><b>캘린더는 시작점, 정답이 아님</b> — 캘린더에 일정이 없는 사람(외근이라 안 적는 한소희)은 빈 그리드에서 직접 표시합니다. 한 사람이 캘린더에 없어도 조율이 멈추지 않습니다.</p>
+              <p class="fd-b"><b>참석자</b> — 캘린더를 자동으로 불러와(“○○님의 캘린더를 불러왔어요”) 안 되는 시간만 표시합니다. ‘가능/불가’ 이분법과 달리 X(불가)와 ▲(피하고 싶어요)를 구분해 버려지던 선호까지 담습니다.</p>
+              <p class="fd-b"><b>캘린더는 시작점, 정답이 아님</b> — 연동자는 자동으로 채우되, 캘린더에 일정이 없는 사람(외근이라 안 적는 한소희)은 빈 그리드에서 직접 표시합니다. 한 사람이 캘린더에 없어도 조율이 멈추지 않습니다.</p>
+              <p class="fd-shoot"><span class="fd-shoot__ico" aria-hidden="true">🎬</span><span>회의 만들기(이름·기간, 나머지 기본값) → “만들고 #커머스팀에 요청 보내기” → 참석자 응답(캘린더 자동 / 미연동자는 빈 그리드, X·▲ 원탭)</span></p>
               <div class="fd-tags">
                 <span>요청 자동 게시</span><span>캘린더 자동 + 없으면 직접 보완</span><span>외근 → X</span><span>점심 직후 → ▲</span>
               </div>

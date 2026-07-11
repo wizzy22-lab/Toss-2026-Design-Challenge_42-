@@ -836,3 +836,9 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
   .fd-panel__body.is-active{animation:none;}
   .fd-progress span{transition:none;}
 }
+
+/* Final Design · 녹화 흐름 노트 (챕터별 무엇을 보여주는지) */
+.fd-shoot{display:flex;gap:8px;align-items:flex-start;margin:16px 0 0;padding:12px 14px;
+  border-radius:10px;background:rgba(245,89,28,.10);border:1px solid rgba(245,89,28,.28);
+  font-size:14px;line-height:1.6;color:var(--d-t2);}
+.fd-shoot__ico{flex:none;}
