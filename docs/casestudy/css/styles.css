@@ -724,3 +724,12 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
 .reading__pbody{
   font-size:17px;line-height:1.6;color:var(--t2);margin:0;max-width:640px;
 }
+
+/* ============================================================
+   SCROLL SNAP — 스크롤하면 다음 섹션으로 정착 (데스크톱 · 스크럽 제외)
+   ============================================================ */
+@media (min-width:900px) and (prefers-reduced-motion:no-preference){
+  html{scroll-snap-type:y proximity;scroll-padding-top:60px;}
+  section[id]{scroll-snap-align:start;}
+  section.pin-section{scroll-snap-align:none;} /* Reading·Pain·Direction 스크럽은 자유 스크롤 */
+}
