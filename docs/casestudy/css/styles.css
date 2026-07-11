@@ -771,3 +771,12 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
 .flow__act{font-size:13px;line-height:1.45;}
 .flow__step--host{border-left:0;border-top:3px solid var(--accent-lg);} /* 가로용 상단 액센트 */
 @media(max-width:640px){ .flow{justify-content:flex-start;} } /* 좁으면 가로 스크롤 */
+
+/* ---- System Flow 아이콘: 오렌지 주최자 · 42 뱃지 ---- */
+.flow__ava--host{color:var(--accent-lg);}
+.flow__ava--host svg{width:26px;height:26px;display:block;}
+.flow__ava--42{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:26px;height:26px;border-radius:7px;background:var(--t1);color:var(--page);
+  font-size:12px;font-weight:800;letter-spacing:.01em;
+}
