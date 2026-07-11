@@ -799,31 +799,31 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
 }
 .fd-video{position:sticky;top:80px;}
 .fd-video__frame{margin:0;position:relative;border-radius:var(--r-card);overflow:hidden;
-  box-shadow:0 20px 60px rgba(0,0,0,.35);}
+  box-shadow:0 20px 60px rgba(0,0,0,.18);}
 .fd-video__frame video{display:block;width:100%;height:auto;background:#26211d;}
-.fd-progress{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.18);}
+.fd-progress{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(0,0,0,.12);}
 .fd-progress span{display:block;height:100%;width:0;background:var(--accent-lg);transition:width .1s linear;}
 
 .fd-chapters{display:flex;flex-direction:column;gap:8px;}
 .fd-chip{display:flex;align-items:center;gap:10px;width:100%;text-align:left;cursor:pointer;
-  padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.10);color:var(--d-t2);transition:background .15s,border-color .15s;}
-.fd-chip:hover{background:rgba(255,255,255,.09);}
-.fd-chip.is-active{background:rgba(255,255,255,.10);border-color:var(--accent-lg);color:var(--d-t1);}
+  padding:14px 16px;border-radius:14px;background:rgba(0,0,0,.03);
+  border:1px solid rgba(28,21,16,.12);color:var(--t2);transition:background .15s,border-color .15s;}
+.fd-chip:hover{background:rgba(0,0,0,.05);}
+.fd-chip.is-active{background:rgba(245,89,28,.06);border-color:var(--accent-lg);color:var(--t1);}
 .fd-chip__no{font-weight:700;color:var(--accent-lg);}
 .fd-chip__ttl{flex:1;font-size:15px;font-weight:600;}
-.fd-chip__ts{font-size:13px;color:var(--d-t2);font-variant-numeric:tabular-nums;}
+.fd-chip__ts{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;}
 
 .fd-desc{margin-top:24px;}
 .fd-panel__body{display:none;}
 .fd-panel__body.is-active{display:block;animation:fdFade .25s ease;}
 @keyframes fdFade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
-.fd-lede{font-size:18px;line-height:1.6;font-weight:600;color:var(--d-t1);margin:0 0 16px;}
-.fd-b{font-size:15px;line-height:1.7;color:var(--d-t2);margin:0 0 12px;}
-.fd-b b{color:var(--d-t1);font-weight:700;}
+.fd-lede{font-size:18px;line-height:1.6;font-weight:600;color:var(--t1);margin:0 0 16px;}
+.fd-b{font-size:15px;line-height:1.7;color:var(--t2);margin:0 0 12px;}
+.fd-b b{color:var(--t1);font-weight:700;}
 .fd-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;}
-.fd-tags span{font-size:12px;font-weight:600;color:var(--d-t2);
-  padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);}
+.fd-tags span{font-size:12px;font-weight:600;color:var(--t2);
+  padding:5px 10px;border-radius:999px;background:rgba(0,0,0,.04);border:1px solid rgba(28,21,16,.12);}
 
 @media (max-width:1000px){
   .fd-module{grid-template-columns:1fr;gap:24px;}
@@ -840,7 +840,7 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
 /* Final Design · 녹화 흐름 노트 (챕터별 무엇을 보여주는지) */
 .fd-shoot{display:flex;gap:8px;align-items:flex-start;margin:16px 0 0;padding:12px 14px;
   border-radius:10px;background:rgba(245,89,28,.10);border:1px solid rgba(245,89,28,.28);
-  font-size:14px;line-height:1.6;color:var(--d-t2);}
+  font-size:14px;line-height:1.6;color:var(--t2);}
 .fd-shoot__ico{flex:none;}
 
 /* Final Design · 문단=영상 시크 버튼 (챕터 영상 내 미니 목차) */
@@ -850,6 +850,9 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
   padding:8px 12px 8px 14px;margin:0 0 4px;border-radius:8px;
   border-left:3px solid transparent;transition:background .15s,border-color .15s;
 }
-.fd-seek:hover{background:rgba(255,255,255,.06);border-left-color:rgba(245,89,28,.45);}
-.fd-seek.is-cur{background:rgba(245,89,28,.10);border-left-color:var(--accent-lg);}
+.fd-seek:hover{background:rgba(0,0,0,.04);border-left-color:rgba(245,89,28,.45);}
+.fd-seek.is-cur{background:rgba(245,89,28,.08);border-left-color:var(--accent-lg);}
 .fd-seek:focus-visible{outline:2px solid var(--accent-sm);outline-offset:2px;}
+.fd-seek__ts{display:inline-block;margin-right:8px;padding:1px 6px;border-radius:6px;
+  font-size:11px;font-weight:700;color:var(--accent-lg);background:rgba(245,89,28,.10);
+  font-variant-numeric:tabular-nums;vertical-align:1px;}
