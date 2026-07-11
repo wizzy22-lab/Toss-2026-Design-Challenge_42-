@@ -396,7 +396,7 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
 .pain__text{text-align:center;}
 .pain__text > p{font-size:clamp(20px,2.6vw,24px);font-weight:500;line-height:1.5;color:var(--t1);}
 .pain__text b{color:var(--accent-lg);font-weight:700;} /* 큰·볼드 텍스트라 accent-lg 허용 */
-.pain__caption{margin-top:14px;font-size:14px;font-weight:400;color:var(--muted);}
+.pain__caption{margin-top:14px;font-size:16px;font-weight:400;color:var(--t2);line-height:1.6;}
 
 /* Transition → Research */
 .pain__bridge{text-align:center;font-size:clamp(20px,2.8vw,26px);font-weight:600;color:var(--t1);}
