@@ -204,10 +204,9 @@
     gsap.set('[data-dir="decide"]', { xPercent: -50, yPercent: -50, left: '58%', top: '82%', opacity: 0, scale: 0.9 });
     gsap.set('[data-dir="flow"]',   { xPercent: -50, yPercent: -50, left: '50%', top: '47%', opacity: 0 });
     gsap.set('[data-dir="closing"]', { opacity: 0, y: 16 });
-    gsap.set('[data-dir="bridge"]',  { opacity: 0, y: 16 });
 
     var tl = gsap.timeline({
-      scrollTrigger: { trigger: sec, start: 'top top', end: '+=4400', scrub: true, pin: true }
+      scrollTrigger: { trigger: sec, start: 'top top', end: '+=3600', scrub: true, pin: true }
     });
 
     // Step 1 · ① 모으기 Host → System
@@ -221,12 +220,8 @@
       .to('[data-dir="rec"]',    { opacity: 1, scale: 1, duration: 0.6 }, '<')
       .to('[data-dir="decide"]', { opacity: 1, scale: 1, duration: 0.6 }, '<0.1')
       .to('[data-dir="flow"]',   { opacity: 1, duration: 0.5 }, '<')
-      // Step 4 · 닫는 문장
-      .to('[data-dir="closing"]', { opacity: 1, y: 0, duration: 0.7 }, '+=0.4')
-      // Transition · 다이어그램 축소되며 브리지 문장
-      .to('[data-dir="stage"]', { scale: 0.9, opacity: 0.25, duration: 0.6 }, '+=0.6')
-      .to('[data-dir="closing"]', { opacity: 0, duration: 0.4 }, '<')
-      .to('[data-dir="bridge"]', { opacity: 1, y: 0, duration: 0.7 }, '<0.1');
+      // Step 4 · 닫는 문장 (마지막 · 브리지 삭제)
+      .to('[data-dir="closing"]', { opacity: 1, y: 0, duration: 0.7 }, '+=0.4');
   })();
 
   window.addEventListener('load', function () { ScrollTrigger.refresh(); });

@@ -787,3 +787,7 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
 
 /* ---- Build 섹션: 연속 리드 문단 간격 ---- */
 #build .lead + .lead{margin-top:20px;}
+
+/* ---- Design Direction 리드: 뒷문장 한 줄 ---- */
+.dir__intro .lead{font-size:15px;white-space:nowrap;}
+@media(max-width:760px){ .dir__intro .lead{white-space:normal;font-size:16px;} }
