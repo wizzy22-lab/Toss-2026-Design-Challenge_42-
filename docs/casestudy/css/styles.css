@@ -293,6 +293,7 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
 
 /* Step 1 · 토스 챌린지 원문 (실제 이미지) */
 .reading__original{margin:0;}
+.reading__kicker{text-align:center;} /* 섹션 타이틀 · 이미지 위 가운데 정렬 */
 .reading__label{
   font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
   color:var(--muted);margin-bottom:14px;text-align:center;
