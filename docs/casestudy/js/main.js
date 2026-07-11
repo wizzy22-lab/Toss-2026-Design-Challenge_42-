@@ -71,65 +71,33 @@
      영상 파일이 없어도 칩으로 설명 패널은 전환됨
      ============================================================ */
   (function finalDemo() {
-    var video = document.getElementById('fdVideo');
-    var bar = document.getElementById('fdProgressBar');
-    var chips = Array.prototype.slice.call(document.querySelectorAll('.fd-chip'));
-    var bodies = Array.prototype.slice.call(document.querySelectorAll('.fd-panel__body'));
-    if (!chips.length) return;
+    // 영상 3개 세로 나열 · 각 블록(.fd-item)의 시크 항목은 그 블록 영상만 제어
+    Array.prototype.slice.call(document.querySelectorAll('.fd-item')).forEach(function (item) {
+      var video = item.querySelector('video');
+      var bar = item.querySelector('.fd-progress span');
+      var seeks = Array.prototype.slice.call(item.querySelectorAll('.fd-seek'));
 
-    function activate(ch) {
-      chips.forEach(function (c) {
-        var on = c.getAttribute('data-ch') === ch;
-        c.classList.toggle('is-active', on);
-        c.setAttribute('aria-selected', on ? 'true' : 'false');
-      });
-      bodies.forEach(function (b) {
-        b.classList.toggle('is-active', b.getAttribute('data-ch') === ch);
-      });
-    }
-
-    var seeks = Array.prototype.slice.call(document.querySelectorAll('.fd-seek'));
-    function clearCur() { seeks.forEach(function (s) { s.classList.remove('is-cur'); }); }
-
-    // 챕터 칩 → 영상 소스 교체 + 패널 전환
-    chips.forEach(function (c) {
-      c.addEventListener('click', function () {
-        activate(c.getAttribute('data-ch'));
-        clearCur();
-        if (!video) return;
-        var src = c.getAttribute('data-src');
-        if (src && video.getAttribute('src') !== src) {
-          video.setAttribute('src', src);
-          video.load();
-        }
-        if (bar) bar.style.width = '0%';
-        var p = video.play(); if (p) p.catch(function () {});
-      });
-    });
-
-    // 문단(시크) 클릭 → 현재 챕터 영상 해당 시각으로 점프
-    seeks.forEach(function (s) {
-      s.addEventListener('click', function () {
-        if (!video) return;
-        try { video.currentTime = parseFloat(s.getAttribute('data-seek')) || 0; } catch (e) {}
-        var p = video.play(); if (p) p.catch(function () {});
-      });
-    });
-
-    // 진행바 + 활성 챕터의 지나온 지점 하이라이트
-    if (video) {
-      video.addEventListener('timeupdate', function () {
-        if (bar && video.duration) bar.style.width = (Math.min(1, video.currentTime / video.duration) * 100) + '%';
-        var panel = document.querySelector('.fd-panel__body.is-active');
-        if (!panel) return;
-        var items = Array.prototype.slice.call(panel.querySelectorAll('.fd-seek'));
-        var cur = null;
-        items.forEach(function (it) {
-          if (video.currentTime >= (parseFloat(it.getAttribute('data-seek')) || 0) - 0.1) cur = it;
+      // 항목 클릭 → 이 블록 영상 해당 시각으로 점프
+      seeks.forEach(function (s) {
+        s.addEventListener('click', function () {
+          if (!video) return;
+          try { video.currentTime = parseFloat(s.getAttribute('data-seek')) || 0; } catch (e) {}
+          if (video.play) { var p = video.play(); if (p && p.catch) p.catch(function () {}); }
         });
-        items.forEach(function (it) { it.classList.toggle('is-cur', it === cur); });
       });
-    }
+
+      // 진행바 + 지나온 지점 하이라이트 (자기 영상 기준)
+      if (video) {
+        video.addEventListener('timeupdate', function () {
+          if (bar && video.duration) bar.style.width = (Math.min(1, video.currentTime / video.duration) * 100) + '%';
+          var cur = null;
+          seeks.forEach(function (it) {
+            if (video.currentTime >= (parseFloat(it.getAttribute('data-seek')) || 0) - 0.1) cur = it;
+          });
+          seeks.forEach(function (it) { it.classList.toggle('is-cur', it === cur); });
+        });
+      }
+    });
   })();
 
   /* ============================================================
