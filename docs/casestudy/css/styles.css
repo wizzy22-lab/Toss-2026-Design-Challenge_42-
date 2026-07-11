@@ -733,3 +733,11 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
   section[id]{scroll-snap-align:start;}
   section.pin-section{scroll-snap-align:none;} /* Reading·Pain·Direction 스크럽은 자유 스크롤 */
 }
+
+/* ---- Challenge Recognition 헤드라인 한 줄 고정 (NORMALIZE override) ---- */
+.reading__pquote{white-space:nowrap;font-size:clamp(13px,2.4vw,22px);max-width:none;}
+@media(max-width:520px){ .reading__pquote{white-space:normal;} } /* 아주 좁은 화면만 줄바꿈 */
+
+/* ---- Challenge Recognition 본문도 한 줄 고정 (두 문장 각각 1줄) ---- */
+.reading__pbody{white-space:nowrap;font-size:14px;max-width:none;}
+@media(max-width:800px){ .reading__pbody{white-space:normal;font-size:16px;} } /* 좁으면 줄바꿈+복원 */
