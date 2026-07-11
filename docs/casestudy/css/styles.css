@@ -387,8 +387,9 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
 }
 .pain__whole h3{font-size:clamp(22px,3vw,28px);font-weight:700;}
 
-/* 사람 */
-.pain__person{font-size:56px;line-height:1;text-align:center;}
+/* 사람 (주최자 · 오렌지 메인컬러 아이콘) */
+.pain__person{color:var(--accent-lg);line-height:1;text-align:center;}
+.pain__person svg{width:56px;height:56px;display:block;margin:0 auto;}
 
 /* Step 7 · 요약 텍스트 */
 .pain__text{text-align:center;}
