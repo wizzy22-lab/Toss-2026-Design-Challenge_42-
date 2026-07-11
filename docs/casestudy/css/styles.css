@@ -747,3 +747,27 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
 /* ---- Market 리드 한 줄 (폭 확장 + 뷰포트 맞춤 축소) ---- */
 #market .lead{white-space:nowrap;max-width:none;font-size:clamp(14px,1.85vw,18px);}
 @media(max-width:760px){ #market .lead{white-space:normal;font-size:16px;} }
+
+/* ============================================================
+   System Flow — 가로 배치 (7단계 →) · NORMALIZE 이후 override
+   ============================================================ */
+.flow{
+  max-width:1080px;margin:40px auto 0;
+  display:flex;flex-direction:row;align-items:stretch;justify-content:center;
+  gap:20px;overflow-x:auto;padding:4px 4px 8px;list-style:none;
+}
+.flow__step{
+  position:relative;flex:1 0 120px;min-width:120px;
+  display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;
+  padding:16px 10px;margin-top:0;
+}
+.flow__step + .flow__step{margin-top:0;}
+.flow__step + .flow__step::before{ /* 세로 ↓ → 가로 → */
+  content:"→";left:-10px;top:50%;transform:translate(-50%,-50%);
+  font-size:16px;
+}
+.flow__actor{width:auto;font-size:11px;gap:3px;}
+.flow__ava{font-size:24px;}
+.flow__act{font-size:13px;line-height:1.45;}
+.flow__step--host{border-left:0;border-top:3px solid var(--accent-lg);} /* 가로용 상단 액센트 */
+@media(max-width:640px){ .flow{justify-content:flex-start;} } /* 좁으면 가로 스크롤 */
