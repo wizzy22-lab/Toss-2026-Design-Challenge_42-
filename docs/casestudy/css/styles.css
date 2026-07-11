@@ -784,3 +784,6 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
 /* ---- Market 브리지: 둘째 줄 한 줄 + 오렌지 강조 Semibold ---- */
 .mkt__bridge{max-width:none;}          /* 720 제한 해제 → wrap 폭까지 한 줄 */
 .mkt__bridge b{font-weight:600;}       /* 오렌지 강조 Bold→Semibold */
+
+/* ---- Build 섹션: 연속 리드 문단 간격 ---- */
+#build .lead + .lead{margin-top:20px;}
