@@ -91,24 +91,20 @@
     chips.forEach(function (c) {
       c.addEventListener('click', function () {
         activate(c.getAttribute('data-ch'));
-        if (video) {
-          var start = parseFloat(c.getAttribute('data-start')) || 0;
-          try { video.currentTime = start; var p = video.play(); if (p) p.catch(function () {}); } catch (e) {}
+        if (!video) return;
+        var src = c.getAttribute('data-src');
+        if (src && video.getAttribute('src') !== src) {   // 챕터별 영상 소스 교체
+          video.setAttribute('src', src);
+          video.load();
         }
+        if (bar) bar.style.width = '0%';
+        var p = video.play(); if (p) p.catch(function () {});
       });
     });
 
-    if (video) {
-      var starts = chips.map(function (c) { return parseFloat(c.getAttribute('data-start')) || 0; });
+    if (video && bar) {   // 현재 챕터 영상 진행바
       video.addEventListener('timeupdate', function () {
-        if (video.duration && bar) {
-          bar.style.width = (Math.min(1, video.currentTime / video.duration) * 100) + '%';
-        }
-        var idx = 0;
-        for (var i = 0; i < starts.length; i++) { if (video.currentTime >= starts[i] - 0.15) idx = i; }
-        var cur = String(idx);
-        var active = document.querySelector('.fd-chip.is-active');
-        if (!active || active.getAttribute('data-ch') !== cur) activate(cur);
+        if (video.duration) bar.style.width = (Math.min(1, video.currentTime / video.duration) * 100) + '%';
       });
     }
   })();
