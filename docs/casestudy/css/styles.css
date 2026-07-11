@@ -443,6 +443,7 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
 .mkt__status .is-gap{background:rgba(194,62,18,.07);}      /* 공통 미해결 지점 강조 */
 .mkt__status .is-gap .mkt__mark{color:var(--accent-sm);}
 .mkt__desc{font-size:15px;color:var(--t2);line-height:1.65;margin-top:auto;}
+.mkt__src{margin-top:10px;font-size:12px;color:var(--muted);letter-spacing:.01em;} /* 예시 도구 각주 */
 
 .mkt__key{margin-top:28px;text-align:center;font-size:16px;color:var(--t2);}
 .mkt__key b{color:var(--t1);}
