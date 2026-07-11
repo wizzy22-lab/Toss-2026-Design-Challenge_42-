@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Case Study — AI Working Process</title>
+  <meta name="description" content="42 포트폴리오 · AI 워킹 프로세스 케이스 스터디" />
+
+  <!-- Pretendard -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+  <link rel="stylesheet" href="css/styles.css?v=2" />
+</head>
+<body>
+  <!-- ===== NAV + PROGRESS (P5) ===== -->
+  <a class="skip-link" href="#hero">본문으로 건너뛰기</a>
+  <nav class="nav" id="nav" aria-label="주요 섹션">
+    <div class="nav__inner">
+      <a class="nav__brand" href="#hero" aria-label="맨 위로">
+        <span class="nav__mark" aria-hidden="true">42</span>
+        <span class="nav__brand-text">토스&nbsp;PD&nbsp;챌린지&nbsp;2026</span>
+      </a>
+
+      <ul class="nav__links" id="navLinks">
+        <li><a href="#hero" data-spy="hero">Challenge</a></li>
+        <li><a href="#process" data-spy="process">Process</a></li>
+        <li><a href="#reading" data-spy="reading">Problem</a></li>
+        <li><a href="#market" data-spy="market">Research</a></li>
+        <li><a href="#direction" data-spy="direction">Design</a></li>
+      </ul>
+
+      <div class="nav__right">
+        <a class="nav__cta" href="#pain">데모 열어보기</a>
+        <button class="nav__burger" id="navBurger" type="button"
+                aria-label="메뉴 열기" aria-expanded="false" aria-controls="navLinks">
+          <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+    <div class="nav__progress" role="presentation">
+      <span class="nav__progress-bar" id="progress"></span>
+    </div>
+  </nav>
+
+  <main>
+    <!-- ===== 1 · HERO (dark full-bleed + corner glow) ===== -->
+    <section class="hero band-dark" id="hero">
+      <div class="hero__glow" aria-hidden="true"></div>
+      <div class="hero__inner">
+        <p class="hero__eyebrow" data-hero>Toss 2026 Design challenge</p>
+        <h1 class="hero__title" data-hero>
+          여러 사람의 회의 시간을 정하려면<br />
+          각자의 조건을 모으고, 가능한 시간을 비교하고, 의견을 조율해야 해요.<br />
+          이 프로젝트는 <span class="accent-lg">주최자 혼자 맡던 이 과정을 시스템화 하여</span>,<br />
+          모두가 수용할 수 있는 시간을 더 쉽게 결정하도록 설계했어요.
+        </h1>
+        <div class="hero__actions" data-hero>
+          <a class="btn-cta" href="#build">프로토타입보기</a>
+        </div>
+      </div>
+
+      <a class="hero__cue" href="#process" aria-label="다음 섹션으로">
+        <span class="hero__cue-text">스크롤</span>
+        <span class="hero__cue-line" aria-hidden="true"></span>
+        <span class="hero__cue-arrow" aria-hidden="true">↓</span>
+      </a>
+    </section>
+
+    <!-- ===== 2 · AI WORKING PROCESS ===== -->
+    <section class="section" id="process">
+      <div class="wrap">
+        <p class="kicker reveal">01 · How I Worked</p>
+        <h2 class="reveal">AI와 함께 빠르게 만들고 검증했습니다</h2>
+        <p class="lead reveal">설계부터 프로토타입 구현, 사용성 테스트, 개선까지 빠르게 반복했습니다.</p>
+
+        <!-- 순환형 프로세스 다이어그램 -->
+        <div class="cycle reveal" role="group"
+             aria-label="반복 프로세스: 01 빠른 설계 → 02 프로토타입 → 03 사용성 테스트 → 04 빠른 개선 → 다시 01 빠른 설계. 중심은 디자이너의 판단.">
+          <svg class="cycle__svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <marker id="cyArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.6" markerHeight="3.6" markerUnits="userSpaceOnUse" orient="auto">
+                <path class="cy-head" d="M1,1 L9,5 L1,9 z"/>
+              </marker>
+            </defs>
+            <path class="cy-arc" d="M60.9,19.9 A32,32 0 0 1 80.1,39.1" marker-end="url(#cyArrow)"/>
+            <path class="cy-arc" d="M80.1,60.9 A32,32 0 0 1 60.9,80.1" marker-end="url(#cyArrow)"/>
+            <path class="cy-arc" d="M39.1,80.1 A32,32 0 0 1 19.9,60.9" marker-end="url(#cyArrow)"/>
+            <path class="cy-arc" d="M19.9,39.1 A32,32 0 0 1 39.1,19.9" marker-end="url(#cyArrow)"/>
+          </svg>
+
+          <div class="cycle__center">
+            <span class="cycle__center-label">Designer’s Judgment</span>
+            <p>무엇을 만들고 왜 바꿀지 결정</p>
+          </div>
+
+          <article class="cynode cynode--1"><span class="cynode__num">01</span><h3>빠른 설계</h3><p>AI와 아이디어 구체화</p></article>
+          <article class="cynode cynode--2"><span class="cynode__num">02</span><h3>프로토타입</h3><p>동작하는 시안 구현</p></article>
+          <article class="cynode cynode--3"><span class="cynode__num">03</span><h3>사용성 테스트</h3><p>직접 사용하며 검증</p></article>
+          <article class="cynode cynode--4"><span class="cynode__num">04</span><h3>빠른 개선</h3><p>AI와 문제 수정</p></article>
+
+          <p class="cycle__loop" aria-hidden="true"><span>↻</span> 다시 01 빠른 설계로</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 3 · READING BETWEEN THE LINES (pinned scrub · P3) ===== -->
+    <section class="pin-section" id="reading">
+      <div class="pin-stage">
+        <div class="reading">
+          <!-- Step 1 · 토스 챌린지 원문 (실제 이미지) -->
+          <div class="reading__original" data-r="original">
+            <figure class="reading__doc">
+              <img class="reading__img" data-r="docimg" src="images/challenge-original.png"
+                   alt="토스 챌린지 원문 — 6명이 회의 일정을 잡는 경험을 설계해주세요. 같은 회사 동료 6명이 다음 주까지 1시간 회의를 잡되, 누군가는 점심 직후를 피하고, 어떤 사람은 특정 요일에 외근이 있으며, 꼭 참석해야 하는 사람과 선택 참석이 나뉩니다. 모두가 괜찮은 시간을 찾는 솔루션을 설계하는 과제입니다." />
+              <!-- Step 2 · 실제 글씨 위치에서 떠오르는 핵심 단어 -->
+              <ul class="reading__words" data-r="words" aria-hidden="true">
+                <li style="left:8%;top:11%">6명</li>
+                <li style="left:62%;top:38%">괜찮은</li>
+                <li style="left:13%;top:58%">점심 직후 회피</li>
+                <li style="left:52%;top:58%">특정 요일 외근</li>
+                <li style="left:42%;top:67%">필수 / 선택</li>
+                <li style="left:38%;top:80%">파악</li>
+              </ul>
+            </figure>
+          </div>
+
+          <!-- Step 3 · 의미 그리드 (2-col CSS grid · 표 아님 · 카드 아님) -->
+          <div class="reading__grid" data-r="grid">
+            <div class="reading__head">지문의 단서</div>
+            <div class="reading__head">읽은 의미</div>
+
+            <div class="reading__clue">6명</div>
+            <div class="reading__mean">6명은 한번에 인지하기 어려운 임계점이에요.</div>
+
+            <div class="reading__clue">괜찮은</div>
+            <div class="reading__mean">완벽하게 맞는 시간은 없을 수 있어요. 하지만 수용 가능한 답을 내야 해요.</div>
+
+            <div class="reading__clue">파악</div>
+            <div class="reading__mean">주최자는 상황 맥락을 한눈에 이해할 수 있어야 해요.</div>
+
+            <div class="reading__clue">점심 직후 회피</div>
+            <div class="reading__mean">선호는 제약과 달라요.</div>
+
+            <div class="reading__clue">특정 요일 외근</div>
+            <div class="reading__mean">반드시 지켜야 하는 제약도 있어요.</div>
+
+            <div class="reading__clue">필수 / 선택</div>
+            <div class="reading__mean">꼭 와야 하는 사람과 선택 참석자를 구별해야 해요.</div>
+          </div>
+
+          <!-- Step 4 · Challenge Recognition (이미지 레퍼런스 · 줄바꿈 동일) -->
+          <blockquote class="reading__problem" data-r="problem">
+            <p class="reading__eyebrow">challenge recognition</p>
+            <p class="reading__pquote">단순히 빈 시간이 겹치는지만 확인해서는 회의 시간을 정할 수 없었습니다.</p>
+            <p class="reading__pbody">6명에게는 피하고 싶은 시간과 외근 일정이 있었고, 참석 우선순위도 달랐습니다.<br />따라서 각자의 조건을 한곳에 모으고, 필수 참석자의 가능 여부와 다른 구성원의 선호를 함께 비교할 방법이 필요했습니다.</p>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 4 · PAIN POINTS (라이트 · 스크롤 스토리텔링) ===== -->
+    <section class="pin-section" id="pain">
+      <div class="pain__intro wrap wrap--narrow">
+        <p class="kicker reveal">Problem Breakdown</p>
+        <h2 class="reveal">회의 시간 정하기, 정말 ‘하나의 일’일까요?</h2>
+      </div>
+      <div class="pin-stage">
+        <div class="pain">
+          <!-- Step 1 · 하나의 '일' (설명 없음 · scrub 전용) -->
+          <div class="pain__whole" data-pp="whole">
+            <h3>회의 시간 정하기</h3>
+          </div>
+
+          <!-- 세 부담 카드 -->
+          <div class="pain__cards">
+            <article class="pcard" data-pp="card">
+              <span class="pcard__idx">①</span>
+              <h3>모으기</h3>
+              <p class="pcard__desc" data-pp="desc">다들 언제 되는지 묻고, 응답을 하나씩 모아야 합니다.</p>
+            </article>
+            <article class="pcard" data-pp="card">
+              <span class="pcard__idx">②</span>
+              <h3>비교하기</h3>
+              <p class="pcard__desc" data-pp="desc">모인 시간을 비교해 가장 괜찮은 시간을 찾아야 합니다.</p>
+            </article>
+            <article class="pcard" data-pp="card">
+              <span class="pcard__idx">③</span>
+              <h3>조율하기</h3>
+              <p class="pcard__desc" data-pp="desc">모두가 되는 시간이 없으면 누군가는 양보해야 합니다.</p>
+            </article>
+          </div>
+
+          <!-- Step 5 · 한 사람 -->
+          <div class="pain__person" data-pp="person" aria-hidden="true">👤</div>
+
+          <!-- Step 7 · 요약 텍스트 -->
+          <div class="pain__text" data-pp="text">
+            <p>회의 시간은 함께 정하지만, 모으고, 비교하고, 조율하는 일은 대부분 <b>한 사람</b>이 맡고 있었습니다.</p>
+            <p class="pain__caption">회의의 부담은 한 사람에게 집중되어 있었습니다.</p>
+          </div>
+
+          <!-- Transition → Research -->
+          <p class="pain__bridge" data-pp="bridge">현재 서비스들은 이 부담을 어떻게 해결하고 있을까요?</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 5 · MARKET RESEARCH (라이트 · 3열 비교 · 스크롤 애니 없음) ===== -->
+    <section class="section band-tint" id="market">
+      <div class="wrap">
+        <p class="kicker">02 · Market Research</p>
+        <h2>현재 도구들은 이 문제를 어떻게 풀고 있을까?</h2>
+        <p class="lead">모으기, 비교하기, 조율하기. 세 가지를 기준으로 대표적인 일정 조율 방식을 직접 사용해봤어요.</p>
+
+        <div class="mkt">
+          <article class="mkt__col">
+            <div class="mkt__head">
+              <span class="mkt__icon" aria-hidden="true">💬</span>
+              <h3>Messenger</h3>
+            </div>
+            <ul class="mkt__status">
+              <li class="is-ok"><span class="mkt__step">① 모으기</span><span class="mkt__mark" aria-hidden="true">✓</span><span class="sr-only">해결</span></li>
+              <li class="is-no"><span class="mkt__step">② 비교하기</span><span class="mkt__mark" aria-hidden="true">✗</span><span class="sr-only">미해결</span></li>
+              <li class="is-no is-gap"><span class="mkt__step">③ 조율하기</span><span class="mkt__mark" aria-hidden="true">✗</span><span class="sr-only">미해결</span></li>
+            </ul>
+            <p class="mkt__desc">익숙해서 바로 시작할 수 있어요. 하지만 답을 모으고 정리하는 일은 여전히 사람이 해요.</p>
+          </article>
+
+          <article class="mkt__col">
+            <div class="mkt__head">
+              <span class="mkt__icon" aria-hidden="true">📊</span>
+              <h3>Poll</h3>
+            </div>
+            <ul class="mkt__status">
+              <li class="is-ok"><span class="mkt__step">① 모으기</span><span class="mkt__mark" aria-hidden="true">✓</span><span class="sr-only">해결</span></li>
+              <li class="is-warn"><span class="mkt__step">② 비교하기</span><span class="mkt__mark" aria-hidden="true">△</span><span class="sr-only">부분 해결</span></li>
+              <li class="is-no is-gap"><span class="mkt__step">③ 조율하기</span><span class="mkt__mark" aria-hidden="true">✗</span><span class="sr-only">미해결</span></li>
+            </ul>
+            <p class="mkt__desc">응답은 한곳에 모여요. 하지만 후보 시간을 만들고 가장 좋은 시간을 고르는 일은 여전히 사람이 해요.</p>
+          </article>
+
+          <article class="mkt__col">
+            <div class="mkt__head">
+              <span class="mkt__icon" aria-hidden="true">🗓️</span>
+              <h3>Dedicated Tool</h3>
+            </div>
+            <ul class="mkt__status">
+              <li class="is-warn"><span class="mkt__step">① 모으기</span><span class="mkt__mark" aria-hidden="true">△</span><span class="sr-only">부분 해결</span></li>
+              <li class="is-ok"><span class="mkt__step">② 비교하기</span><span class="mkt__mark" aria-hidden="true">✓</span><span class="sr-only">해결</span></li>
+              <li class="is-no is-gap"><span class="mkt__step">③ 조율하기</span><span class="mkt__mark" aria-hidden="true">✗</span><span class="sr-only">미해결</span></li>
+            </ul>
+            <p class="mkt__desc">겹치는 시간은 쉽게 찾을 수 있어요. 하지만 링크를 만들어 공유해야 하고, 참석자도 새로운 화면에서 다시 답해야 해요.</p>
+          </article>
+        </div>
+
+        <p class="mkt__key">셋 다 <b>③ 조율하기</b>는 <span class="mkt__x" aria-hidden="true">✗</span> — 아무도 조율을 맡지 않았어요.</p>
+
+        <div class="mkt__insight">
+          <p class="mkt__insight-label">What We Learned</p>
+          <p>도구마다 덜어준 일은 달랐어요. 하지만 끝까지 사람이 해야 하는 일은 남아 있었어요.</p>
+        </div>
+
+        <p class="mkt__bridge">그래서 남아 있는 일은 <b>주최자가 아니라 시스템</b>이 맡도록 설계했어요.</p>
+      </div>
+    </section>
+
+    <!-- ===== 6 · DESIGN DIRECTION (라이트 · 스크롤 다이어그램) ===== -->
+    <section class="pin-section" id="direction">
+      <div class="pin-stage">
+        <div class="dir">
+          <!-- 상단 · 인트로 -->
+          <div class="dir__intro" data-dir="intro">
+            <p class="kicker">03 · Design Direction</p>
+            <h2>주최자가 하던 일을 시스템이 맡도록 설계했습니다.</h2>
+            <p class="lead">기존 도구는 일부 과정을 도왔지만, 모으고·비교하고·조율하는 일은 여전히 주최자의 몫이었습니다. 필참 여부·선호·일정 제약까지 함께 고려해 시스템이 추천하고, 사람은 최종 결정에만 집중할 수 있도록 설계했습니다.</p>
+          </div>
+
+          <!-- 중앙 · Host ↔ System 구조도 -->
+          <div class="dir__stage" data-dir="stage">
+            <div class="dir__actor dir__actor--system" data-dir="system">
+              <span class="dir__ava" aria-hidden="true">🤖</span><span class="dir__role">System</span>
+            </div>
+            <div class="dcard" data-dir="c1"><span class="dcard__idx">①</span>모으기</div>
+            <div class="dcard" data-dir="c2"><span class="dcard__idx">②</span>비교하기</div>
+            <div class="dcard dcard--sys" data-dir="rec"><span class="dcard__idx" aria-hidden="true">🧮</span>추천 시간 계산</div>
+            <div class="dir__flow" data-dir="flow" aria-hidden="true">▼</div>
+            <div class="dir__actor dir__actor--host" data-dir="host">
+              <span class="dir__ava" aria-hidden="true">👤</span><span class="dir__role">Host</span>
+            </div>
+            <div class="dcard dcard--host" data-dir="decide"><span class="dcard__idx" aria-hidden="true">✅</span>최종 결정</div>
+            <div class="dcard" data-dir="c3"><span class="dcard__idx">③</span>조율하기</div>
+          </div>
+
+          <!-- 하단 · Closing -->
+          <div class="dir__closing" data-dir="closing">
+            <p><b>시스템</b>은 모으고, 비교하고, 추천합니다.</p>
+            <p><b>사람</b>은 상황을 고려해 최종 결정합니다.</p>
+          </div>
+
+          <!-- Transition → Solution -->
+          <p class="dir__bridge" data-dir="bridge">이 원칙을 바탕으로 회의를 만드는 경험을 다시 설계했습니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 7 · IA — SYSTEM FLOW (라이트 · 위→아래 순차 등장) ===== -->
+    <section class="section band-tint" id="ia">
+      <div class="wrap wrap--narrow">
+        <p class="kicker reveal">04 · System Flow</p>
+        <h2 class="reveal">조율의 흐름을 시스템 중심으로 다시 설계했습니다.</h2>
+        <p class="lead reveal">회의 생성부터 확정까지, 반복되는 전달과 조율은 시스템이 담당하도록 정보 구조를 재구성했습니다. 주최자는 회의를 만들고 최종 결정만 내리며, 시스템은 참석 요청을 전달하고 응답을 모아 비교한 뒤 추천 시간을 제안하고, 확정 결과까지 자동으로 공유합니다.</p>
+
+        <ol class="flow">
+          <li class="flow__step flow__step--host reveal">
+            <span class="flow__actor"><span class="flow__ava" aria-hidden="true">🧑</span>주최자</span>
+            <span class="flow__act">회의 만들기</span>
+          </li>
+          <li class="flow__step flow__step--sys reveal">
+            <span class="flow__actor"><span class="flow__ava" aria-hidden="true">🤖</span>42</span>
+            <span class="flow__act">회의 생성 메시지 전송</span>
+          </li>
+          <li class="flow__step flow__step--att reveal">
+            <span class="flow__actor"><span class="flow__ava" aria-hidden="true">👥</span>참석자 1~6</span>
+            <span class="flow__act">응답 제출</span>
+          </li>
+          <li class="flow__step flow__step--sys reveal">
+            <span class="flow__actor"><span class="flow__ava" aria-hidden="true">🤖</span>42</span>
+            <span class="flow__act">응답 모으기 · 일정 비교하기 · 추천 시간 찾기</span>
+          </li>
+          <li class="flow__step flow__step--host reveal">
+            <span class="flow__actor"><span class="flow__ava" aria-hidden="true">🧑</span>주최자</span>
+            <span class="flow__act">추천 결과 확인 · 최종 시간 결정</span>
+          </li>
+          <li class="flow__step flow__step--sys reveal">
+            <span class="flow__actor"><span class="flow__ava" aria-hidden="true">🤖</span>42</span>
+            <span class="flow__act">확정 메시지 자동 전송</span>
+          </li>
+          <li class="flow__step flow__step--att reveal">
+            <span class="flow__actor"><span class="flow__ava" aria-hidden="true">👥</span>참석자 1~6</span>
+            <span class="flow__act">회의 확정 확인</span>
+          </li>
+        </ol>
+
+        <p class="flow__key reveal">
+          <b class="sys">🤖 42</b>가 전달·수집·비교·공유를 모두 맡고,
+          사람(주최자)은 <b>만들기</b>·<b>결정</b> 두 지점만 개입합니다.
+        </p>
+
+        <p class="flow__bridge reveal">이제 각 단계를 실제 화면으로 살펴봅니다.</p>
+      </div>
+    </section>
+
+    <!-- ===== 8 · BUILD → TEST → REFINE (라이트 · 리빌) ===== -->
+    <section class="section" id="build">
+      <div class="wrap">
+        <p class="kicker reveal">05 · Build · Test · Refine</p>
+        <h2 class="reveal">하나의 시안이 아니라, 반복의 결과입니다.</h2>
+        <p class="lead reveal">정보 구조의 뼈대를 설계한 뒤, Claude Code를 활용해 실제 제품 형태로 구현하며 사용 경험을 검증했습니다. 구현 과정에서 발견한 문제를 수정하고, 사용자 테스트를 통해 받은 피드백을 반영하며 제품을 지속적으로 발전시켰습니다. 최종 결과물은 하나의 시안을 선택한 결과가 아니라, 설계 → 구현 → 검증 → 개선을 반복하며 사용자 경험을 완성한 결과입니다.</p>
+
+        <!-- ① Build -->
+        <div class="btr">
+          <div class="btr__head reveal"><span class="btr__num">①</span><h3>Build — Version History</h3></div>
+          <p class="btr__desc reveal">동작하는 프로토타입은 목업이 아니라 <b>실제 추천 로직</b> 위에서 돌아갑니다. 메신저 안에서 그대로 쓰는 네이티브 경험으로 구현했습니다.</p>
+          <div class="vhist reveal" role="group" aria-label="버전 히스토리 · 가로 스크롤">
+            <figure class="vcard">
+              <figcaption class="vcard__tag">v0.1</figcaption>
+              <div class="shot__ph">[데모캡처 · 최초 프로토타입]</div>
+              <span class="vcard__note">기본 입력 → 추천 흐름</span>
+            </figure>
+            <figure class="vcard">
+              <figcaption class="vcard__tag">v0.2</figcaption>
+              <div class="shot__ph">[데모캡처 · 추천 로직 연결]</div>
+              <span class="vcard__note">mock 제거, 실제 추천 계산</span>
+            </figure>
+            <figure class="vcard">
+              <figcaption class="vcard__tag">v0.3</figcaption>
+              <div class="shot__ph">[데모캡처 · 메신저 네이티브]</div>
+              <span class="vcard__note">메신저 UI에 통합</span>
+            </figure>
+            <figure class="vcard">
+              <figcaption class="vcard__tag">v1.0</figcaption>
+              <div class="shot__ph">[데모캡처 · UT 반영 최종]</div>
+              <span class="vcard__note">테스트 피드백 반영</span>
+            </figure>
+          </div>
+          <p class="btr__cap reveal">실제 구현 과정에서 제품이 발전한 주요 버전입니다.</p>
+        </div>
+
+        <!-- ② Test -->
+        <div class="btr">
+          <div class="btr__head reveal"><span class="btr__num">②</span><h3>Test — User Test</h3></div>
+          <p class="btr__desc reveal">구현한 프로토타입으로 사용자 테스트를 진행하고, 주요 피드백을 반영해 최종 경험을 개선했습니다.</p>
+          <p class="btr__meta reveal">낯선 참가자 3명(대학생 21·여 / 회사원 46·여 / 프리랜서 26·남) 씽크얼라우드. <b>n=3은 통계가 아니라 큰 문제를 발견하기 위한 크기</b>입니다 — 지표는 퍼센트가 아니라 N/3과 심각도로 봤습니다.</p>
+          <div class="uquotes stagger">
+            <blockquote class="uquote"><p>“이게 꼭 와야 하는 건지, 그냥 물어보는 건지 헷갈렸어요.”</p><cite>대학생 · 21 · 여</cite></blockquote>
+            <blockquote class="uquote"><p>“다 안 된다고만 나오니까, 그다음에 뭘 눌러야 할지 몰랐어요.”</p><cite>회사원 · 46 · 여</cite></blockquote>
+            <blockquote class="uquote"><p>“‘참석 어려워요’가 그냥 안내 문구인 줄 알았어요.”</p><cite>프리랜서 · 26 · 남</cite></blockquote>
+          </div>
+          <table class="sev reveal">
+            <thead><tr><th>관찰된 문제</th><th>N/3</th><th>심각도</th></tr></thead>
+            <tbody>
+              <tr><td>필수·선택 모델을 이해하지 못함</td><td>2/3</td><td><span class="sev__lv sev__lv--hi">High</span></td></tr>
+              <tr><td>추천 0건일 때 다음 행동을 못 찾음</td><td>1/3</td><td><span class="sev__lv sev__lv--hi">High</span></td></tr>
+              <tr><td>“참석 어려워요”를 버튼으로 인지 못함</td><td>2/3</td><td><span class="sev__lv sev__lv--md">Med</span></td></tr>
+              <tr><td>확정의 최종성이 약하게 느껴짐</td><td>1/3</td><td><span class="sev__lv sev__lv--lo">Low</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ③ Refine -->
+        <div class="btr">
+          <div class="btr__head reveal"><span class="btr__num">③</span><h3>Refine — Before / After</h3></div>
+          <div class="baf stagger">
+            <article class="baf__pair">
+              <p class="baf__issue">필수·선택 이해 실패 (2/3)</p>
+              <div class="baf__shots">
+                <figure class="baf__col"><span class="baf__tag">Before</span><div class="shot__ph">[균일한 필수/선택 UI]</div></figure>
+                <span class="baf__arrow" aria-hidden="true">→</span>
+                <figure class="baf__col"><span class="baf__tag baf__tag--after">After</span><div class="shot__ph">[단순화한 필참 모델]</div></figure>
+              </div>
+              <p class="baf__fix">필참 모델을 단순화해 한눈에 구분되게 했습니다.</p>
+            </article>
+            <article class="baf__pair">
+              <p class="baf__issue">추천 성립 0건에서 막힘</p>
+              <div class="baf__shots">
+                <figure class="baf__col"><span class="baf__tag">Before</span><div class="shot__ph">[빈 결과 화면]</div></figure>
+                <span class="baf__arrow" aria-hidden="true">→</span>
+                <figure class="baf__col"><span class="baf__tag baf__tag--after">After</span><div class="shot__ph">[L3 안내 메시징]</div></figure>
+              </div>
+              <p class="baf__fix">되는 시간이 없을 때 다음 행동을 안내하는 L3 메시징을 추가했습니다.</p>
+            </article>
+            <article class="baf__pair">
+              <p class="baf__issue">“참석 어려워요” 어포던스</p>
+              <div class="baf__shots">
+                <figure class="baf__col"><span class="baf__tag">Before</span><div class="shot__ph">[모호한 텍스트]</div></figure>
+                <span class="baf__arrow" aria-hidden="true">→</span>
+                <figure class="baf__col"><span class="baf__tag baf__tag--after">After</span><div class="shot__ph">[명확한 버튼]</div></figure>
+              </div>
+              <p class="baf__fix">탭 가능한 버튼으로 명확히 바꿨습니다.</p>
+            </article>
+            <article class="baf__pair">
+              <p class="baf__issue">확정의 최종성 부족</p>
+              <div class="baf__shots">
+                <figure class="baf__col"><span class="baf__tag">Before</span><div class="shot__ph">[약한 확정 상태]</div></figure>
+                <span class="baf__arrow" aria-hidden="true">→</span>
+                <figure class="baf__col"><span class="baf__tag baf__tag--after">After</span><div class="shot__ph">[강화된 확정 상태]</div></figure>
+              </div>
+              <p class="baf__fix">확정의 최종성을 시각적으로 강화했습니다.</p>
+            </article>
+          </div>
+
+          <div class="btr__selfcheck reveal">
+            <p class="btr__selfcheck-label">자기 교정</p>
+            <p><b>잘 덜어낸 것</b>(히트맵 숨김)과 <b>과하게 덜어낸 것</b>(“참석 어려워요” · 확정)을 사용자 테스트가 갈라줬습니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- GSAP (로컬 벤더 · CDN/오프라인 의존 제거) -->
+  <script src="js/vendor/gsap.min.js"></script>
+  <script src="js/vendor/ScrollTrigger.min.js"></script>
+  <script src="js/main.js?v=3"></script>
+</body>
+</html>
