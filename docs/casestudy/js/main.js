@@ -66,6 +66,54 @@
   })();
 
   /* ============================================================
+     FINAL DESIGN — 챕터형 데모 (vanilla · GSAP 독립)
+     칩 클릭 → 패널 전환 + 영상 시킹, 재생 시 진행바·챕터 자동 하이라이트
+     영상 파일이 없어도 칩으로 설명 패널은 전환됨
+     ============================================================ */
+  (function finalDemo() {
+    var video = document.getElementById('fdVideo');
+    var bar = document.getElementById('fdProgressBar');
+    var chips = Array.prototype.slice.call(document.querySelectorAll('.fd-chip'));
+    var bodies = Array.prototype.slice.call(document.querySelectorAll('.fd-panel__body'));
+    if (!chips.length) return;
+
+    function activate(ch) {
+      chips.forEach(function (c) {
+        var on = c.getAttribute('data-ch') === ch;
+        c.classList.toggle('is-active', on);
+        c.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      bodies.forEach(function (b) {
+        b.classList.toggle('is-active', b.getAttribute('data-ch') === ch);
+      });
+    }
+
+    chips.forEach(function (c) {
+      c.addEventListener('click', function () {
+        activate(c.getAttribute('data-ch'));
+        if (video) {
+          var start = parseFloat(c.getAttribute('data-start')) || 0;
+          try { video.currentTime = start; var p = video.play(); if (p) p.catch(function () {}); } catch (e) {}
+        }
+      });
+    });
+
+    if (video) {
+      var starts = chips.map(function (c) { return parseFloat(c.getAttribute('data-start')) || 0; });
+      video.addEventListener('timeupdate', function () {
+        if (video.duration && bar) {
+          bar.style.width = (Math.min(1, video.currentTime / video.duration) * 100) + '%';
+        }
+        var idx = 0;
+        for (var i = 0; i < starts.length; i++) { if (video.currentTime >= starts[i] - 0.15) idx = i; }
+        var cur = String(idx);
+        var active = document.querySelector('.fd-chip.is-active');
+        if (!active || active.getAttribute('data-ch') !== cur) activate(cur);
+      });
+    }
+  })();
+
+  /* ============================================================
      Animations — require GSAP; skipped under reduced motion
      ============================================================ */
   if (!window.gsap || !window.ScrollTrigger) return;

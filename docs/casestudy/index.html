@@ -8,7 +8,7 @@
 
   <!-- Pretendard -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
-  <link rel="stylesheet" href="css/styles.css?v=25" />
+  <link rel="stylesheet" href="css/styles.css?v=26" />
 </head>
 <body>
   <!-- ===== NAV + PROGRESS (P5) ===== -->
@@ -376,11 +376,99 @@
       </div>
     </section>
 
+    <!-- ============ 08 · Final Design (라이트 인트로) ============ -->
+    <section class="section" id="final">
+      <div class="wrap wrap--narrow reveal">
+        <p class="kicker">08 · Final Design</p>
+        <h2>최종 경험 — 세 부담을 덜고, 지문의 단서를 닫았습니다</h2>
+        <p class="lead">모으기·비교하기·조율하기를 시스템으로 다시 나눴습니다. 각 단계에서 입력·비교·판단 부담을 낮추는 동시에, 과제가 던진 단서들을 하나씩 해결했습니다.</p>
+      </div>
+    </section>
+
+    <!-- ============ 다크밴드 · 챕터형 데모 모듈 ============ -->
+    <section class="section band-dark" id="final-demo">
+      <div class="fd-module reveal">
+
+        <!-- 좌: 영상 (sticky) -->
+        <div class="fd-video">
+          <figure class="fd-video__frame">
+            <video id="fdVideo" width="1080" height="608" playsinline muted
+                   poster="assets/final-demo.png">
+              <source src="assets/final-demo.mp4" type="video/mp4">
+            </video>
+            <div class="fd-progress"><span id="fdProgressBar"></span></div>
+          </figure>
+        </div>
+
+        <!-- 우: 챕터 컨트롤 + 설명 -->
+        <div class="fd-panel">
+          <div class="fd-chapters" role="tablist" aria-label="데모 챕터">
+            <button class="fd-chip is-active" role="tab" aria-selected="true" data-ch="0" data-start="0">
+              <span class="fd-chip__no">①</span>
+              <span class="fd-chip__ttl">모으기 · 입력 부담 ↓</span>
+              <span class="fd-chip__ts">0:00</span>
+            </button>
+            <button class="fd-chip" role="tab" aria-selected="false" data-ch="1" data-start="12">
+              <span class="fd-chip__no">②</span>
+              <span class="fd-chip__ttl">비교하기 · 비교 부담 ↓</span>
+              <span class="fd-chip__ts">0:12</span>
+            </button>
+            <button class="fd-chip" role="tab" aria-selected="false" data-ch="2" data-start="24">
+              <span class="fd-chip__no">③</span>
+              <span class="fd-chip__ttl">조율하기 · 판단 부담 ↓</span>
+              <span class="fd-chip__ts">0:24</span>
+            </button>
+          </div>
+
+          <div class="fd-desc">
+            <!-- ① 모으기 -->
+            <div class="fd-panel__body is-active" data-ch="0">
+              <p class="fd-lede">주최자와 참석자, 양쪽 입력을 함께 줄입니다.</p>
+              <p class="fd-b"><b>주최자</b> — 회의 이름과 후보 기간만 정하면 됩니다. 소요시간·응답 마감·참석자(전원 필참)는 기본값으로 오고, 요청은 채널에 자동 게시돼 따로 공지를 쓰지 않습니다.</p>
+              <p class="fd-b"><b>참석자</b> — 캘린더를 자동으로 불러와 안 되는 시간만 표시합니다. ‘가능/불가’ 이분법과 달리 X(불가)와 ▲(피하고 싶어요)를 구분해 버려지던 선호까지 담습니다.</p>
+              <p class="fd-b"><b>캘린더는 시작점, 정답이 아님</b> — 캘린더에 일정이 없는 사람(외근이라 안 적는 한소희)은 빈 그리드에서 직접 표시합니다. 한 사람이 캘린더에 없어도 조율이 멈추지 않습니다.</p>
+              <div class="fd-tags">
+                <span>요청 자동 게시</span><span>캘린더 자동 + 없으면 직접 보완</span><span>외근 → X</span><span>점심 직후 → ▲</span>
+              </div>
+            </div>
+
+            <!-- ② 비교하기 -->
+            <div class="fd-panel__body" data-ch="1">
+              <p class="fd-lede">후보를 다 늘어놓지 않고 최적의 하나만 크게 추천해 인지부담을 줄입니다. 더 보는 것도, 정하는 것도 사용자의 자유입니다.</p>
+              <p class="fd-b">응답이 모이면 시스템이 겹쳐 보고 “다들 참석할 수 있는 시간” 하나를 크게 제시합니다.</p>
+              <p class="fd-b"><b>완벽한 시간은 없다 · 그래서 투명하게</b> — 모두가 편한 완벽한 시간은 없습니다. 그래서 추천은 늘 누가 ▲ 피하고 싶어했는지(트레이드오프)를 감추지 않고 함께 보여주고, 회피가 가장 적은 명확한 1등을 고릅니다. 추천이 자의적이지 않다는 근거입니다.</p>
+              <p class="fd-b">“다른 시간도 있어요(N)”로 언제든 전체를 펼쳐 볼 수 있고, “이 시간으로 정하기”는 사용자가 누릅니다.</p>
+              <div class="fd-tags">
+                <span>6명 → 한눈에</span><span>완벽한 시간 없음 → 트레이드오프 투명</span><span>근거 있는 1등</span><span>더보기·결정 = 사용자</span>
+              </div>
+            </div>
+
+            <!-- ③ 조율하기 -->
+            <div class="fd-panel__body" data-ch="2">
+              <p class="fd-lede">조율은 시간을 정하는 일이자 감정을 쓰는 일이었습니다. 42는 판단의 근거와 함께 그 에너지까지 덜어줍니다. 완벽한 시간이 없어도 멈추지 않고, 최종 결정은 사람이 합니다.</p>
+              <p class="fd-b"><b>성립</b> — 필참자가 모두 되는 시간을 확정하면 “다들 올 수 있는 괜찮은 시간으로 정했어요.”</p>
+              <p class="fd-b"><b>성립 0</b> — 다 되는 시간이 없으면 억지로 만들지 않습니다. “다 되는 시간 없음”을 정직하게 알리고, 가까운 순 후보와 히트맵으로 사람이 직접 고르게 합니다.</p>
+              <p class="fd-b"><b>양방향 조율</b> — 확정 후 누가 어려워지면 개별로 다시 묻지 않아도 됩니다. 참석자는 다른 시간 제안 / 나 없이 진행 / 개인 메시지 중에 고르고, 시스템은 받아둔 응답으로 ‘가장 적게 흔드는 순서’의 조정안을 중립적 문구로 올린 뒤 채널에 자동 공지합니다.</p>
+              <div class="fd-tags">
+                <span>필수/선택 → 필참 전원 최선</span><span>괜찮은 → “괜찮은 시간”</span><span>성립 0 → 정직한 대안</span><span>양방향 조율</span><span>재메시지·완곡한 부탁 에너지 ↓</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 닫는 문장 + CTA -->
+      <div class="wrap wrap--narrow" style="text-align:center;margin-top:56px;">
+        <p class="lead" style="color:var(--d-t2);">추천은 제안이고, 결정은 사람이 합니다.</p>
+        <a class="btn-cta" href="../" style="margin-top:16px;">데모 열어보기</a>
+      </div>
+    </section>
+
   </main>
 
   <!-- GSAP (로컬 벤더 · CDN/오프라인 의존 제거) -->
   <script src="js/vendor/gsap.min.js"></script>
   <script src="js/vendor/ScrollTrigger.min.js"></script>
-  <script src="js/main.js?v=3"></script>
+  <script src="js/main.js?v=4"></script>
 </body>
 </html>
