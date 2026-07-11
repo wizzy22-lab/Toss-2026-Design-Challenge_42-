@@ -88,12 +88,17 @@
       });
     }
 
+    var seeks = Array.prototype.slice.call(document.querySelectorAll('.fd-seek'));
+    function clearCur() { seeks.forEach(function (s) { s.classList.remove('is-cur'); }); }
+
+    // 챕터 칩 → 영상 소스 교체 + 패널 전환
     chips.forEach(function (c) {
       c.addEventListener('click', function () {
         activate(c.getAttribute('data-ch'));
+        clearCur();
         if (!video) return;
         var src = c.getAttribute('data-src');
-        if (src && video.getAttribute('src') !== src) {   // 챕터별 영상 소스 교체
+        if (src && video.getAttribute('src') !== src) {
           video.setAttribute('src', src);
           video.load();
         }
@@ -102,9 +107,27 @@
       });
     });
 
-    if (video && bar) {   // 현재 챕터 영상 진행바
+    // 문단(시크) 클릭 → 현재 챕터 영상 해당 시각으로 점프
+    seeks.forEach(function (s) {
+      s.addEventListener('click', function () {
+        if (!video) return;
+        try { video.currentTime = parseFloat(s.getAttribute('data-seek')) || 0; } catch (e) {}
+        var p = video.play(); if (p) p.catch(function () {});
+      });
+    });
+
+    // 진행바 + 활성 챕터의 지나온 지점 하이라이트
+    if (video) {
       video.addEventListener('timeupdate', function () {
-        if (video.duration) bar.style.width = (Math.min(1, video.currentTime / video.duration) * 100) + '%';
+        if (bar && video.duration) bar.style.width = (Math.min(1, video.currentTime / video.duration) * 100) + '%';
+        var panel = document.querySelector('.fd-panel__body.is-active');
+        if (!panel) return;
+        var items = Array.prototype.slice.call(panel.querySelectorAll('.fd-seek'));
+        var cur = null;
+        items.forEach(function (it) {
+          if (video.currentTime >= (parseFloat(it.getAttribute('data-seek')) || 0) - 0.1) cur = it;
+        });
+        items.forEach(function (it) { it.classList.toggle('is-cur', it === cur); });
       });
     }
   })();

@@ -842,3 +842,14 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
   border-radius:10px;background:rgba(245,89,28,.10);border:1px solid rgba(245,89,28,.28);
   font-size:14px;line-height:1.6;color:var(--d-t2);}
 .fd-shoot__ico{flex:none;}
+
+/* Final Design · 문단=영상 시크 버튼 (챕터 영상 내 미니 목차) */
+.fd-seek{
+  display:block;width:100%;text-align:left;background:none;border:0;
+  font-family:inherit;cursor:pointer;position:relative;
+  padding:8px 12px 8px 14px;margin:0 0 4px;border-radius:8px;
+  border-left:3px solid transparent;transition:background .15s,border-color .15s;
+}
+.fd-seek:hover{background:rgba(255,255,255,.06);border-left-color:rgba(245,89,28,.45);}
+.fd-seek.is-cur{background:rgba(245,89,28,.10);border-left-color:var(--accent-lg);}
+.fd-seek:focus-visible{outline:2px solid var(--accent-sm);outline-offset:2px;}
