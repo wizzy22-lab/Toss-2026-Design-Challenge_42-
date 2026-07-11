@@ -780,3 +780,7 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
   width:26px;height:26px;border-radius:7px;background:var(--t1);color:var(--page);
   font-size:12px;font-weight:800;letter-spacing:.01em;
 }
+
+/* ---- Market 브리지: 둘째 줄 한 줄 + 오렌지 강조 Semibold ---- */
+.mkt__bridge{max-width:none;}          /* 720 제한 해제 → wrap 폭까지 한 줄 */
+.mkt__bridge b{font-weight:600;}       /* 오렌지 강조 Bold→Semibold */
