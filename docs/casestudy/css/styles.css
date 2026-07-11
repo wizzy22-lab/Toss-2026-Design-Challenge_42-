@@ -640,3 +640,86 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
   .hero__cue-line{animation:none;}
   .cy-arc{animation:none;}
 }
+
+/* ============================================================
+   NORMALIZE — 카드·폭·리드 일괄 정합 (뒤죽박죽 수정)
+   맨 끝에 붙임 (나중 규칙이 이김). scrub 안무 위치값은 #id/.is-scrub가 우선.
+   ============================================================ */
+:root{
+  --border:rgba(28,21,16,.10);
+  --shadow-card:0 8px 28px rgba(0,0,0,.07);
+  --measure:720px;
+  --measure-wide:1040px;
+  --card-pad:24px;
+}
+
+/* ---- 1) 콘텐츠 폭 통일 ---- */
+.wrap{max-width:var(--measure-wide);}
+.reading,.pain,.dir,.pain__intro,
+.flow,.flow__key,.flow__bridge,
+.dir__intro .lead,.btr__desc,.btr__meta,
+.mkt__key,.mkt__bridge{max-width:var(--measure);margin-left:auto;margin-right:auto;}
+
+/* ---- 2) 카드 통일 ---- */
+.pcard,.mkt__col,.flow__step,.uquote,.baf__pair,
+.mkt__insight,.btr__selfcheck,.vcard,
+.cynode,.cycle__center,.dcard{
+  border:1px solid var(--border);
+  box-shadow:var(--shadow-card);
+  border-radius:var(--r-card);
+}
+.pcard,.mkt__col,.flow__step,.uquote,.baf__pair,
+.mkt__insight,.btr__selfcheck{padding:var(--card-pad);}
+.vcard{padding:16px;}
+.dcard{padding:12px 16px;}
+
+.mkt__insight{border-left:3px solid var(--accent-lg);}
+.uquote{border-left:3px solid var(--accent-lg);}
+.flow__step--host{border-left:4px solid var(--accent-lg);}
+
+/* ---- 3) 리드 크기 통일 (18) ---- */
+.lead,#process .lead,.dir__intro .lead{font-size:18px;line-height:1.6;color:var(--t2);}
+
+/* ---- 4) 그리드 갭 통일 (20) ---- */
+.mkt,.uquotes,.pain__cards{gap:20px;}
+
+/* ---- 5) 섹션 리듬 ---- */
+.section{padding-top:var(--sp-sec);padding-bottom:var(--sp-sec);}
+
+/* ---- 6) 카드 hover 통일 ---- */
+.pcard,.mkt__col,.flow__step,.uquote,.baf__pair,.vcard{transition:transform .15s ease,box-shadow .15s ease;}
+@media(hover:hover){
+  .vcard:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(0,0,0,.10);}
+}
+
+/* ---- 7) 헤딩 블록 간격 ---- */
+.kicker,.hero__eyebrow{margin-bottom:24px;}
+.section h2,.hero__title{margin-top:0;margin-bottom:12px;}
+.section .kicker + h2{margin-top:0;}
+.lead{margin-top:0;}
+.section h2 + .lead,.section h2 + p,
+.dir__intro h2 + .lead{margin-top:0;}
+
+/* ---- 8) 헤딩 → 콘텐츠 간격 통일 (40) ---- */
+.reading__grid,.mkt,.flow,.btr,.pain__cards{margin-top:40px;}
+.dir__stage{margin:32px auto;}
+.reading__problem,.pain__text{margin-top:40px;}
+
+/* ---- 9) READING · Challenge Recognition 타이트 스택 ---- */
+.reading__problem,
+.is-scrub .reading__problem{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
+}
+.reading__eyebrow{
+  text-transform:none;
+  font-size:15px;font-weight:600;letter-spacing:.02em;line-height:1.2;
+  color:var(--accent-sm);margin:0 0 16px;
+}
+.reading__pquote{
+  font-size:clamp(20px,2.6vw,28px);font-weight:700;line-height:1.35;
+  color:var(--t1);white-space:normal;margin:0 0 12px;max-width:760px;
+}
+.reading__pbody{
+  font-size:17px;line-height:1.6;color:var(--t2);margin:0;max-width:640px;
+}
