@@ -375,8 +375,9 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
   border-radius:var(--r-card);padding:22px 22px 20px;
   box-shadow:0 10px 30px rgba(0,0,0,.08);text-align:left;
 }
-.pcard__idx{display:inline-flex;font-size:18px;font-weight:700;color:var(--accent-sm);margin-bottom:10px;}
-.pcard h3{font-size:19px;font-weight:600;margin-bottom:8px;}
+.pcard__head{display:flex;align-items:center;gap:8px;margin-bottom:10px;} /* 번호+제목 한 줄 */
+.pcard__idx{display:inline-flex;font-size:18px;font-weight:700;color:var(--accent-sm);margin-bottom:0;}
+.pcard h3{font-size:19px;font-weight:600;margin-bottom:0;}
 .pcard__desc{font-size:15px;color:var(--t2);line-height:1.6;}
 
 /* Step 1 · 하나의 일 (scrub 전용) */
@@ -410,7 +411,7 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
 /* is-scrub 안무 (모션 전용) — 카드/사람/텍스트를 절대배치로 겹쳐 이동·크로스페이드 */
 #pain.is-scrub .pain{min-height:74vh;}
 #pain.is-scrub .pain__cards{position:absolute;inset:0;display:block;margin:0;}
-#pain.is-scrub .pcard{position:absolute;width:clamp(150px,26vw,200px);}
+#pain.is-scrub .pcard{position:absolute;width:clamp(160px,27vw,210px);min-height:190px;} /* 3장 크기 동일 */
 #pain.is-scrub .pain__whole,
 #pain.is-scrub .pain__person{position:absolute;}
 #pain.is-scrub .pain__text{position:absolute;left:0;right:0;top:76%;margin:0;}
