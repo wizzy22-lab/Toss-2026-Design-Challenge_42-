@@ -17,7 +17,22 @@
     var bar = document.getElementById('progress');
     var burger = document.getElementById('navBurger');
     var links = Array.prototype.slice.call(document.querySelectorAll('.nav__links a[data-spy]'));
-    var sections = links.map(function (a) { return document.getElementById(a.getAttribute('data-spy')); });
+    // 각 링크(data-spy)는 하나 이상의 섹션 그룹을 가질 수 있음 (공백 구분).
+    // 그룹이 DOM에서 비연속일 수 있어(예: Build=build+iteration, 사이에 Solution),
+    // 모든 대상 섹션을 문서 순서로 정렬해 "지난 마지막 섹션이 속한 링크"를 활성화한다.
+    var tracked = [];
+    links.forEach(function (a, li) {
+      a.getAttribute('data-spy').split(/\s+/).forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) tracked.push({ el: el, li: li });
+      });
+    });
+    tracked.sort(function (x, y) {
+      var pos = x.el.compareDocumentPosition(y.el);
+      if (pos & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
+      if (pos & Node.DOCUMENT_POSITION_PRECEDING) return 1;
+      return 0;
+    });
 
     var ticking = false;
     function onScroll() {
@@ -30,14 +45,14 @@
         var p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
         if (bar) bar.style.transform = 'scaleX(' + p + ')';
 
-        // scrollspy — active = last anchor section whose top passed the line
+        // scrollspy — 지난 마지막(문서 순서) 섹션이 속한 링크를 활성화
         var line = (navEl ? navEl.offsetHeight : 60) + doc.clientHeight * 0.25;
-        var activeIdx = 0;
-        for (var i = 0; i < sections.length; i++) {
-          if (sections[i] && sections[i].getBoundingClientRect().top <= line) activeIdx = i;
+        var activeLi = 0;
+        for (var i = 0; i < tracked.length; i++) {
+          if (tracked[i].el.getBoundingClientRect().top <= line) activeLi = tracked[i].li;
         }
         links.forEach(function (a, i) {
-          if (i === activeIdx) a.setAttribute('aria-current', 'true');
+          if (i === activeLi) a.setAttribute('aria-current', 'true');
           else a.removeAttribute('aria-current');
         });
         ticking = false;
