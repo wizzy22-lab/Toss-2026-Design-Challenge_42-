@@ -4,7 +4,7 @@ import { useApp } from "../store";
 import { DAY_LABEL, slotKorean, timeLabel } from "../data";
 import { parseKey, type SlotResult } from "../engine";
 import { changeAnnounceLine } from "../copy";
-import { Button, Icon, personAvatar } from "../ui";
+import { Button, Card, Icon, personAvatar } from "../ui";
 import { addDays, wd } from "../lib/date";
 
 /**
@@ -226,7 +226,7 @@ function RequestProgress() {
     : `${state.rangeLabel} (${md(start)}–${end.getDate()})`;
 
   return (
-    <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-line/70">
+    <Card className="overflow-hidden">
       <div className="px-4 py-4">
         {/* 제목 + 부제(대기) · 마감 태그(우상단) — 참석자 카드와 동일 레이아웃 */}
         <div className="flex items-start justify-between gap-2">
@@ -252,7 +252,7 @@ function RequestProgress() {
       <div className="border-t border-line-soft px-4 py-3">
         <ResponseRoster animateFill={realDone < total} />
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -272,7 +272,7 @@ function EphemeralReco({
   // 성립 0 — 시간을 추천하지 않는다. 상태 + 단일 CTA(후보 시간 보기)로 상세 뷰 유도.
   if (!best) {
     return (
-      <div className="rounded-2xl border border-line bg-canvas p-6 shadow-card">
+      <Card variant="accent" className="p-6">
         <span className="inline-flex items-center rounded-full bg-avoid px-2.5 py-1 text-[13px] font-semibold text-avoid-ink">
           다 되는 시간 없음
         </span>
@@ -285,7 +285,7 @@ function EphemeralReco({
         <Button variant="primary" size="lg" full onClick={onDetails} className="mt-4">
           후보 시간 보기
         </Button>
-      </div>
+      </Card>
     );
   }
 
@@ -293,7 +293,7 @@ function EphemeralReco({
   const avoidNames = best.softNames.map((n) => `${n}님`).join("·");
 
   return (
-    <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-brand-100">
+    <Card variant="brand" className="overflow-hidden">
       <div className="border-b border-line-soft bg-gradient-to-r from-brand-50/80 to-white px-4 py-3">
         <p className="text-[13px] font-bold tracking-[-0.01em] text-ink">
           {roster.length}명 모두 답했어요.
@@ -341,7 +341,7 @@ function EphemeralReco({
           정하면 채널에 바로 알려드려요.
         </p>
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -414,10 +414,9 @@ function ConfirmedAnnouncement({
   )}) ${ampm} ${h12}:00`;
 
   return (
-    <div
-      className={`relative overflow-hidden rounded-2xl border border-line bg-canvas shadow-card ${
-        muted ? "opacity-70" : ""
-      }`}
+    <Card
+      variant="accent"
+      className={`relative overflow-hidden ${muted ? "opacity-70" : ""}`}
     >
       {/* 소프트 글로우 — 성사(finality)에만. 장식·포인터 무시 */}
       <div aria-hidden className="glow-accent pointer-events-none absolute inset-0" />
@@ -518,7 +517,7 @@ function ConfirmedAnnouncement({
           <div className="pb-6" />
         )}
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -573,7 +572,7 @@ function ReCoordCard() {
   };
 
   return (
-    <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-brand-100">
+    <Card variant="brand" className="overflow-hidden">
       <div className="border-b border-line-soft bg-gradient-to-r from-brand-50/80 to-white px-4 py-3">
         <p className="text-[13px] font-bold tracking-[-0.01em] text-ink">
           {name}님이 참석이 어려워졌어요
@@ -689,7 +688,7 @@ function ReCoordCard() {
           정하면 모두에게 자동으로 알리고 캘린더도 갱신돼요.
         </p>
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -697,7 +696,7 @@ function ReCoordCard() {
 function CancelledAnnouncement() {
   const { state } = useApp();
   return (
-    <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-line/70">
+    <Card className="overflow-hidden">
       <div className="flex items-center gap-2.5 px-4 py-4">
         <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-danger text-lg text-danger-ink">
           <Icon name="x" size={16} />
@@ -711,7 +710,7 @@ function CancelledAnnouncement() {
           {changeAnnounceLine("cancel", state.title, "", "", "")}
         </p>
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -732,7 +731,7 @@ function ChangeAnnouncement() {
   );
   const calCta = lc.kind === "reschedule" ? "캘린더 갱신" : "캘린더 유지";
   return (
-    <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-line/70">
+    <Card className="overflow-hidden">
       <div className="flex items-center gap-2.5 px-4 py-4">
         <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-100 text-lg text-brand-600">
           <Icon name="refresh-cw" size={18} />
@@ -749,7 +748,7 @@ function ChangeAnnouncement() {
       <div className="border-t border-line-soft px-4 py-3">
         <p className="text-[13px] leading-relaxed text-ink-soft">{line}</p>
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -772,7 +771,7 @@ function ReceivedRequest({ onRespond }: { onRespond: () => void }) {
     : `${state.rangeLabel} (${md(start)}–${end.getDate()})`;
 
   return (
-    <div className="overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-line/70">
+    <Card className="overflow-hidden">
       <div className="px-4 py-4">
         {/* 제목 + 부제(뮤트) · 마감 태그(우상단) */}
         <div className="flex items-start justify-between gap-2">
@@ -820,7 +819,7 @@ function ReceivedRequest({ onRespond }: { onRespond: () => void }) {
       <div className="border-t border-line-soft px-4 py-3">
         <ResponseRoster />
       </div>
-    </div>
+    </Card>
   );
 }
 
