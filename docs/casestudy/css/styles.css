@@ -574,20 +574,18 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
 .btr__meta b{color:var(--t1);font-weight:600;}
 .btr__cap{margin-top:14px;font-size:14px;color:var(--muted);text-align:center;}
 
-/* 공통 · 인라인 "자세히 보기" 링크 (케이스 전체 5곳 재사용 · Primary 버튼 아님) */
+/* 공통 · 심화 링크 칩 (케이스 전체 5곳 재사용 · Primary 버튼 아님) */
 .cs-more{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  margin-top:24px;
-  font-size:14px;
-  font-weight:600;
-  color:var(--accent-sm);        /* #C23E12 딥오렌지 소자 · 작은 텍스트 대비 4.5+ */
-  text-decoration:none;
-  transition:gap .15s ease;
+  display:inline-flex; align-items:center; gap:8px;
+  margin-top:24px; padding:11px 16px;
+  border:1px solid var(--border); border-radius:10px;
+  background:#fff;
+  font-size:15px; font-weight:600; color:var(--t1);   /* 제목은 다크 */
+  text-decoration:none; transition:border-color .15s, gap .15s;
 }
-.cs-more:hover{ text-decoration:underline; gap:9px; }
-.cs-more__arrow{ transition:transform .15s ease; }
+.cs-more:hover{ border-color:var(--accent-lg); gap:11px; }
+.cs-more__label{ color:var(--accent-sm); }        /* '보러가기' 오렌지 */
+.cs-more__arrow{ color:var(--accent-sm); }
 
 /* ① Version History — 가로 스크롤 카드 */
 .vhist{display:flex;gap:20px;margin-top:24px;padding:4px 4px 16px;overflow-x:auto;scroll-snap-type:x mandatory;}
