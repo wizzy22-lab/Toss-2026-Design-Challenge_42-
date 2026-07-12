@@ -823,6 +823,7 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
 .fd-item__no>span:first-child{color:var(--accent-lg);margin-right:6px;}
 .fd-item__sub{font-weight:600;color:var(--muted);}
 .fd-lede{font-size:18px;line-height:1.6;font-weight:600;color:var(--t1);margin:0 0 16px;}
+.fd-desc{font-size:15px;line-height:1.6;color:var(--t2);margin:0 0 16px;}
 .fd-b{font-size:15px;line-height:1.6;color:var(--t2);margin:0 0 12px;}
 .fd-b b{color:var(--t1);font-weight:700;}
 .fd-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;}

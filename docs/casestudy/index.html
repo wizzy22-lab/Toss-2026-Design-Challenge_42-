@@ -8,7 +8,7 @@
 
   <!-- Pretendard -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
-  <link rel="stylesheet" href="css/styles.css?v=41" />
+  <link rel="stylesheet" href="css/styles.css?v=42" />
 </head>
 <body>
   <!-- ===== NAV + PROGRESS (P5) ===== -->
@@ -446,14 +446,14 @@
             <div class="fd-progress"><span></span></div>
           </figure>
           <div class="fd-item__desc">
-            <p class="fd-item__no"><span>①</span>모으기 · 입력 부담 ↓</p>
-            <p class="fd-lede">주최자와 참석자, 양쪽 입력을 함께 줄입니다.</p>
-            <button type="button" class="fd-b fd-seek" data-seek="0"><span class="fd-seek__ts">0:00</span><b>주최자</b> — 회의 이름과 후보 기간만 정하면 됩니다. 소요시간·응답 마감·참석자(전원 필참)는 기본값으로 오고, 요청은 채널에 자동 게시돼 따로 공지를 쓰지 않습니다.</button>
-            <button type="button" class="fd-b fd-seek" data-seek="6"><span class="fd-seek__ts">0:06</span><b>참석자</b> — 캘린더를 자동으로 불러와(“○○님의 캘린더를 불러왔어요”) 안 되는 시간만 표시합니다. ‘가능/불가’ 이분법과 달리 X(불가)와 ▲(피하고 싶어요)를 구분해 버려지던 선호까지 담습니다.</button>
-            <button type="button" class="fd-b fd-seek" data-seek="12"><span class="fd-seek__ts">0:12</span><b>캘린더는 시작점, 정답이 아님</b> — 연동자는 자동으로 채우되, 캘린더에 일정이 없는 사람(외근이라 안 적는 한소희)은 빈 그리드에서 직접 표시합니다. 한 사람이 캘린더에 없어도 조율이 멈추지 않습니다.</button>
-            <p class="fd-shoot"><span class="fd-shoot__ico" aria-hidden="true">🎬</span><span>회의 만들기(이름·기간, 나머지 기본값) → “만들고 #커머스팀에 요청 보내기” → 참석자 응답(캘린더 자동 / 미연동자는 빈 그리드, X·▲ 원탭)</span></p>
+            <p class="fd-item__no"><span>①</span>모으기</p>
+            <p class="fd-lede">처음부터 입력하지 않고, 필요한 정보만 보완합니다</p>
+            <p class="fd-desc">시스템이 알고 있는 정보는 먼저 채우고, 주최자와 참석자는 바꿀 내용과 빠진 조건만 입력합니다.</p>
+            <button type="button" class="fd-b fd-seek" data-seek="0"><span class="fd-seek__ts">0:00</span><b>회의 만들기</b> — 주최자는 회의 이름과 후보 기간만 정합니다. 소요 시간·응답 마감·채널 참석자는 수정 가능한 기본값으로 제공하고, 생성된 요청은 채널에 자동으로 게시합니다.</button>
+            <button type="button" class="fd-b fd-seek" data-seek="10"><span class="fd-seek__ts">0:10</span><b>주최자 응답</b> — 주최자도 참석자로서 자신의 일정을 확인합니다. 연동된 캘린더를 처음부터 다시 입력하지 않고, 이번 회의에서 안 되는 시간(X)과 피하고 싶은 시간(▲)만 보완합니다.</button>
+            <button type="button" class="fd-b fd-seek" data-seek="16"><span class="fd-seek__ts">0:16</span><b>참석자 응답</b> — 캘린더가 연동된 참석자는 기존 일정에서 시작하고, 연동하지 않은 참석자는 빈 그리드에 직접 조건을 표시합니다. 캘린더 유무와 관계없이 같은 흐름에서 응답할 수 있습니다.</button>
             <div class="fd-tags">
-              <span>요청 자동 게시</span><span>캘린더 자동 + 없으면 직접 보완</span><span>외근 → X</span><span>점심 직후 → ▲</span>
+              <span>요청 자동 게시</span><span>수정 가능한 기본값</span><span>캘린더 자동 반영</span><span>직접 보완</span><span>불가 X</span><span>선호 ▲</span>
             </div>
           </div>
         </article>
