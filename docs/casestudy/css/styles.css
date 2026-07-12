@@ -902,25 +902,20 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
 /* ============================================================
    10 · REFLECTION
    ============================================================ */
-.rfl-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.rfl-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 
 .rfl-card{
   display:flex;flex-direction:column;
   border:1px solid var(--border);border-radius:var(--r-card);box-shadow:var(--shadow-card);
   background:#fff;padding:24px;
 }
-.rfl-card__ttl{font-size:18px;font-weight:700;color:var(--t1);margin:0 0 10px;line-height:1.35;}
-.rfl-card__bd{font-size:15px;line-height:1.6;color:var(--t2);margin:0;}
+.rfl-card__ttl{font-size:17px;font-weight:700;color:var(--t1);margin:0 0 10px;line-height:1.35;}
+.rfl-card__bd{font-size:15px;line-height:1.65;color:var(--t2);margin:0;}
 .rfl-more{
   margin-top:16px;align-self:flex-start;
   font-size:13px;font-weight:700;color:var(--accent-sm);text-decoration:none;
 }
 .rfl-more:hover{text-decoration:underline;}
-
-.rfl-next{
-  margin-top:32px;font-size:18px;line-height:1.55;font-weight:600;
-  color:var(--t1);text-align:center;
-}
 
 .rfl-footer{
   margin-top:40px;padding-top:24px;border-top:1px solid var(--border);
