@@ -131,7 +131,11 @@ export function rankedCandidates(results: SlotResult[]): SlotResult[] {
     if (b.counts.in !== a.counts.in) return b.counts.in - a.counts.in;
     if (a.softViolations !== b.softViolations)
       return a.softViolations - b.softViolations;
-    return TIMES.indexOf(a.time) - TIMES.indexOf(b.time);
+    // 동점 = 더 이른 시간 (요일 먼저, 그다음 시각). 월 < 수 < 금 순.
+    return (
+      DAYS.indexOf(a.day) - DAYS.indexOf(b.day) ||
+      TIMES.indexOf(a.time) - TIMES.indexOf(b.time)
+    );
   });
 }
 
@@ -146,7 +150,11 @@ export function topRecommendations(
       if (a.softViolations !== b.softViolations)
         return a.softViolations - b.softViolations;
       if (b.score !== a.score) return b.score - a.score;
-      return TIMES.indexOf(a.time) - TIMES.indexOf(b.time);
+      // 동점 = 더 이른 시간 (요일 먼저, 그다음 시각). 월 < 수 < 금 순.
+      return (
+        DAYS.indexOf(a.day) - DAYS.indexOf(b.day) ||
+        TIMES.indexOf(a.time) - TIMES.indexOf(b.time)
+      );
     })
     .slice(0, n);
 }
