@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 /* ---------- 아이콘 (한 세트로 통일 · Lucide 경로 · currentColor 상속) ---------- */
 type IconName =
@@ -257,17 +257,69 @@ export function Checkbox({
 
 export function Card({
   children,
+  variant = "default",
   className = "",
 }: {
   children: ReactNode;
+  variant?: "default" | "brand" | "accent";
   className?: string;
 }) {
+  // default = 흰 카드(헤어라인) · brand = 오렌지 링(에페메럴/재조율) · accent = 쿨톤 강조면(확정/폴백)
+  const variants = {
+    default: "bg-white ring-1 ring-line/70",
+    brand: "bg-white ring-1 ring-brand-100",
+    accent: "bg-canvas border border-line",
+  };
   return (
-    <div
-      className={`rounded-2xl bg-white shadow-card ring-1 ring-line/70 ${className}`}
-    >
+    <div className={`rounded-2xl shadow-card ${variants[variant]} ${className}`}>
       {children}
     </div>
+  );
+}
+
+/* ---------- 버튼 (인라인 난립 흡수 · 높이/라운드/타이포 중앙집중) ---------- */
+type BtnVariant = "primary" | "secondary" | "ghost" | "danger";
+type BtnSize = "sm" | "md" | "lg";
+export function Button({
+  variant = "primary",
+  size = "md",
+  full = false,
+  icon,
+  iconRight,
+  className = "",
+  children,
+  ...rest
+}: {
+  variant?: BtnVariant;
+  size?: BtnSize;
+  full?: boolean;
+  icon?: IconName; // 좌측 리딩 아이콘(크기는 size 연동)
+  iconRight?: IconName; // 우측 트레일링 아이콘
+  className?: string;
+  children?: ReactNode;
+} & ButtonHTMLAttributes<HTMLButtonElement>) {
+  const sizes: Record<BtnSize, { box: string; icon: number }> = {
+    sm: { box: "h-9 px-3 text-[13px] gap-1", icon: 14 },
+    md: { box: "h-11 px-4 text-[14px] gap-1.5", icon: 16 },
+    lg: { box: "h-12 px-5 text-[16px] gap-2", icon: 18 },
+  };
+  const variants: Record<BtnVariant, string> = {
+    primary: "bg-ink text-white hover:bg-ink-hover",
+    secondary: "border border-edge text-ink-soft hover:bg-sand-50",
+    ghost: "text-brand-600 hover:bg-brand-50",
+    danger: "text-danger-ink hover:bg-danger",
+  };
+  const s = sizes[size];
+  return (
+    <button
+      type="button"
+      className={`inline-flex items-center justify-center rounded-[10px] font-bold transition ${s.box} ${variants[variant]} ${full ? "w-full" : ""} ${className}`}
+      {...rest}
+    >
+      {icon && <Icon name={icon} size={s.icon} />}
+      {children}
+      {iconRight && <Icon name={iconRight} size={s.icon} />}
+    </button>
   );
 }
 
