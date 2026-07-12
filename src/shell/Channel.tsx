@@ -272,7 +272,7 @@ function EphemeralReco({
   // 성립 0 — 시간을 추천하지 않는다. 상태 + 단일 CTA(후보 시간 보기)로 상세 뷰 유도.
   if (!best) {
     return (
-      <div className="rounded-2xl border border-line bg-cream p-6 shadow-card">
+      <div className="rounded-2xl border border-line bg-canvas p-6 shadow-card">
         <span className="inline-flex items-center rounded-full bg-avoid px-2.5 py-1 text-[13px] font-semibold text-avoid-ink">
           다 되는 시간 없음
         </span>
@@ -418,7 +418,7 @@ function ConfirmedAnnouncement({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl border border-line bg-cream shadow-card ${
+      className={`relative overflow-hidden rounded-2xl border border-line bg-canvas shadow-card ${
         muted ? "opacity-70" : ""
       }`}
     >
