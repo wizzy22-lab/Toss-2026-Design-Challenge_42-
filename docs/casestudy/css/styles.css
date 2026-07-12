@@ -861,16 +861,16 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
 /* ============================================================
    09 · ITERATION
    ============================================================ */
-/* UT 이미지 3장 */
-.iter-shots{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
-.iter-shot{margin:0;}
-.iter-shot img{width:100%;height:auto;display:block;border-radius:var(--r-card);
-  border:1px solid var(--border);box-shadow:var(--shadow-card);object-fit:cover;}
+/* UT 사진 3장 */
+.iter-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.iter-photo{margin:0;}
+.iter-photo img{width:100%;height:auto;display:block;aspect-ratio:4/3;object-fit:cover;
+  border-radius:var(--r-card);border:1px solid var(--border);box-shadow:var(--shadow-card);}
+.iter-photo figcaption{margin-top:10px;font-size:13px;color:var(--muted);text-align:center;}
+.iter-photos__lead{margin-top:16px;font-size:14px;color:var(--t2);text-align:center;}
 
 /* 문제·근거·결정 표 */
-.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:8px;}
-.iter-table{width:100%;border-collapse:collapse;font-size:15px;}
-@media(max-width:520px){ .iter-table{min-width:440px;} } /* 좁은 폰: 클립 대신 스크롤 */
+.iter-table{width:100%;border-collapse:collapse;font-size:15px;margin-top:8px;}
 .iter-table th,.iter-table td{text-align:left;padding:14px 16px;border-bottom:1px solid var(--border);vertical-align:top;}
 .iter-table th{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.02em;}
 .iter-table td:first-child{color:var(--t1);font-weight:600;width:56%;}
@@ -886,25 +886,14 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
 .iter-changes li{display:flex;gap:16px;align-items:flex-start;
   border:1px solid var(--border);border-radius:var(--r-card);box-shadow:var(--shadow-card);
   background:#fff;padding:20px 24px;}
-.iter-num{flex:0 0 auto;font-size:15px;font-weight:800;color:var(--accent-sm);
-  font-variant-numeric:tabular-nums;line-height:1.5;}
-.iter-ct{font-size:18px;font-weight:700;color:var(--t1);margin:0 0 4px;}
-.iter-cd{font-size:15px;line-height:1.6;color:var(--t2);margin:0;}
-
-/* Before → After 3개 */
-.iter-ba-shots{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
-.iter-ba-shot{margin:0;}
-.iter-ba-shot video{width:100%;height:auto;display:block;border-radius:var(--r-card);
-  border:1px solid var(--border);box-shadow:var(--shadow-card);}
-.iter-ba-shot figcaption{margin-top:10px;font-size:14px;color:var(--muted);text-align:center;}
+.iter-num{flex:0 0 auto;font-size:15px;font-weight:800;color:var(--accent-sm);font-variant-numeric:tabular-nums;line-height:1.5;}
+.iter-ct{font-size:16px;font-weight:700;color:var(--t1);margin:0 0 4px;}
+.iter-cd{font-size:15px;line-height:1.65;color:var(--t2);margin:0;}
 
 .iter-close{margin-top:40px;font-size:20px;line-height:1.5;font-weight:600;color:var(--t1);text-align:center;}
 
 /* 모바일 */
-@media (max-width:720px){
-  .iter-shots,.iter-ba-shots{grid-template-columns:1fr;}
-  .iter-table td:first-child{width:auto;}
-}
+@media (max-width:720px){ .iter-photos{grid-template-columns:1fr;} .iter-table td:first-child{width:auto;} }
 
 /* ============================================================
    10 · REFLECTION
