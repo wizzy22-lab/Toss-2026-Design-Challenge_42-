@@ -290,7 +290,7 @@ function MiniGrid({ me }: { me: Attendee }) {
   const cols = { gridTemplateColumns: `repeat(${days.length}, minmax(0,1fr))` };
   return (
     <div className="inline-block rounded-lg bg-sand-50 p-2">
-      <div className="mb-1 grid gap-[3px]" style={cols}>
+      <div className="mb-1 grid gap-1" style={cols}>
         {days.map((d) => (
           <div
             key={d}
@@ -300,7 +300,7 @@ function MiniGrid({ me }: { me: Attendee }) {
           </div>
         ))}
       </div>
-      <div className="grid gap-[3px]" style={cols}>
+      <div className="grid gap-1" style={cols}>
         {TIMES.map((t) =>
           days.map((d) => {
             const kind = cellKind(me, d, t);

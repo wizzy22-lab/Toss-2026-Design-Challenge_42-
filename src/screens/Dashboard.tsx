@@ -108,7 +108,7 @@ function ListRow({
     .map((s) => s.attendee.name);
   const softNames = r.states.filter((s) => s.soft).map((s) => s.attendee.name);
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-[14px] bg-white p-4 ring-1 ring-line/70 transition hover:bg-sand-50">
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl bg-white p-4 ring-1 ring-line/70 transition hover:bg-sand-50">
       <div className="min-w-0 flex-1">
         <p className="text-[16px] font-semibold tracking-[-0.01em] text-ink [font-variant-numeric:tabular-nums]">
           {DAY_LABEL[r.day]} {timeLabel(r.time)}
