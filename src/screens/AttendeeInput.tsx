@@ -163,7 +163,7 @@ export default function AttendeeInput({
                     <b className="font-bold text-ink">
                       {me.name}님의 캘린더를 불러왔어요.
                     </b>{" "}
-                    안 되는 시간만 확인하고 필요한 곳만 수정해주세요.
+                    확인하고 필요한 곳만 수정해주세요.
                   </p>
                 )}
                 <p className="text-[13px] text-ink-soft">
