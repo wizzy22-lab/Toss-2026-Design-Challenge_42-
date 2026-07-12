@@ -27,7 +27,8 @@ export default {
           hover: "#33291F", // 다크 primary 버튼 hover(bg-ink 위 lift)
         },
         // 표면 (크림 + 다크 텍스트)
-        cream: "#FFF9F4", // page 배경
+        canvas: "#F9FAFC", // 메신저 창(메시지 영역) 배경 — 쿨 톤
+        cream: "#FFF9F4", // 웜 카드 틴트(확정·폴백 카드)
         surface: "#FFFDFB", // 카드
         edge: "#9C9186", // 인풋·아웃라인 경계 — 1.4.11 조작요소 3:1(3.08)
         // 시맨틱 상태 컬러 (V2 §4) — 대비 통일 ~4.5 + 패턴/아이콘 병행
