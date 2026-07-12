@@ -121,10 +121,10 @@ h3{font-size:22px;font-weight:600;line-height:1.35;}
 .nav__right{display:flex;align-items:center;gap:12px;}
 .nav__cta{
   display:inline-flex;align-items:center;font-size:14px;font-weight:600;
-  color:#fff;background:var(--accent-cta);padding:8px 16px;border-radius:999px;
+  color:#fff;background:var(--t1);padding:8px 16px;border-radius:999px;
   transition:background .15s ease,transform .15s ease;white-space:nowrap;
 }
-.nav__cta:hover{background:var(--accent-cta-hover);}
+.nav__cta:hover{background:#000;}
 .nav__cta:active{transform:translateY(1px);}
 
 .nav__burger{
