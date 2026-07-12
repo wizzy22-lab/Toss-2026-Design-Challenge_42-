@@ -8,7 +8,7 @@
 
   <!-- Pretendard -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
-  <link rel="stylesheet" href="css/styles.css?v=32" />
+  <link rel="stylesheet" href="css/styles.css?v=33" />
 </head>
 <body>
   <!-- ===== NAV + PROGRESS (P5) ===== -->
@@ -25,6 +25,7 @@
         <li><a href="#reading" data-spy="reading">Brief Analysis</a></li>
         <li><a href="#pain" data-spy="pain">Task Analysis</a></li>
         <li><a href="#market" data-spy="market">Market Research</a></li>
+        <li><a href="#direction" data-spy="direction">Design Direction</a></li>
         <li><a href="#ia" data-spy="ia">System Flow</a></li>
         <li><a href="#build" data-spy="build">Build</a></li>
         <li><a href="#final" data-spy="final">Final Design</a></li>
@@ -33,7 +34,7 @@
       </ul>
 
       <div class="nav__right">
-        <a class="nav__cta" href="#pain">데모 열어보기</a>
+        <a class="nav__cta" href="#final">데모 열어보기</a>
         <button class="nav__burger" id="navBurger" type="button"
                 aria-label="메뉴 열기" aria-expanded="false" aria-controls="navLinks">
           <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
@@ -58,7 +59,7 @@
           모두가 수용할 수 있는 시간을 더 쉽게 결정하도록 설계했어요.
         </h1>
         <div class="hero__actions" data-hero>
-          <a class="btn-cta" href="#build">프로토타입보기</a>
+          <a class="btn-cta" href="#final">프로토타입보기</a>
         </div>
       </div>
 
@@ -69,7 +70,7 @@
       </a>
     </section>
 
-    <!-- ===== 2 · AI WORKING PROCESS ===== -->
+    <!-- ===== 01 · PROCESS (AI Working Process) ===== -->
     <section class="section" id="process">
       <div class="wrap">
         <p class="kicker reveal">01 · How I Worked</p>
@@ -106,8 +107,9 @@
       </div>
     </section>
 
-    <!-- ===== 3 · READING BETWEEN THE LINES (pinned scrub · P3) ===== -->
+    <!-- ===== 02 · BRIEF ANALYSIS (Reading Between the Lines · pinned scrub) ===== -->
     <section class="pin-section" id="reading">
+      <h2 class="sr-only">Brief Analysis — 지문에서 읽어낸 의미</h2>
       <div class="pin-stage">
         <div class="reading">
           <!-- Step 1 · 토스 챌린지 원문 (실제 이미지) -->
@@ -162,7 +164,7 @@
       </div>
     </section>
 
-    <!-- ===== 4 · PAIN POINTS (라이트 · 스크롤 스토리텔링) ===== -->
+    <!-- ===== 03 · TASK ANALYSIS (Pain Points · 스크롤 스토리텔링) ===== -->
     <section class="pin-section" id="pain">
       <div class="pain__intro wrap wrap--narrow">
         <p class="kicker reveal">03 · Task Analysis</p>
@@ -208,10 +210,10 @@
       </div>
     </section>
 
-    <!-- ===== 5 · MARKET RESEARCH (라이트 · 3열 비교 · 스크롤 애니 없음) ===== -->
+    <!-- ===== 04 · MARKET RESEARCH (라이트 · 3열 비교 · 스크롤 애니 없음) ===== -->
     <section class="section band-tint" id="market">
       <div class="wrap">
-        <p class="kicker">04 · Market Research</p>
+        <p class="kicker reveal">04 · Market Research</p>
         <h2>현재 도구들은 회의 일정 잡기를 어디까지 돕고 있을까?</h2>
         <p class="lead">회의 시간 정하기를 모으기, 비교하기, 조율하기로 나누고 대표적인 일정 조율 방식을 직접 사용해 봤어요.</p>
 
@@ -270,13 +272,13 @@
       </div>
     </section>
 
-    <!-- ===== 6 · DESIGN DIRECTION (라이트 · 스크롤 다이어그램) ===== -->
+    <!-- ===== 05 · DESIGN DIRECTION (라이트 · 스크롤 다이어그램) ===== -->
     <section class="pin-section" id="direction">
       <div class="pin-stage">
         <div class="dir">
           <!-- 상단 · 인트로 -->
           <div class="dir__intro" data-dir="intro">
-            <p class="kicker">05 · Design Direction</p>
+            <p class="kicker reveal">05 · Design Direction</p>
             <h2>주최자가 맡던 세 가지 일을 시스템과 나눴습니다</h2>
             <p class="lead">기존 도구는 일부 과정을 도왔지만, 모으고·비교하고·조율하는 일은 여전히 주최자의 몫이었습니다.<br />필참 여부·선호·일정 제약까지 함께 고려해 시스템이 추천하고, 사람은 최종 결정에만 집중할 수 있도록 설계했습니다.</p>
           </div>
@@ -306,7 +308,7 @@
       </div>
     </section>
 
-    <!-- ===== 7 · IA — SYSTEM FLOW (라이트 · 위→아래 순차 등장) ===== -->
+    <!-- ===== 06 · SYSTEM FLOW (라이트 · 순차 등장) ===== -->
     <section class="section band-tint" id="ia">
       <div class="wrap">
         <p class="kicker reveal">06 · System Flow</p>
@@ -349,11 +351,11 @@
       </div>
     </section>
 
-    <!-- ===== 7 · BUILD (라이트) ===== -->
+    <!-- ===== 07 · BUILD (라이트) ===== -->
     <section class="section" id="build">
       <!-- 텍스트: 좁은 폭(720) -->
       <div class="wrap wrap--narrow reveal">
-        <p class="kicker">07 · Build</p>
+        <p class="kicker reveal">07 · Build</p>
         <h2>설계한 구조를 직접 사용할 수 있는 프로토타입으로 구현했습니다</h2>
 
         <p class="lead">정보 구조를 설계한 뒤, Claude Code를 활용해 직접 조작할 수 있는 프로토타입으로 구현했습니다. 정지된 화면이 아니라 전체 흐름을 직접 따라가며, 화면이 아닌 실제 사용 경험을 확인했습니다.</p>
@@ -366,8 +368,8 @@
       </div>
 
       <!-- 이미지: 1080 폭 -->
-      <div class="wrap reveal" style="max-width:1080px;margin:32px auto 0;">
-        <figure class="reading__doc" style="max-width:1080px;margin:0 auto;">
+      <div class="wrap reveal" style="max-width:1040px;margin:40px auto 0;">
+        <figure class="reading__doc" style="max-width:1040px;margin:0 auto;">
           <img class="reading__img" src="assets/build-versions.png"
                width="1080" height="608"
                alt="바이브코딩으로 만든 버전별 프로토타입 화면 모음" loading="lazy" />
@@ -379,7 +381,7 @@
     <!-- ============ 08 · Final Design (라이트 인트로) ============ -->
     <section class="section" id="final">
       <div class="wrap wrap--narrow reveal">
-        <p class="kicker">08 · Final Design</p>
+        <p class="kicker reveal">08 · Final Design</p>
         <h2>최종 경험 — 세 부담을 덜고, 지문의 단서를 닫았습니다</h2>
         <p class="lead">모으기·비교하기·조율하기를 시스템으로 다시 나눴습니다. 각 단계에서 입력·비교·판단 부담을 낮추는 동시에, 과제가 던진 단서들을 하나씩 해결했습니다.</p>
       </div>
@@ -387,12 +389,13 @@
 
     <!-- ============ 챕터형 데모 모듈 · 영상 3개 세로 나열 ============ -->
     <section class="section" id="final-demo">
+      <h2 class="sr-only">Final Design 데모 — 챕터별 화면</h2>
       <div class="fd-stack reveal">
 
         <!-- ① 모으기 -->
         <article class="fd-item">
           <figure class="fd-video__frame">
-            <video width="1080" height="608" playsinline muted poster="assets/final-demo.png">
+            <video width="1080" height="608" playsinline muted poster="assets/final-demo.png" aria-label="① 모으기 데모 화면">
               <source src="assets/final-ch1.mp4" type="video/mp4">
             </video>
             <div class="fd-progress"><span></span></div>
@@ -413,7 +416,7 @@
         <!-- ② 비교하기 -->
         <article class="fd-item">
           <figure class="fd-video__frame">
-            <video width="1080" height="608" playsinline muted poster="assets/final-demo.png">
+            <video width="1080" height="608" playsinline muted poster="assets/final-demo.png" aria-label="② 비교하기 데모 화면">
               <source src="assets/final-ch2.mp4" type="video/mp4">
             </video>
             <div class="fd-progress"><span></span></div>
@@ -434,7 +437,7 @@
         <!-- ③ 조율하기 -->
         <article class="fd-item">
           <figure class="fd-video__frame">
-            <video width="1080" height="608" playsinline muted poster="assets/final-demo.png">
+            <video width="1080" height="608" playsinline muted poster="assets/final-demo.png" aria-label="③ 조율하기 데모 화면">
               <source src="assets/final-ch3.mp4" type="video/mp4">
             </video>
             <div class="fd-progress"><span></span></div>
@@ -454,22 +457,22 @@
       </div>
 
       <!-- 닫는 문장 + CTA -->
-      <div class="wrap wrap--narrow" style="text-align:center;margin-top:56px;">
+      <div class="wrap wrap--narrow" style="text-align:center;margin-top:40px;">
         <p class="lead">추천은 제안이고, 결정은 사람이 합니다.</p>
-        <a class="btn-cta" href="../" style="margin-top:16px;">데모 열어보기</a>
+        <a class="btn-cta" href="../" style="margin-top:16px;">데모보기</a>
       </div>
     </section>
 
-    <!-- ===== 9 · ITERATION ===== -->
+    <!-- ===== 09 · ITERATION ===== -->
     <section class="section" id="iteration">
       <div class="wrap wrap--narrow reveal">
-        <p class="kicker">09 · Iteration</p>
+        <p class="kicker reveal">09 · Iteration</p>
         <h2>완성한 뒤 평가하지 않고, 만드는 과정에서 계속 고쳤습니다</h2>
         <p class="lead">서비스를 처음 접한 3명이 동작하는 프로토타입을 사용하는 모습을 관찰했습니다. 발견한 문제는 심각도와 반복 여부, 수정 범위를 기준으로 비교해 핵심 흐름에 영향을 주는 항목부터 개선했습니다.</p>
       </div>
 
       <!-- UT 진행 이미지 3장 -->
-      <div class="wrap reveal" style="max-width:1040px;margin:32px auto 0;">
+      <div class="wrap reveal" style="max-width:1040px;margin:40px auto 0;">
         <div class="iter-shots">
           <figure class="iter-shot"><img src="assets/ut-1.jpg" width="640" height="420" alt="사용자 테스트 진행 1" loading="lazy"></figure>
           <figure class="iter-shot"><img src="assets/ut-2.jpg" width="640" height="420" alt="사용자 테스트 진행 2" loading="lazy"></figure>
@@ -479,17 +482,19 @@
 
       <!-- 문제·근거·결정 표 -->
       <div class="wrap wrap--narrow reveal" style="margin-top:40px;">
-        <table class="iter-table">
-          <thead>
-            <tr><th>발견한 문제</th><th>근거</th><th>결정</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>가능한 시간이 없을 때 다음 행동이 없음</td><td>기능 공백</td><td><span class="iter-tag is-fix">개선</span></td></tr>
-            <tr><td>‘참석 어려워요’가 버튼으로 보이지 않음</td><td>행동 요소 인식 실패</td><td><span class="iter-tag is-fix">개선</span></td></tr>
-            <tr><td>회의 확정 상태가 명확하지 않음</td><td>2/3 반복</td><td><span class="iter-tag is-fix">개선</span></td></tr>
-            <tr><td>필수·선택 참석자의 의미가 불분명함</td><td>구조 검토 필요</td><td><span class="iter-tag is-park">보류</span></td></tr>
-          </tbody>
-        </table>
+        <div class="table-scroll">
+          <table class="iter-table">
+            <thead>
+              <tr><th>발견한 문제</th><th>근거</th><th>결정</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>가능한 시간이 없을 때 다음 행동이 없음</td><td>기능 공백</td><td><span class="iter-tag is-fix">개선</span></td></tr>
+              <tr><td>‘참석 어려워요’가 버튼으로 보이지 않음</td><td>행동 요소 인식 실패</td><td><span class="iter-tag is-fix">개선</span></td></tr>
+              <tr><td>회의 확정 상태가 명확하지 않음</td><td>2/3 반복</td><td><span class="iter-tag is-fix">개선</span></td></tr>
+              <tr><td>필수·선택 참석자의 의미가 불분명함</td><td>구조 검토 필요</td><td><span class="iter-tag is-park">보류</span></td></tr>
+            </tbody>
+          </table>
+        </div>
 
         <!-- 바뀐 세 가지 -->
         <h3 class="iter-h3">사용자 피드백으로 바뀐 세 가지</h3>
@@ -519,18 +524,18 @@
       </div>
 
       <!-- Before → After 3개 -->
-      <div class="wrap reveal" style="max-width:1040px;margin:32px auto 0;">
+      <div class="wrap reveal" style="max-width:1040px;margin:40px auto 0;">
         <div class="iter-ba-shots">
           <figure class="iter-ba-shot">
-            <video width="640" height="400" playsinline muted loop autoplay poster="assets/ba-1.png"><source src="assets/ba-1.mp4" type="video/mp4"></video>
+            <video width="640" height="400" playsinline muted loop autoplay poster="assets/ba-1.png" aria-label="개선 01 · 결과 없음에서 가까운 후보 제안으로 (Before/After)"><source src="assets/ba-1.mp4" type="video/mp4"></video>
             <figcaption>01 · 결과 없음 → 가까운 후보 제안</figcaption>
           </figure>
           <figure class="iter-ba-shot">
-            <video width="640" height="400" playsinline muted loop autoplay poster="assets/ba-2.png"><source src="assets/ba-2.mp4" type="video/mp4"></video>
+            <video width="640" height="400" playsinline muted loop autoplay poster="assets/ba-2.png" aria-label="개선 02 · 텍스트에서 버튼으로 (Before/After)"><source src="assets/ba-2.mp4" type="video/mp4"></video>
             <figcaption>02 · 텍스트 → 버튼</figcaption>
           </figure>
           <figure class="iter-ba-shot">
-            <video width="640" height="400" playsinline muted loop autoplay poster="assets/ba-3.png"><source src="assets/ba-3.mp4" type="video/mp4"></video>
+            <video width="640" height="400" playsinline muted loop autoplay poster="assets/ba-3.png" aria-label="개선 03 · 약한 확정에서 명확한 확정으로 (Before/After)"><source src="assets/ba-3.mp4" type="video/mp4"></video>
             <figcaption>03 · 약한 확정 → 명확한 확정</figcaption>
           </figure>
         </div>
@@ -549,7 +554,7 @@
         <p class="lead">짧은 기간 동안 내린 결정과, 의도적으로 남겨둔 것들입니다.</p>
       </div>
 
-      <div class="wrap reveal" style="max-width:960px;margin-top:32px;">
+      <div class="wrap reveal" style="max-width:1040px;margin-top:40px;">
         <div class="rfl-grid">
 
           <article class="rfl-card">
@@ -591,7 +596,7 @@
 
         <!-- 심화 링크 -->
         <div class="rfl-footer">
-          <a class="rfl-link" href="[데모 링크]">데모 열어보기</a>
+          <a class="rfl-link" href="../">데모 열어보기</a>
           <a class="rfl-link" href="[설계 결정 로그 링크]">설계 결정 로그</a>
           <a class="rfl-link" href="[리서치 링크]">경쟁 리서치</a>
           <a class="rfl-link" href="[디자인 시스템 링크]">디자인 시스템</a>
@@ -604,6 +609,6 @@
   <!-- GSAP (로컬 벤더 · CDN/오프라인 의존 제거) -->
   <script src="js/vendor/gsap.min.js"></script>
   <script src="js/vendor/ScrollTrigger.min.js"></script>
-  <script src="js/main.js?v=7"></script>
+  <script src="js/main.js?v=8"></script>
 </body>
 </html>
