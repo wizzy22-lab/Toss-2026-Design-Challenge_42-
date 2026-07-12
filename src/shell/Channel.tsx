@@ -308,8 +308,14 @@ function EphemeralReco({
       </div>
 
       <div className="px-4 py-4">
-        <div className="text-3xl font-bold tracking-[-0.01em] text-ink">
-          {DAY_LABEL[best.day]} {timeLabel(best.time)}
+        {/* 랭킹 1위 명시 — 정하기 모달의 1·2·3 넘버링과 일관 */}
+        <div className="flex items-center gap-2">
+          <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-ink text-[14px] font-bold text-white [font-variant-numeric:tabular-nums]">
+            1
+          </span>
+          <div className="text-3xl font-bold tracking-[-0.01em] text-ink">
+            {DAY_LABEL[best.day]} {timeLabel(best.time)}
+          </div>
         </div>
         {/* WHY — L2에서만: 누가 피하고 싶어했는지 (△ + 투명) */}
         {!perfect && avoidNames && (
