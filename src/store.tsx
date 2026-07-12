@@ -31,8 +31,8 @@ const BEST_KEY = "mon-11";
 export const HOST_ID = INITIAL_ATTENDEES[0].id;
 /** 변경 데모에서 "참석 어려워졌다"고 올리는 사람 (필수·대면) */
 const CHANGE_DEMO_ID = "jihoon";
-/** 확정 카드 초기 참석 확인 = 2명 미리 확인(윤지은·박준호) → "확인 2/6"에서 시작 */
-const SEED_ATTEND_CONFIRM = ["jieun", "junho"];
+/** 확정 직후엔 아무도 참석 확인 안 한 상태(0명)에서 시작 — 각자 눌러야 채워짐 */
+const SEED_ATTEND_CONFIRM: string[] = [];
 /** 기본 후보 기간 = 다음 주 월요일 시작, 월–금 5일 */
 const DEFAULT_RANGE_START = addDays(mondayOfWeek(atMidnight(new Date())), 7);
 /** 기본 응답 마감 = 오늘로부터 2일 뒤 18:00 (DeadlinePicker 기본값과 동일) */
@@ -179,6 +179,7 @@ function applyDemo(state: State, stage: DemoStage): State {
         screen: "dashboard",
         confirmedKey: bestKey,
         responded: allIds,
+        attendConfirmed: [], // 방금 확정 → 참석 확인 0명에서 시작
       };
     case "change":
       return {
@@ -186,6 +187,7 @@ function applyDemo(state: State, stage: DemoStage): State {
         screen: "dashboard",
         confirmedKey: bestKey,
         responded: allIds,
+        attendConfirmed: [],
         change: { attendeeId: CHANGE_DEMO_ID },
       };
   }
