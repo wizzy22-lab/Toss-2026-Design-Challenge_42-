@@ -243,7 +243,7 @@ function DemoSwitcher({
         {next && (
           <button
             onClick={() => onDemo(next.to)}
-            className="demo-next-pulse inline-flex items-center gap-1.5 rounded-lg bg-brand-600 px-3 py-1 font-bold text-white transition hover:bg-brand-700"
+            className="demo-next-pulse inline-flex items-center gap-1.5 rounded-[10px] bg-brand-600 px-3 py-1 font-bold text-white transition hover:bg-brand-700"
           >
             {next.label}
             <Icon name="arrow-right" size={14} />
@@ -251,7 +251,7 @@ function DemoSwitcher({
         )}
         <button
           onClick={onRestart}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1 font-semibold text-white/80 transition-colors hover:bg-white/[0.18] hover:text-white"
+          className="inline-flex items-center gap-1.5 rounded-[10px] bg-white/10 px-3 py-1 font-semibold text-white/80 transition-colors hover:bg-white/[0.18] hover:text-white"
         >
           <Icon name="rotate-ccw" size={14} />
           처음부터
@@ -342,9 +342,9 @@ export default function Shell({
               #커머스팀에 메시지 보내기…
             </div>
             <span className="hidden shrink-0 items-center gap-2 pr-1 text-ink-faint sm:flex">
-              <span className="text-base">＠</span>
-              <span className="text-base">😊</span>
-              <span className="text-base">📎</span>
+              <span className="text-[16px]">＠</span>
+              <span className="text-[16px]">😊</span>
+              <span className="text-[16px]">📎</span>
             </span>
           </div>
         </div>

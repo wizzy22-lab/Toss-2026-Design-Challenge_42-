@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useApp } from "../store";
 import { DAY_LABEL, TIMES, slotKey, timeLabel } from "../data";
 import type { Attendee, Day, TimeSlot } from "../types";
-import { Badge, Icon } from "../ui";
+import { Badge, Button, Icon } from "../ui";
 import { addDays } from "../lib/date";
 
 // 상태 2개만: 불가(hard) / 가능하면 피해요(soft). '외근'은 상태가 아니라 이유 → 삭제.
@@ -218,12 +218,9 @@ export default function AttendeeInput({
 
             {/* CTA (고정 · 하단) — 다크 primary(WCAG 통과). 중복 안내문 제거 */}
             <div className="shrink-0 border-t border-line-soft bg-white px-6 pb-6 pt-4">
-              <button
-                onClick={submit}
-                className="h-12 w-full rounded-[10px] bg-ink text-[16px] font-bold text-white transition hover:bg-ink-hover"
-              >
+              <Button variant="primary" size="lg" full onClick={submit}>
                 이대로 공유할게요
-              </button>
+              </Button>
             </div>
           </>
         )}

@@ -10,7 +10,7 @@ import {
   type SlotResult,
 } from "../engine";
 import type { TimeSlot } from "../types";
-import { Icon } from "../ui";
+import { Button, Icon } from "../ui";
 
 type Tip = { r: SlotResult; x: number; y: number };
 
@@ -294,17 +294,20 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
                               {r.softNames.map((n) => `${n}님`).join("·")}
                             </p>
                           )}
-                          <button
+                          <Button
+                            variant="primary"
+                            size="lg"
+                            full
                             onClick={() => confirm(r.key)}
-                            className="mt-4 inline-flex h-12 w-full items-center justify-center rounded-[10px] bg-ink text-[16px] font-bold text-white transition hover:bg-ink-hover"
+                            className="mt-4"
                           >
                             이 시간으로 정하기
-                          </button>
+                          </Button>
                         </div>
                       ) : (
                         <button
                           onClick={() => setSelectedKey(r.key)}
-                          className="flex w-full flex-wrap items-center gap-x-2 gap-y-1 px-4 py-3 text-left transition hover:bg-[#F2EAE2]"
+                          className="flex w-full flex-wrap items-center gap-x-2 gap-y-1 px-4 py-3 text-left transition hover:bg-sand-100"
                         >
                           <span className="text-[16px] font-bold text-ink">
                             {slotKorean(r.day, r.time)}
@@ -333,7 +336,7 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
                 {!expanded && moreCount > 0 && (
                   <button
                     onClick={() => setExpanded(true)}
-                    className="flex w-full items-center justify-center gap-1 rounded-2xl bg-sand-50 px-4 py-2.5 text-[13px] font-bold text-brand-600 transition hover:bg-[#F2EAE2]"
+                    className="flex w-full items-center justify-center gap-1 rounded-[10px] bg-sand-50 px-4 py-2.5 text-[13px] font-bold text-brand-600 transition hover:bg-sand-100"
                   >
                     다른 시간 더 보기 ({moreCount})
                     <Icon name="chevron-down" size={14} />
@@ -420,13 +423,13 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
               <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1">
                 <button
                   onClick={onClose}
-                  className="py-1 text-[14px] font-semibold text-brand-600"
+                  className="py-1 text-[13px] font-semibold text-brand-600"
                 >
                   후보 기간 넓히기
                 </button>
                 <button
                   onClick={onClose}
-                  className="py-1 text-[14px] font-semibold text-brand-600"
+                  className="py-1 text-[13px] font-semibold text-brand-600"
                 >
                   참석자 조정
                 </button>

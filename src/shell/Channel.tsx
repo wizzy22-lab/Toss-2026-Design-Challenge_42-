@@ -4,7 +4,7 @@ import { useApp } from "../store";
 import { DAY_LABEL, slotKorean, timeLabel } from "../data";
 import { parseKey, type SlotResult } from "../engine";
 import { changeAnnounceLine } from "../copy";
-import { Icon, personAvatar } from "../ui";
+import { Button, Icon, personAvatar } from "../ui";
 import { addDays, wd } from "../lib/date";
 
 /**
@@ -282,12 +282,9 @@ function EphemeralReco({
         <p className="mt-1 text-[16px] leading-relaxed text-ink-soft">
           그래도 가까운 시간들이 있어요. 직접 보고 골라주세요.
         </p>
-        <button
-          onClick={onDetails}
-          className="mt-4 h-12 w-full rounded-[10px] bg-ink text-[16px] font-bold text-white transition hover:bg-ink-hover"
-        >
+        <Button variant="primary" size="lg" full onClick={onDetails} className="mt-4">
           후보 시간 보기
-        </button>
+        </Button>
       </div>
     );
   }
