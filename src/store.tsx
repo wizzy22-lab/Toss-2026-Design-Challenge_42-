@@ -273,7 +273,13 @@ function reducer(state: State, action: Action): State {
     case "SET_QUORUM":
       return { ...state, quorum: Math.max(0, action.value) };
     case "SET_ACTIVE_ATTENDEE":
-      return { ...state, activeAttendeeId: action.id };
+      // 현재 뷰어("나")는 '참석 확인'을 직접 눌러야 확인됨.
+      // 시드(다른 2명 미리 확인)에 내가 포함돼도 제외 → 누르기 전엔 항상 미확인 CTA.
+      return {
+        ...state,
+        activeAttendeeId: action.id,
+        attendConfirmed: state.attendConfirmed.filter((x) => x !== action.id),
+      };
     case "TOGGLE_BUSY":
       return {
         ...state,
