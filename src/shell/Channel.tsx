@@ -448,7 +448,7 @@ function ConfirmedAnnouncement({
 
         {/* ③ 사실 문장 */}
         <p className="px-4 pt-3 text-[13px] leading-relaxed text-ink-soft">
-          다들 올 수 있는 괜찮은 시간으로 정했어요.
+          다들 올 수 있는 시간으로 정했어요.
         </p>
 
         {/* ④ 참석 확인 */}

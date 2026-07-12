@@ -44,16 +44,9 @@ export default function CreateMeeting({
     title.trim() !== "" && range !== null && duration !== null;
 
   const handleSubmit = () => {
-    // 비활성 느낌이되 클릭 시 안내(토스트+인라인). 갖춰지면 제출.
+    // 비활성 느낌이되 클릭 시 인라인 필드 에러로 안내(토스트 중복 제거). 갖춰지면 제출.
     if (!canSubmit) {
       setAttempted(true);
-      showToast(
-        title.trim() === ""
-          ? "회의 이름을 정해주세요"
-          : range === null
-            ? "후보 기간을 정해주세요"
-            : "소요시간을 정해주세요",
-      );
       return;
     }
     dispatch({ type: "SET_TITLE", title: title.trim() });
