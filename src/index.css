@@ -10,7 +10,7 @@
     text-rendering: optimizeLegibility;
   }
   body {
-    @apply bg-cream text-ink font-sans antialiased;
+    @apply bg-canvas text-ink font-sans antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     line-height: 1.6; /* 한글 넉넉한 행간 */
     font-variant-numeric: tabular-nums; /* 시간·카운트 정렬 안정 */

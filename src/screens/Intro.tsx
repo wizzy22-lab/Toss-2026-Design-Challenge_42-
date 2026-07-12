@@ -41,7 +41,7 @@ export default function Intro({
         initial={{ opacity: 0, y: 14, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ type: "spring", stiffness: 260, damping: 26 }}
-        className="glow-accent relative z-10 my-auto w-full max-w-lg overflow-hidden rounded-[18px] bg-cream shadow-pop"
+        className="glow-accent relative z-10 my-auto w-full max-w-lg overflow-hidden rounded-[18px] bg-canvas shadow-pop"
       >
         <div className="px-6 py-6 sm:px-8 sm:py-7">
           {/* 로고 — 오렌지 액센트 #C23E12 */}

@@ -25,8 +25,9 @@ export default {
           faint: "#726A61", // 메타·뮤트 — 읽힘 유지(4.53:1)
           disabled: "#A99E94", // placeholder·disabled·장식만 (본문 금지)
         },
-        // 표면 (크림 + 다크 텍스트)
-        cream: "#FFF9F4", // page 배경
+        // 표면 (쿨 톤 통일)
+        canvas: "#F9FAFC", // page·메신저·카드 배경 — 쿨 톤
+        cream: "#FFF9F4", // (레거시) 웜 크림 — 현재 미사용
         surface: "#FFFDFB", // 카드
         edge: "#9C9186", // 인풋·아웃라인 경계 — 1.4.11 조작요소 3:1(3.08)
         // 시맨틱 상태 컬러 (V2 §4) — 대비 통일 ~4.5 + 패턴/아이콘 병행

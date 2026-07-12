@@ -286,7 +286,7 @@ export default function Shell({
         state.attendees[0].name;
 
   return (
-    <div className="flex h-[100dvh] overflow-hidden bg-cream text-ink">
+    <div className="flex h-[100dvh] overflow-hidden bg-canvas text-ink">
       <Sidebar persona={persona} />
       {navOpen && (
         <SidebarDrawer persona={persona} onClose={() => setNavOpen(false)} />
@@ -327,7 +327,7 @@ export default function Shell({
         </header>
 
         {/* 메시지 영역 — 42 무대 */}
-        <main className="flex-1 overflow-y-auto bg-cream">{children}</main>
+        <main className="flex-1 overflow-y-auto bg-canvas">{children}</main>
 
         {/* 컴포저 (정적 입력 + 42 진입 버튼) */}
         <div className="border-t border-line bg-white px-4 py-3 md:px-6">
