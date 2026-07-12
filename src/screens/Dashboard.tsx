@@ -256,6 +256,8 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
                 {visible.map((r) => {
                   const isHero = r.key === sel.key;
                   const isBest = r.key === best?.key;
+                  // 추천 랭킹 번호 (1위=추천, 2·3…) — 표시 위치와 무관하게 순위 고정
+                  const rank = sorted.findIndex((s) => s.key === r.key) + 1;
                   return (
                     <motion.div
                       key={r.key}
@@ -272,6 +274,9 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
                       {isHero ? (
                         <div className="p-5">
                           <div className="flex flex-wrap items-center gap-2">
+                            <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-ink text-[14px] font-bold text-white [font-variant-numeric:tabular-nums]">
+                              {rank}
+                            </span>
                             <span className="text-2xl font-bold tracking-[-0.01em] text-ink">
                               {slotKorean(r.day, r.time)}
                             </span>
@@ -306,6 +311,9 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
                           onClick={() => setSelectedKey(r.key)}
                           className="flex w-full flex-wrap items-center gap-x-2 gap-y-1 px-4 py-3 text-left transition hover:bg-[#F2EAE2]"
                         >
+                          <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-ink text-[13px] font-bold text-white [font-variant-numeric:tabular-nums]">
+                            {rank}
+                          </span>
                           <span className="text-[16px] font-bold text-ink">
                             {slotKorean(r.day, r.time)}
                           </span>
