@@ -253,7 +253,7 @@
     gsap.set('[data-dir="c3"]', { xPercent: -50, yPercent: -50, left: '82%', top: '82%', opacity: 1, scale: 1 });
     gsap.set('[data-dir="rec"]',    { xPercent: -50, yPercent: -50, left: '82%', top: '12%', opacity: 0, scale: 0.9 });
     gsap.set('[data-dir="decide"]', { xPercent: -50, yPercent: -50, left: '58%', top: '82%', opacity: 0, scale: 0.9 });
-    gsap.set('[data-dir="flow"]',   { xPercent: -50, yPercent: -50, left: '50%', top: '47%', opacity: 0 });
+    gsap.set('[data-dir="flow"]',   { xPercent: -50, yPercent: -50, left: '58%', top: '47%', opacity: 0 });
     gsap.set('[data-dir="closing"]', { opacity: 0, y: 16 });
 
     var tl = gsap.timeline({
