@@ -220,7 +220,7 @@ export default function AttendeeInput({
             <div className="shrink-0 border-t border-line-soft bg-white px-6 pb-6 pt-4">
               <button
                 onClick={submit}
-                className="h-12 w-full rounded-[10px] bg-ink text-[16px] font-bold text-white transition hover:bg-[#33291F]"
+                className="h-12 w-full rounded-[10px] bg-ink text-[16px] font-bold text-white transition hover:bg-ink-hover"
               >
                 이대로 공유할게요
               </button>
@@ -361,7 +361,7 @@ function Receipt({
         </button>
         <button
           onClick={onDone}
-          className="flex-1 rounded-[10px] bg-ink py-2.5 text-[16px] font-bold text-white transition hover:bg-[#33291F]"
+          className="flex-1 rounded-[10px] bg-ink py-2.5 text-[16px] font-bold text-white transition hover:bg-ink-hover"
         >
           이제 기다릴게요
         </button>

@@ -284,7 +284,7 @@ function EphemeralReco({
         </p>
         <button
           onClick={onDetails}
-          className="mt-4 h-12 w-full rounded-[10px] bg-ink text-[16px] font-bold text-white transition hover:bg-[#33291F]"
+          className="mt-4 h-12 w-full rounded-[10px] bg-ink text-[16px] font-bold text-white transition hover:bg-ink-hover"
         >
           후보 시간 보기
         </button>
@@ -328,7 +328,7 @@ function EphemeralReco({
         <div className="mt-4 flex flex-col items-center gap-1.5">
           <button
             onClick={onDecide}
-            className="w-full rounded-[10px] bg-ink px-5 py-3 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
+            className="w-full rounded-[10px] bg-ink px-5 py-3 text-[13px] font-bold text-white transition hover:bg-ink-hover"
           >
             이 시간으로 정하기
           </button>
@@ -367,7 +367,7 @@ function AddToCalendarButton({
       className={`inline-flex items-center gap-1 rounded-[10px] px-3 py-1.5 text-[13px] font-bold transition ${
         added
           ? "bg-ok text-ok-ink ring-1 ring-ok-ink/20"
-          : "bg-ink text-white hover:bg-[#33291F]"
+          : "bg-ink text-white hover:bg-ink-hover"
       } ${className}`}
     >
       {added ? (
@@ -461,7 +461,7 @@ function ConfirmedAnnouncement({
             ) : (
               <button
                 onClick={() => dispatch({ type: "CONFIRM_ATTEND", id: me.id })}
-                className="w-full rounded-[10px] bg-ink py-3 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
+                className="w-full rounded-[10px] bg-ink py-3 text-[13px] font-bold text-white transition hover:bg-ink-hover"
               >
                 참석 확인하기
               </button>
@@ -551,7 +551,7 @@ function ReCoordCard() {
   }) => {
     const ring = {
       emerald: "ring-ok-ink/20",
-      amber: "ring-amber-200",
+      amber: "ring-avoid-ink/20",
       brand: "ring-brand-100",
     }[tone];
     return (
@@ -567,7 +567,7 @@ function ReCoordCard() {
         </div>
         <button
           onClick={onClick}
-          className="ml-auto shrink-0 rounded-[10px] bg-ink px-3 py-1.5 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
+          className="ml-auto shrink-0 rounded-[10px] bg-ink px-3 py-1.5 text-[13px] font-bold text-white transition hover:bg-ink-hover"
         >
           {cta}
         </button>
@@ -612,7 +612,7 @@ function ReCoordCard() {
                     {(rc.canDrop ? 1 : 0) + i + 1}
                   </span>
                   <div className="min-w-0">
-                    <p className="text-[13px] font-bold text-brand-500">
+                    <p className="text-[13px] font-bold text-brand-600">
                       {name}님이 제안
                     </p>
                     <p className="text-xl font-bold tracking-[-0.01em] text-ink">
@@ -627,7 +627,7 @@ function ReCoordCard() {
                         newKey: key,
                       })
                     }
-                    className="ml-auto shrink-0 rounded-[10px] bg-ink px-3 py-2 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
+                    className="ml-auto shrink-0 rounded-[10px] bg-ink px-3 py-2 text-[13px] font-bold text-white transition hover:bg-ink-hover"
                   >
                     이 시간으로 변경
                   </button>
@@ -643,7 +643,7 @@ function ReCoordCard() {
                 {rc.canDrop ? 2 : 1}
               </span>
               <div className="min-w-0">
-                <p className="text-[13px] font-bold text-brand-500">새로 추천</p>
+                <p className="text-[13px] font-bold text-brand-600">새로 추천</p>
                 <p className="text-xl font-bold tracking-[-0.01em] text-ink">
                   {DAY_LABEL[rc.newSlot.day]} {timeLabel(rc.newSlot.time)}
                 </p>
@@ -656,7 +656,7 @@ function ReCoordCard() {
                     newKey: rc.newSlot!.key,
                   })
                 }
-                className="ml-auto shrink-0 rounded-[10px] bg-ink px-3 py-2 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
+                className="ml-auto shrink-0 rounded-[10px] bg-ink px-3 py-2 text-[13px] font-bold text-white transition hover:bg-ink-hover"
               >
                 이 시간으로 변경
               </button>
@@ -667,7 +667,7 @@ function ReCoordCard() {
           </div>
         ) : (
           !rc.canDrop && (
-            <p className="rounded-xl bg-amber-50 px-3 py-3 text-[13px] text-amber-700">
+            <p className="rounded-xl bg-avoid px-3 py-3 text-[13px] text-avoid-ink">
               필수 참석자라 제외할 수 없어요. 후보 기간을 넓히거나 참석자를 다시
               정할 수 있어요.
             </p>
@@ -682,7 +682,7 @@ function ReCoordCard() {
         {/* 조정이 안 될 때의 마지막 갈래 — 라이트하게 회의 취소 */}
         <button
           onClick={() => dispatch({ type: "RESOLVE_CHANGE", kind: "cancel" })}
-          className="w-full rounded-[10px] px-3 py-2 text-[13px] font-semibold text-ink-faint transition hover:bg-rose-50 hover:text-rose-500"
+          className="w-full rounded-[10px] px-3 py-2 text-[13px] font-semibold text-ink-faint transition hover:bg-danger hover:text-danger-ink"
         >
           이 회의는 취소할게요
         </button>
@@ -745,7 +745,7 @@ function ChangeAnnouncement() {
             회의 시간이 조정됐어요
           </p>
         </div>
-        <button className="ml-auto shrink-0 rounded-[10px] bg-ink px-3 py-1.5 text-[13px] font-bold text-white transition hover:bg-[#33291F]">
+        <button className="ml-auto shrink-0 rounded-[10px] bg-ink px-3 py-1.5 text-[13px] font-bold text-white transition hover:bg-ink-hover">
           {calCta}
         </button>
       </div>
@@ -812,7 +812,7 @@ function ReceivedRequest({ onRespond }: { onRespond: () => void }) {
         ) : (
           <button
             onClick={onRespond}
-            className="mt-3 w-full rounded-[10px] bg-ink py-3 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
+            className="mt-3 w-full rounded-[10px] bg-ink py-3 text-[13px] font-bold text-white transition hover:bg-ink-hover"
           >
             응답하기
           </button>

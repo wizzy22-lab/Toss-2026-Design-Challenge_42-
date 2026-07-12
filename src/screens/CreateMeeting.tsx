@@ -122,7 +122,7 @@ export default function CreateMeeting({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="ex) 신규 프로모션 회의"
-              className={`w-full rounded-[10px] border px-3.5 py-2.5 text-[16px] font-bold outline-none placeholder:font-normal placeholder:text-[#C7BFB6] focus:ring-2 focus:ring-brand-100 ${
+              className={`w-full rounded-[10px] border px-3.5 py-2.5 text-[16px] font-bold outline-none placeholder:font-normal placeholder:text-ink-disabled focus:ring-2 focus:ring-brand-100 ${
                 titleErr
                   ? "border-danger-ink focus:border-danger-ink"
                   : "border-edge focus:border-brand-400"
@@ -281,7 +281,7 @@ export default function CreateMeeting({
                 />
                 <button
                   onClick={addExternal}
-                  className="shrink-0 rounded-[10px] bg-ink px-3 py-2 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
+                  className="shrink-0 rounded-[10px] bg-ink px-3 py-2 text-[13px] font-bold text-white transition hover:bg-ink-hover"
                 >
                   초대
                 </button>
@@ -312,7 +312,7 @@ export default function CreateMeeting({
             aria-disabled={!canSubmit}
             className={`inline-flex h-12 w-full items-center justify-center rounded-[10px] bg-ink text-[16px] font-bold text-white transition ${
               canSubmit
-                ? "hover:bg-[#33291F]"
+                ? "hover:bg-ink-hover"
                 : "cursor-not-allowed opacity-40"
             }`}
           >

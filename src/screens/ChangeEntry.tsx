@@ -153,7 +153,7 @@ export default function ChangeEntry({
           {isHost ? (
             <button
               onClick={submit}
-              className="mt-5 w-full rounded-[10px] bg-ink py-3 text-[16px] font-bold text-white transition hover:bg-[#33291F]"
+              className="mt-5 w-full rounded-[10px] bg-ink py-3 text-[16px] font-bold text-white transition hover:bg-ink-hover"
             >
               조정안 보기
             </button>
@@ -168,7 +168,7 @@ export default function ChangeEntry({
 
               <div className="mt-2.5 space-y-1.5">
                 {alternatives.length === 0 && whoRequired && (
-                  <p className="rounded-xl bg-amber-50 px-3 py-2.5 text-[13px] leading-relaxed text-amber-700">
+                  <p className="rounded-xl bg-avoid px-3 py-2.5 text-[13px] leading-relaxed text-avoid-ink">
                     받아둔 응답만으론 다들 되는 다른 시간이 없어요. 개인 메시지로
                     알리거나, 주최자가 후보 기간을 넓혀야 해요.
                   </p>
@@ -215,7 +215,7 @@ export default function ChangeEntry({
               <button
                 onClick={submit}
                 disabled={choices.length === 0}
-                className="mt-5 w-full rounded-[10px] bg-ink py-3 text-[16px] font-bold text-white transition hover:bg-[#33291F] disabled:cursor-not-allowed disabled:bg-sand-200 disabled:text-ink-faint"
+                className="mt-5 w-full rounded-[10px] bg-ink py-3 text-[16px] font-bold text-white transition hover:bg-ink-hover disabled:cursor-not-allowed disabled:bg-sand-200 disabled:text-ink-faint"
               >
                 {choices.length === 1 && choices[0] === "drop"
                   ? "나 없이 진행하도록 알리기"

@@ -108,7 +108,7 @@ function ListRow({
     .map((s) => s.attendee.name);
   const softNames = r.states.filter((s) => s.soft).map((s) => s.attendee.name);
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-[14px] bg-white p-4 ring-1 ring-line/70 transition hover:bg-[#F7F1EC]">
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-[14px] bg-white p-4 ring-1 ring-line/70 transition hover:bg-sand-50">
       <div className="min-w-0 flex-1">
         <p className="text-[16px] font-semibold tracking-[-0.01em] text-ink [font-variant-numeric:tabular-nums]">
           {DAY_LABEL[r.day]} {timeLabel(r.time)}
@@ -296,7 +296,7 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
                           )}
                           <button
                             onClick={() => confirm(r.key)}
-                            className="mt-4 inline-flex h-12 w-full items-center justify-center rounded-[10px] bg-ink text-[16px] font-bold text-white transition hover:bg-[#33291F]"
+                            className="mt-4 inline-flex h-12 w-full items-center justify-center rounded-[10px] bg-ink text-[16px] font-bold text-white transition hover:bg-ink-hover"
                           >
                             이 시간으로 정하기
                           </button>
@@ -481,7 +481,7 @@ export default function Dashboard({ onClose }: { onClose: () => void }) {
                   </button>
                   <button
                     onClick={() => confirm(confirmKey)}
-                    className="rounded-[10px] bg-ink px-3 py-2 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
+                    className="rounded-[10px] bg-ink px-3 py-2 text-[13px] font-bold text-white transition hover:bg-ink-hover"
                   >
                     이대로 정하기
                   </button>

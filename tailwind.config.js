@@ -24,6 +24,7 @@ export default {
           soft: "#6E6259", // 보조·읽히는 뮤트 (5.66:1)
           faint: "#726A61", // 메타·뮤트 — 읽힘 유지(4.53:1)
           disabled: "#A99E94", // placeholder·disabled·장식만 (본문 금지)
+          hover: "#33291F", // 다크 primary 버튼 hover(bg-ink 위 lift)
         },
         // 표면 (크림 + 다크 텍스트)
         cream: "#FFF9F4", // page 배경

@@ -334,7 +334,7 @@ export default function Shell({
           <div className="flex items-center gap-2 rounded-[10px] border border-line bg-white px-2 py-2 shadow-sm">
             <button
               onClick={onCreate}
-              className="flex shrink-0 items-center gap-1 rounded-[10px] bg-ink px-3 py-2 text-[13px] font-bold text-white transition hover:bg-[#33291F]"
+              className="flex shrink-0 items-center gap-1 rounded-[10px] bg-ink px-3 py-2 text-[13px] font-bold text-white transition hover:bg-ink-hover"
             >
               <Icon name="plus" size={16} /> 회의 만들기
             </button>

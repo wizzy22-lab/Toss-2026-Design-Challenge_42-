@@ -69,7 +69,7 @@ export default function Intro({
               정체성 '이가영'은 타이틀이 전달 → 아바타로 중복 안 함. 차이는 카드 톤으로만 */}
           <button
             onClick={onHost}
-            className="mt-2 flex w-full items-center gap-3 rounded-2xl bg-ink px-4 py-3.5 text-left text-white transition hover:bg-[#33291F]"
+            className="mt-2 flex w-full items-center gap-3 rounded-2xl bg-ink px-4 py-3.5 text-left text-white transition hover:bg-ink-hover"
           >
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white">
               <Icon name="user" size={18} filled className="text-brand-600" />
@@ -87,7 +87,7 @@ export default function Intro({
           <button
             onClick={() => setShowAttendees((v) => !v)}
             aria-expanded={showAttendees}
-            className="mt-2.5 flex w-full items-center gap-3 rounded-2xl bg-[#F4EEE8] px-4 py-3.5 text-left shadow-card transition hover:bg-[#F7F1EC]"
+            className="mt-2.5 flex w-full items-center gap-3 rounded-2xl bg-[#F4EEE8] px-4 py-3.5 text-left shadow-card transition hover:bg-sand-50"
           >
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white text-ink-soft">
               <Icon name="users" size={18} />
