@@ -46,15 +46,19 @@ export interface SlotResult {
   requiredAllIn: boolean;
   /** 참석 가능한 선택 인원 수 */
   optionalIn: number;
-  /** 회피(soft) 위반 수 */
+  /** 회피(soft) 위반 수 (필수+선택 합산) */
   softViolations: number;
+  /** 필수 참석자 중 회피(soft) 수 — 추천 순서 2단계 */
+  requiredSoft: number;
+  /** 선택 참석자 중 회피(soft) 수 — 추천 순서 4단계 */
+  optionalSoft: number;
   /** 회피로 조금 불편한 사람들 이름 (트레이드오프 설명용) */
   softNames: string[];
   /** 불가한 필수 인원 이름 (필수 전원 불가 설명용) */
   blockedRequired: string[];
   /** 완벽 = 성립 + 회피 0 (전원 편하게 다 되는 시간). 설계상 존재하지 않음 */
   perfect: boolean;
-  /** 성립 = 필수 전원 대면 + 선택 정족수 충족 */
+  /** 성립 = 필수 전원 대면 가능 (명세 §3 — 선택 정족수는 성립 조건이 아님) */
   feasible: boolean;
   score: number;
   counts: { in: number; out: number };
@@ -64,7 +68,6 @@ export function evalSlot(
   day: Day,
   time: TimeSlot,
   attendees: Attendee[],
-  quorum: number,
 ): SlotResult {
   const states: AttendeeSlotState[] = attendees.map((a) => ({
     attendee: a,
@@ -79,12 +82,15 @@ export function evalSlot(
   const optionalIn = optionalStates.filter((s) => s.available).length;
   const softNames = states.filter((s) => s.soft).map((s) => s.attendee.name);
   const softViolations = softNames.length;
+  const requiredSoft = requiredStates.filter((s) => s.soft).length;
+  const optionalSoft = optionalStates.filter((s) => s.soft).length;
   const blockedRequired = requiredStates
     .filter((s) => !s.available)
     .map((s) => s.attendee.name);
 
   const inCount = states.filter((s) => s.available).length;
-  const feasible = requiredAllIn && optionalIn >= quorum;
+  // 성립 = 필수 전원 대면 가능. 선택 인원 수는 성립 조건이 아니라 추천 순서 3단계에서 반영.
+  const feasible = requiredAllIn;
   const perfect = feasible && softViolations === 0;
 
   // 점수 = 참석 가능 인원 − 회피 위반(불편)×2. 회피가 적을수록 상위.
@@ -100,6 +106,8 @@ export function evalSlot(
     requiredAllIn,
     optionalIn,
     softViolations,
+    requiredSoft,
+    optionalSoft,
     softNames,
     blockedRequired,
     perfect,
@@ -111,44 +119,48 @@ export function evalSlot(
 
 export function evalAll(
   attendees: Attendee[],
-  quorum: number,
   days: Day[] = DAYS,
 ): SlotResult[] {
   const out: SlotResult[] = [];
   for (const d of days)
-    for (const t of TIMES) out.push(evalSlot(d, t, attendees, quorum));
+    for (const t of TIMES) out.push(evalSlot(d, t, attendees));
   return out;
 }
 
 /**
- * 성립 0 상세 뷰용 — 전 슬롯을 점수순으로.
- * ① 필수 전원 가능 우선(불가한 필수 있으면 하단) → ② 가능 인원 많은 순 →
- * ③ 회피(soft) 적은 순 → ④ 시간순. (점수 숫자는 UI 비노출)
+ * 명세(§3~6·§10·§11)의 추천 순서를 그대로 옮긴 단일 사전식 비교기.
+ *   1. 필수 전원 가능 (불가한 필수가 적을수록 위 — 성립 0 폴백에서 '가장 가까운 시간'도 이 키로 정렬)
+ *   2. 필수 참석자 중 '피하고 싶어요' 적은 순
+ *   3. 추가로 참석 가능한 선택 인원 많은 순
+ *   4. 선택 참석자 중 '피하고 싶어요' 적은 순
+ *   5. 더 이른 시간
+ * 필수의 불편(2)이 선택의 참석 여부·불편(3·4)보다 항상 우선한다.
  */
-export function rankedCandidates(results: SlotResult[]): SlotResult[] {
-  return [...results].sort((a, b) => {
-    if (a.requiredAllIn !== b.requiredAllIn) return a.requiredAllIn ? -1 : 1;
-    if (b.counts.in !== a.counts.in) return b.counts.in - a.counts.in;
-    if (a.softViolations !== b.softViolations)
-      return a.softViolations - b.softViolations;
-    return TIMES.indexOf(a.time) - TIMES.indexOf(b.time);
-  });
+export function bySpec(a: SlotResult, b: SlotResult): number {
+  if (a.blockedRequired.length !== b.blockedRequired.length)
+    return a.blockedRequired.length - b.blockedRequired.length; // 1
+  if (a.requiredSoft !== b.requiredSoft)
+    return a.requiredSoft - b.requiredSoft; // 2
+  if (b.optionalIn !== a.optionalIn) return b.optionalIn - a.optionalIn; // 3
+  if (a.optionalSoft !== b.optionalSoft)
+    return a.optionalSoft - b.optionalSoft; // 4
+  return TIMES.indexOf(a.time) - TIMES.indexOf(b.time); // 5
 }
 
-/** 상위 추천 (성립 슬롯만, 회피 적은 순·점수·시간순) */
+/**
+ * 성립 0 상세 뷰용 — 전 슬롯을 명세 순서로. (점수 숫자는 UI 비노출)
+ * 불가한 필수가 적은(=가장 가까운) 시간부터, 그다음 필수 선호 → 선택 인원 → 선택 선호 → 시간.
+ */
+export function rankedCandidates(results: SlotResult[]): SlotResult[] {
+  return [...results].sort(bySpec);
+}
+
+/** 상위 추천 (성립 슬롯만, 명세 추천 순서대로) */
 export function topRecommendations(
   results: SlotResult[],
   n = 3,
 ): SlotResult[] {
-  return [...results]
-    .filter((r) => r.feasible)
-    .sort((a, b) => {
-      if (a.softViolations !== b.softViolations)
-        return a.softViolations - b.softViolations;
-      if (b.score !== a.score) return b.score - a.score;
-      return TIMES.indexOf(a.time) - TIMES.indexOf(b.time);
-    })
-    .slice(0, n);
+  return [...results].filter((r) => r.feasible).sort(bySpec).slice(0, n);
 }
 
 /**
@@ -173,7 +185,6 @@ export function reCoordinate(
   attendees: Attendee[],
   fromKey: string,
   changerId: string,
-  quorum: number,
   days: Day[] = DAYS,
 ): ReCoordination | null {
   const changer = attendees.find((a) => a.id === changerId);
@@ -182,14 +193,14 @@ export function reCoordinate(
 
   // ① 이 사람을 빼면 성립하는가 (필수면 애초에 제외 불가)
   const without = attendees.filter((a) => a.id !== changerId);
-  const rWithout = evalSlot(day, time, without, quorum);
+  const rWithout = evalSlot(day, time, without);
   const canDrop = !changer.required && rWithout.feasible;
 
   // ② 그 사람이 그 슬롯엔 불가(busy)라고 보고 새 최선 시간을 다시 찾는다.
   const reData = attendees.map((a) =>
     a.id === changerId ? { ...a, busy: [...a.busy, fromKey] } : a,
   );
-  const reTop = topRecommendations(evalAll(reData, quorum, days), 3).filter(
+  const reTop = topRecommendations(evalAll(reData, days), 3).filter(
     (r) => r.key !== fromKey,
   );
 

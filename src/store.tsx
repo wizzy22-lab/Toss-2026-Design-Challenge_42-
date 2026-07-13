@@ -47,7 +47,6 @@ interface State {
   durationLabel: string;
   rangeLabel: string;
   attendees: Attendee[];
-  quorum: number; // 선택 참석자 최소 인원 (정족수 임계값)
   screen: ScreenId; // 데모 단계 = 채널 타임라인이 어디까지 진행됐는가
   viewAs: ViewAs; // 채널을 누구의 시점으로 볼까 (주최자 vs 참석자 수신)
   activeAttendeeId: string; // 참석자 관점의 "나"
@@ -81,7 +80,6 @@ type Action =
   | { type: "TOGGLE_REQUIRED"; id: string }
   | { type: "TOGGLE_EXCLUDED"; id: string }
   | { type: "ADD_EXTERNAL"; name: string }
-  | { type: "SET_QUORUM"; value: number }
   | { type: "SET_ACTIVE_ATTENDEE"; id: string }
   | { type: "TOGGLE_BUSY"; id: string; key: string }
   | { type: "TOGGLE_SOFT"; id: string; key: string }
@@ -102,7 +100,6 @@ const initialState: State = {
   durationLabel: INITIAL_MEETING.durationLabel,
   rangeLabel: INITIAL_MEETING.rangeLabel,
   attendees: INITIAL_ATTENDEES,
-  quorum: 0,
   // 첫 화면 = 추천이 주최자에게 막 뜬 순간 (에페메럴 · 아직 채널 공지 전)
   screen: "dashboard",
   viewAs: "host",
@@ -148,8 +145,8 @@ function applyDemo(state: State, stage: DemoStage): State {
   const allIds = active.map((a) => a.id);
   // 확정 슬롯 = 현재 후보 기간(activeDays) 안의 최선. 기본(월–금 5일)이면 mon-11.
   const bestKey =
-    topRecommendations(evalAll(active, state.quorum, state.activeDays), 1)[0]
-      ?.key ?? BEST_KEY;
+    topRecommendations(evalAll(active, state.activeDays), 1)[0]?.key ??
+    BEST_KEY;
   const base: State = { ...state, change: null, lastChange: null };
   switch (stage) {
     case "create":
@@ -272,8 +269,6 @@ function reducer(state: State, action: Action): State {
         ],
       };
     }
-    case "SET_QUORUM":
-      return { ...state, quorum: Math.max(0, action.value) };
     case "SET_ACTIVE_ATTENDEE":
       // 현재 뷰어("나")는 '참석 확인'을 직접 눌러야 확인됨.
       // 시드(다른 2명 미리 확인)에 내가 포함돼도 제외 → 누르기 전엔 항상 미확인 CTA.
@@ -411,14 +406,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const derived = useMemo<Derived>(() => {
     const active = state.attendees.filter((a) => !a.excluded);
-    const results = evalAll(active, state.quorum, state.activeDays);
+    const results = evalAll(active, state.activeDays);
     const recoord =
       state.change && state.confirmedKey
         ? reCoordinate(
             active,
             state.confirmedKey,
             state.change.attendeeId,
-            state.quorum,
             state.activeDays,
           )
         : null;
@@ -428,13 +422,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       hasPerfect: results.some((r) => r.perfect),
       recoord,
     };
-  }, [
-    state.attendees,
-    state.quorum,
-    state.confirmedKey,
-    state.change,
-    state.activeDays,
-  ]);
+  }, [state.attendees, state.confirmedKey, state.change, state.activeDays]);
 
   return (
     <AppContext.Provider value={{ state, dispatch, derived }}>
